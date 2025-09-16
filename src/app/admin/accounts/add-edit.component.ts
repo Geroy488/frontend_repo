@@ -1,96 +1,130 @@
-﻿import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 
 import { AccountService, AlertService } from '@app/_services';
-import { MustMatch } from '@app/_helpers';
+//import { MustMatch } from '@app/_helpers';
 
 @Component({ templateUrl: 'add-edit.component.html' })
-export class AddEditComponent implements OnInit {
-    form!: FormGroup;
-    id?: string;
-    title!: string;
-    loading = false;
-    submitting = false;
-    submitted = false;
+export class AddEditComponent implements OnInit, OnDestroy {
+  form!: FormGroup;
+  id?: string;
+  title!: string;
+  loading = false;
+  submitting = false;
+  submitted = false;    
+  private routeSub!: Subscription;
 
-    constructor(
-        private formBuilder: FormBuilder,
-        private route: ActivatedRoute,
-        private router: Router,
-        private accountService: AccountService,
-        private alertService: AlertService
-    ) { }
+   // 👇 add accounts array
+  accounts: any[] = [];
+  
+  constructor(
+    private formBuilder: FormBuilder,
+    private route: ActivatedRoute,
+    private router: Router,
+    private accountService: AccountService,
+    private alertService: AlertService
+  ) {}
 
-    ngOnInit() {
-        this.id = this.route.snapshot.params['id'];
+  ngOnInit() {
+    // subscribe to route params so the component resets when id changes
+    this.routeSub = this.route.params.subscribe(params => {
+      this.id = params['id'];
+      this.initForm();
 
-        this.form = this.formBuilder.group({
-            title: ['', Validators.required],
-            firstName: ['', Validators.required],
-            lastName: ['', Validators.required],
-            email: ['', [Validators.required, Validators.email]],
-            role: ['', Validators.required],
-            // password only required in add mode
-            password: ['', [Validators.minLength(6), ...(!this.id ? [Validators.required] : [])]],
-            confirmPassword: ['']
-        }, {
-            validator: MustMatch('password', 'confirmPassword')
-        });
+      this.title = this.id ? 'Edit Account' : 'Create Account';
 
-        this.title = 'Create Account';
-        if (this.id) {
-            // edit mode
-            this.title = 'Edit Account';
-            this.loading = true;
-            this.accountService.getById(this.id)
-                .pipe(first())
-                .subscribe(x => {
-                    this.form.patchValue(x);
-                    this.loading = false;
-                });
-        }
+      if (this.id) {
+        this.loading = true;
+        this.accountService.getById(this.id)
+          .pipe(first())
+          .subscribe({
+            next: x => {
+              // ensure backend returns "status" property; safe patch
+              this.form.patchValue({
+                title: x.title,
+                firstName: x.firstName,
+                lastName: x.lastName,
+                email: x.email,
+                role: x.role,
+                status: x.status ?? 'Active'   // fallback
+              });
+              this.loading = false;
+            },
+            error: () => {
+              this.loading = false;
+            }
+          });
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.routeSub) this.routeSub.unsubscribe();
+  }
+
+  private initForm() {
+    this.submitted = false;
+    this.submitting = false;
+    this.loading = false;
+
+    this.form = this.formBuilder.group({
+      title: ['', Validators.required],
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      role: ['', Validators.required],
+      status: ['', Validators.required],            // <-- added status
+      password: ['', [Validators.minLength(6), ...(!this.id ? [Validators.required] : [])]],
+     // confirmPassword: ['', Validators.required]
+    }
+     // validator: MustMatch('password', 'confirmPassword')
+    );
+  }
+
+  // convenience getter for easy access to form fields
+  get f() { return this.form.controls; }
+
+  onSubmit() {
+    this.submitted = true;
+    this.alertService.clear();
+
+    if (this.form.invalid) {
+      return;
     }
 
-    // convenience getter for easy access to form fields
-    get f() { return this.form.controls; }
+    this.submitting = true;
 
-    onSubmit() {
-        this.submitted = true;
+    const payload: any = { ...this.form.value };
+    // remove confirmPassword before sending
+    delete payload.confirmPassword;
 
-        // reset alerts on submit
-        this.alertService.clear();
-
-        // stop here if form is invalid
-        if (this.form.invalid) {
-            return;
-        }
-
-        this.submitting = true;
-
-        // create or update account based on id param
-        let saveAccount;
-        let message: string;
-        if (this.id) {
-            saveAccount = () => this.accountService.update(this.id!, this.form.value);
-            message = 'Account updated';
-        } else {
-            saveAccount = () => this.accountService.create(this.form.value);
-            message = 'Account created';
-        }
-
-        saveAccount()
-            .pipe(first())
-            .subscribe({
-                next: () => {
-                    this.alertService.success(message, { keepAfterRouteChange: true });
-                    this.router.navigateByUrl('/admin/accounts');
-                },
-                error: error => {
-                    this.alertService.error(error);
-                    this.submitting = false;
-                }
-            });
+    // don't send password if blank
+    if (!payload.password) {
+      delete payload.password;
     }
+
+   let request$: any;       // or Observable<any> if you want stricter typing
+   let message: string;
+    if (this.id) {
+      request$ = this.accountService.update(this.id!, payload);
+      message = 'Account updated';
+    } else {
+      request$ = this.accountService.create(payload);
+      message = 'Account created';
+    }
+
+    request$.pipe(first()).subscribe({
+      next: () => {
+        this.alertService.success(message, { keepAfterRouteChange: true });
+        this.router.navigateByUrl('/admin/accounts');
+      },
+      error: (error : any) => {
+        this.alertService.error(error);
+        this.submitting = false;
+      }
+    });
+  }
 }

@@ -1,0 +1,50 @@
+<h1>Employees</h1>
+<p>
+  <a routerLink="add" class="btn btn-sm btn-primary mb-2">Add Employee</a>
+</p>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th style="width: 15%">Employee ID</th>
+      <th style="width: 20%">Account</th>
+      <th style="width: 15%">Position</th>
+      <th style="width: 15%">Department</th>
+      <th style="width: 15%">Hire Date</th>
+      <th style="width: 10%">Status</th>
+      <th style="width: 20%">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let employee of employees">
+      <td>{{ employee.employeeId || '—' }}</td>
+      <td>{{ employee.email }}</td>
+      <td>{{ employee.position || '—' }}</td>
+      <td>{{ employee.department || '—' }}</td>
+      <td>{{ employee.hireDate ? (employee.hireDate | date:'shortDate') : '—' }}</td>
+      <td>
+        <span 
+          class="badge"
+          [ngClass]="{
+            'bg-success': employee.status === 'Active',
+            'bg-danger': employee.status === 'Inactive'
+          }">
+          {{ employee.status }}
+        </span>
+      </td>
+      <td style="white-space: nowrap">
+        <a routerLink="requests/{{ employee.employeeId }}" class="btn btn-sm btn-info me-1">Requests</a>
+        <a routerLink="workflows/{{ employee.employeeId }}" class="btn btn-sm btn-info me-1">Workflows</a>
+        <a routerLink="transfer/{{ employee.employeeId }}" class="btn btn-sm btn-warning me-1">Transfer</a>
+        <a routerLink="edit/{{ employee.employeeId }}" class="btn btn-sm btn-primary">Edit</a>
+      </td>
+    </tr>
+
+    <!-- Loading spinner -->
+    <tr *ngIf="!employees || employees.length === 0">
+      <td colspan="7" class="text-center">
+        <span class="spinner-border spinner-border-lg align-center"></span>
+      </td>
+    </tr>
+  </tbody>
+</table>
