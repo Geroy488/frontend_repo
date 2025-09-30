@@ -18,25 +18,34 @@
   <tbody>
     <tr *ngFor="let employee of employees">
       <td>{{ employee.employeeId || '—' }}</td>
-      <td>{{ employee.email }}</td>
+      <td>{{ employee.account?.email || '—' }}</td>
       <td>{{ employee.position || '—' }}</td>
       <td>{{ employee.department || '—' }}</td>
       <td>{{ employee.hireDate ? (employee.hireDate | date:'shortDate') : '—' }}</td>
       <td>
-        <span 
+        <span
           class="badge"
           [ngClass]="{
-            'bg-success': employee.status === 'Active',
-            'bg-danger': employee.status === 'Inactive'
-          }">
-          {{ employee.status }}
+            'bg-success': employee.status && employee.status.trim().toLowerCase() === 'active',
+            'bg-danger': employee.status && employee.status.trim().toLowerCase() === 'inactive'
+          }"
+        >
+          {{ employee.status || '—' }}
         </span>
       </td>
       <td style="white-space: nowrap">
-        <a routerLink="requests/{{ employee.employeeId }}" class="btn btn-sm btn-info me-1">Requests</a>
-        <a routerLink="workflows/{{ employee.employeeId }}" class="btn btn-sm btn-info me-1">Workflows</a>
-        <a routerLink="transfer/{{ employee.employeeId }}" class="btn btn-sm btn-warning me-1">Transfer</a>
-        <a routerLink="edit/{{ employee.employeeId }}" class="btn btn-sm btn-primary">Edit</a>
+        <a [routerLink]="['/admin/requests']" class="btn btn-sm btn-info me-1">Requests</a>
+        <a [routerLink]="['/admin/workflows', employee.employeeId]" class="btn btn-sm btn-info me-1">Workflows</a>
+
+        <!-- Transfer button -->
+        <button
+          class="btn btn-sm btn-warning me-1"
+          (click)="openTransferModal(employee)">
+          Transfer
+        </button>
+
+        <!-- Fixed Edit button -->
+        <a [routerLink]="['edit', employee.employeeId]" class="btn btn-sm btn-primary">Edit</a>
       </td>
     </tr>
 
@@ -48,3 +57,39 @@
     </tr>
   </tbody>
 </table>
+
+<!-- Transfer Modal -->
+<div class="modal fade" id="transferModal" tabindex="-1" aria-labelledby="transferModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+      <!-- Header -->
+      <div class="modal-header">
+        <h5 class="modal-title" id="transferModalLabel">
+          Transfer Employee: {{ selectedEmployee?.employeeId }}
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body">
+        <div class="mb-3">
+          <label class="form-label">Select Department</label>
+          <select [(ngModel)]="selectedDepartment" class="form-select">
+          <option *ngFor="let dept of departments" [ngValue]="dept.id">
+            {{ dept.name }}
+          </option>
+        </select>
+
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-warning" (click)="transferEmployee()">Confirm Transfer</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+      </div>
+
+    </div>
+  </div>
+</div>

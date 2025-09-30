@@ -6,26 +6,34 @@ import { LayoutComponent } from './layout.component';
 import { OverviewComponent } from './overview.component';
 
 const accountsModule = () => import('./accounts/accounts.module').then(x => x.AccountsModule);
-const employeesModule = () => import('./employees/employees.module').then(x => x.EmployeesModule); // ✅ add this
+const employeesModule = () => import('./employees/employees.module').then(x => x.EmployeesModule);
+const requestsModule = () => import('./requests/requests.module').then(x => x.RequestsModule);
+const departmentsModule = () => import('./departments/departments.module').then(x => x.DepartmentsModule);
+const workflowsModule = () => import('./workflows/workflows.module').then(x => x.WorkflowsModule); // ✅ added
+const positionsModule = () => import('./positions/positions.module').then(x => x.PositionsModule);
 
 const routes: Routes = [
-    { path: '', component: SubNavComponent, outlet: 'subnav' },
-    
-    {
-        path: '', component: LayoutComponent,
-        children: [
-            { path: '', component: OverviewComponent },
-            { path: 'accounts', loadChildren: accountsModule },
-            { path: 'employees', loadChildren: employeesModule }  // ✅ now valid
-        ]
-    },
+  { path: '', component: SubNavComponent, outlet: 'subnav' },
 
-      // ✅ Add this line only
-    { path: '**', redirectTo: '' }
+  {
+    path: '',
+    component: LayoutComponent,
+    children: [
+      { path: '', component: OverviewComponent },
+      { path: 'accounts', loadChildren: accountsModule },
+      { path: 'employees', loadChildren: employeesModule },
+      { path: 'requests', loadChildren: requestsModule },
+      { path: 'workflows', loadChildren: workflowsModule }, // ✅ fixed comma
+      { path: 'departments', loadChildren: departmentsModule },
+      { path: 'positions', loadChildren: positionsModule } // ✅ new
+    ]
+  },
+
+  { path: '**', redirectTo: '' }
 ];
 
 @NgModule({
-    imports: [RouterModule.forChild(routes)],
-    exports: [RouterModule]
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
 })
-export class AdminRoutingModule { }
+export class AdminRoutingModule {}

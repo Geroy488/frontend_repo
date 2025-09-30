@@ -1,0 +1,51 @@
+<h3>WORKFLOWS FOR EMPLOYEE</h3>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Details</th>
+      <th>Status</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let wf of workflows">
+      <td>
+        <span class="badge bg-info">{{ wf.type }}</span>
+      </td>
+      <td>
+        <!-- Main details -->
+        <div>{{ wf.details }}</div>
+
+        <!-- Extra request info -->
+        <div *ngIf="wf.request">
+          <strong>requestId:</strong> {{ wf.request.id }} <br>
+          <strong>requestType:</strong> {{ wf.request.type }} <br>
+          <strong>requesterId:</strong> {{ wf.employeeId }} <br>
+          <strong>message:</strong> Review {{ wf.request.type }} request #{{ wf.request.id }} from Employee ID {{ wf.employeeId }}.
+        </div>
+      </td>
+      <td>
+        <span 
+          class="badge"
+          [ngClass]="{
+            'bg-success': wf.status === 'Approved',
+            'bg-warning': wf.status === 'Pending',
+            'bg-danger': wf.status === 'Rejected'
+          }">
+          {{ wf.status }}
+        </span>
+      </td>
+      <td>
+        <select class="form-select form-select-sm" [(ngModel)]="wf.status" (change)="updateStatus(wf)">
+          <option>Pending</option>
+          <option>Approved</option>
+          <option>Rejected</option>
+        </select>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<a routerLink="/admin/employees" class="btn btn-secondary">Back to Employees</a>

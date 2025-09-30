@@ -1,0 +1,45 @@
+<div class="card shadow-sm rounded-3">
+  <div class="card-header bg-light">
+    <h3 class="mb-0">{{ title }}</h3>
+  </div>
+
+  <div class="card-body">
+    <form *ngIf="!loading" [formGroup]="form" (ngSubmit)="onSubmit()">
+      <!-- Position Name -->
+      <div class="mb-3">
+        <label class="form-label">Position Name</label>
+        <input
+          type="text"
+          formControlName="name"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.name.errors }" />
+        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+          Position name is required
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="mb-3">
+        <label class="form-label">Description</label>
+        <textarea
+          formControlName="description"
+          class="form-control"
+          rows="3"></textarea>
+      </div>
+
+      <!-- Buttons -->
+      <div class="d-flex justify-content-start">
+        <button type="submit" [disabled]="submitting" class="btn btn-primary me-2">
+          <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1"></span>
+          Save
+        </button>
+        <a routerLink="/admin/positions" class="btn btn-secondary">Cancel</a>
+      </div>
+    </form>
+
+    <!-- Loader -->
+    <div *ngIf="loading" class="text-center my-4">
+      <span class="spinner-border spinner-border-lg"></span>
+    </div>
+  </div>
+</div>

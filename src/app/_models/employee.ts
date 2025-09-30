@@ -1,9 +1,15 @@
 export interface Employee {
+  id: number;
+  employeeId: string;
   accountId: number;
-  email: string;
+  position: string;
+  // department (name) for display; departmentId is the actual FK
+  department?: string;
+  departmentId?: number;
+  hireDate: string;   // or Date
   status: string;
-  employeeId?: string;
-  position?: string | null;
-  department?: string | null;
-  hireDate?: string | null;
+  account?: {
+    email: string;
+    status: string;
+  };
 }

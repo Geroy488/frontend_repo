@@ -1,0 +1,32 @@
+<h1>Departments</h1>
+<p>
+  <a routerLink="add" class="btn btn-sm btn-primary mb-2">Add Department</a>
+</p>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th style="width: 25%">Name</th>
+      <th style="width: 35%">Description</th>
+      <th style="width: 20%">Employee Count</th>
+      <th style="width: 20%">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let department of departments">
+      <td>{{ department.name || '—' }}</td>
+      <td>{{ department.description || '—' }}</td>
+      <td>{{ department.employeeCount || 0 }}</td>
+      <td style="white-space: nowrap">
+        <a [routerLink]="['edit', department.id]" class="btn btn-sm btn-primary">Edit</a>
+      </td>
+    </tr>
+
+    <!-- Loading spinner -->
+    <tr *ngIf="!departments || departments.length === 0">
+      <td colspan="4" class="text-center">
+        <span class="spinner-border spinner-border-lg align-center"></span>
+      </td>
+    </tr>
+  </tbody>
+</table>

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Employee } from '@app/_models/employee';  // 👈 use the new type
 import { environment } from 'src/environments/environment';
+import { Employee } from '@app/_models/employee';
 
 @Injectable({ providedIn: 'root' })
 export class EmployeesService {
@@ -10,27 +10,43 @@ export class EmployeesService {
 
   constructor(private http: HttpClient) {}
 
-  // ✅ return AccountWithEmployee[] instead of Employee[]
+  // 🔹 Get all employees
   getAll(): Observable<Employee[]> {
     return this.http.get<Employee[]>(this.baseUrl);
   }
 
-  // ✅ same for getById
-  getById(id: string | number): Observable<Employee> {
+  // 🔹 Get all employees (active + inactive) for requests
+  getAllEmployees(): Observable<Employee[]> {
+    return this.http.get<Employee[]>(`${environment.apiUrl}/requests/all-employees`);
+  }
+
+  // 🔹 Get single employee by ID
+  getById(id: number | string): Observable<Employee> {
     return this.http.get<Employee>(`${this.baseUrl}/${id}`);
   }
 
-  // when creating, you’ll likely send employee data (with accountId)
-  create(employee: any) {
-    return this.http.post(this.baseUrl, employee);
+  // 🔹 Get next auto-generated employeeId
+  getNextId(): Observable<{ nextId: string }> {
+    return this.http.get<{ nextId: string }>(`${this.baseUrl}/next-id`);
   }
 
-  // updating also accepts partial employee/account data
-  update(id: string | number, employee: any) {
-    return this.http.put(`${this.baseUrl}/${id}`, employee);
+  // 🔹 Get all departments (for dropdowns)
+  getDepartments(): Observable<any[]> {
+    return this.http.get<any[]>(`${environment.apiUrl}/departments`);
   }
 
-  delete(id: string | number) {
-    return this.http.delete(`${this.baseUrl}/${id}`);
+  // 🔹 Create new employee
+  create(employee: Partial<Employee>): Observable<Employee> {
+    return this.http.post<Employee>(this.baseUrl, employee);
+  }
+
+  // 🔹 Update existing employee (e.g. transfer department)
+  update(id: number | string, employee: Partial<Employee>): Observable<Employee> {
+    return this.http.put<Employee>(`${this.baseUrl}/${id}`, employee);
+  }
+
+  // 🔹 Delete employee
+  delete(id: number | string): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
 }

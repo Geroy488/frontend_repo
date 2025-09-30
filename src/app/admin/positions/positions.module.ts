@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
-import { EmployeesRoutingModule } from './employees-routing.module';
+import { ReactiveFormsModule } from '@angular/forms';
+import { PositionsRoutingModule } from './positions-routing.module';
 import { ListComponent } from './list.component';
 import { AddEditComponent } from './add-edit.component';
 
@@ -10,12 +9,11 @@ import { AddEditComponent } from './add-edit.component';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    FormsModule,        // ✅ Needed for ngModel
-    EmployeesRoutingModule
+    PositionsRoutingModule
   ],
   declarations: [
     ListComponent,
     AddEditComponent
   ]
 })
-export class EmployeesModule {}
+export class PositionsModule {}

@@ -1,8 +1,9 @@
+// file: departments/departments.module.ts
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { EmployeesRoutingModule } from './employees-routing.module';
+import { DepartmentsRoutingModule } from './departments-routing.module';
 import { ListComponent } from './list.component';
 import { AddEditComponent } from './add-edit.component';
 
@@ -10,12 +11,12 @@ import { AddEditComponent } from './add-edit.component';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    FormsModule,        // ✅ Needed for ngModel
-    EmployeesRoutingModule
+    FormsModule,           // ✅ Needed for ngModel (if ever used)
+    DepartmentsRoutingModule
   ],
   declarations: [
     ListComponent,
     AddEditComponent
   ]
 })
-export class EmployeesModule {}
+export class DepartmentsModule {}

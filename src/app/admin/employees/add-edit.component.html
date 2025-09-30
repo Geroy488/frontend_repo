@@ -3,64 +3,72 @@
     <h3 class="mb-0">{{ title }}</h3>
   </div>
 
-  <div class="card-body">
-    <form *ngIf="!loading" [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="card-body">
+        <form *ngIf="!loading" [formGroup]="form" (ngSubmit)="onSubmit()">
 
-      <!-- Employee ID -->
       <div class="mb-3">
-        <label class="form-label">Employee ID</label>
-        <input type="text" formControlName="employeeId" class="form-control"
-               [ngClass]="{ 'is-invalid': submitted && f.employeeId.errors }" />
-        <div *ngIf="submitted && f.employeeId.errors" class="invalid-feedback">
-          Employee ID is required
-        </div>
+      <label class="form-label">Employee ID</label>
+      <input type="text"
+            formControlName="employeeId"
+            class="form-control"
+            readonly />
       </div>
 
-      <!-- Account Dropdown -->
-     <div class="mb-3">
-  <label class="form-label">Account</label>
-  <select class="form-control" formControlName="accountId">
-    <option value="">-- Select Account --</option>
-    <option *ngFor="let acc of accounts" [value]="acc.id">
-      {{ acc.email }} ({{ acc.role }})
-    </option>
-  </select>
-  <div *ngIf="submitted && f.accountId.errors" class="invalid-feedback d-block">
-    Account is required
-  </div>
-</div>
+      <div class="mb-3">
+      <label class="form-label">Account</label>
+      <select formControlName="accountId" class="form-select">
+        <option value="" disabled selected>
+          {{ accounts.length ? 'Select Account' : 'All accounts are used' }}
+        </option>
+        <option *ngFor="let acc of accounts" [value]="acc.id">
+          {{ acc.email }}
+        </option>
+      </select>
+      <div *ngIf="submitted && f['accountId'].errors" class="invalid-feedback d-block">
+        Account is required
+      </div>
+    </div>
 
-      <!-- Position -->
+     <!-- Position -->
       <div class="mb-3">
         <label class="form-label">Position</label>
-        <input type="text" formControlName="position" class="form-control"
-               [ngClass]="{ 'is-invalid': submitted && f.position.errors }" />
+        <select formControlName="position" class="form-select">
+          <option value="">-- Select Position --</option>
+          <option *ngFor="let pos of positions" [value]="pos.name">{{ pos.name }}</option>
+        </select>
         <div *ngIf="submitted && f.position.errors" class="invalid-feedback">
           Position is required
         </div>
       </div>
 
+      
       <!-- Department -->
-      <div class="mb-3">
+      <div class="mb-3 col-12 col-md-12">
         <label class="form-label">Department</label>
-        <input type="text" formControlName="department" class="form-control"
-               [ngClass]="{ 'is-invalid': submitted && f.department.errors }" />
+        <select formControlName="department" class="form-select"
+                [ngClass]="{ 'is-invalid': submitted && f.department.errors }">
+          <option value="">-- Select Department --</option>
+          <option *ngFor="let dept of departments" [value]="dept.name">
+            {{ dept.name }}
+          </option>
+        </select>
         <div *ngIf="submitted && f.department.errors" class="invalid-feedback">
           Department is required
         </div>
       </div>
+
 
       <!-- Hire Date -->
       <div class="mb-3">
         <label class="form-label">Hire Date</label>
         <input type="date" formControlName="hireDate" class="form-control"
                [ngClass]="{ 'is-invalid': submitted && f.hireDate.errors }" />
-        <div *ngIf="submitted && f.hireDate.errors" class="invalid-feedback">
-          Hire Date is required
-        </div>
+       <div *ngIf="submitted && f.hireDate.errors?.maxYear" class="invalid-feedback">
+       The hire date shouldn't be beyond the current year. {{ currentYear }}
       </div>
 
-      <!-- Status -->
+      </div>
+
       <div class="mb-3">
         <label class="form-label">Status</label>
         <select formControlName="status" class="form-select"
