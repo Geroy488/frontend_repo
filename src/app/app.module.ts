@@ -2,6 +2,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { CredentialsInterceptor } from './_helpers/credentials.interceptor';
 import { RouterModule } from '@angular/router';   // ✅ for routerLink
 import { CommonModule } from '@angular/common';   // ✅ for ngClass, ngIf, ngFor
 
@@ -35,6 +36,7 @@ import { HomeComponent } from './home';
     { provide: APP_INITIALIZER, useFactory: appInitializer, multi: true, deps: [AccountService] },
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: CredentialsInterceptor, multi: true }
     //fakeBackendProvider   // ⚠️ if you still need fake backend
   ],
   bootstrap: [AppComponent]

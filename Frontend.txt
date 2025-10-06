@@ -1,0 +1,5372 @@
+================================================================================
+File: .vscode\extensions.json
+Size: 134 B
+================================================================================
+
+{
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=827846
+  "recommendations": ["angular.ng-template"]
+}
+
+
+================================================================================
+File: .vscode\launch.json
+Size: 494 B
+================================================================================
+
+{
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "ng serve",
+      "type": "pwa-chrome",
+      "request": "launch",
+      "preLaunchTask": "npm: start",
+      "url": "http://localhost:4200/"
+    },
+    {
+      "name": "ng test",
+      "type": "chrome",
+      "request": "launch",
+      "preLaunchTask": "npm: test",
+      "url": "http://localhost:9876/debug.html"
+    }
+  ]
+}
+
+
+================================================================================
+File: .vscode\tasks.json
+Size: 980 B
+================================================================================
+
+{
+  // For more information, visit: https://go.microsoft.com/fwlink/?LinkId=733558
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "npm",
+      "script": "start",
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "typescript",
+        "pattern": "$tsc",
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": {
+            "regexp": "(.*?)"
+          },
+          "endsPattern": {
+            "regexp": "bundle generation complete"
+          }
+        }
+      }
+    },
+    {
+      "type": "npm",
+      "script": "test",
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "typescript",
+        "pattern": "$tsc",
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": {
+            "regexp": "(.*?)"
+          },
+          "endsPattern": {
+            "regexp": "bundle generation complete"
+          }
+        }
+      }
+    }
+  ]
+}
+
+
+================================================================================
+File: angular.json
+Size: 3.5 kB
+================================================================================
+
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "angular-15-example": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "less"
+        }
+      },
+      "root": "",
+      "sourceRoot": "src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/angular-15-example",
+            "index": "src/index.html",
+            "main": "src/main.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "tsconfig.app.json",
+            "inlineStyleLanguage": "less",
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ],
+            "styles": [
+              "src/styles.less",
+              "node_modules/bootstrap/dist/css/bootstrap.min.css"
+            ],
+            "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+            ]
+
+
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "browserTarget": "angular-15-example:build:production"
+            },
+            "development": {
+              "browserTarget": "angular-15-example:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "angular-15-example:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "src/test.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "tsconfig.spec.json",
+            "karmaConfig": "karma.conf.js",
+            "inlineStyleLanguage": "less",
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ],
+            "styles": [
+              "src/styles.less"
+            ],
+            "scripts": []
+          }
+        }
+      }
+    }
+  },
+  "cli": {
+    "analytics": "b55b8aad-3a7d-4e61-920a-6f28b982a326"
+  }
+}
+
+
+================================================================================
+File: karma.conf.js
+Size: 1.48 kB
+================================================================================
+
+// Karma configuration file, see link for more information
+// https://karma-runner.github.io/1.0/config/configuration-file.html
+
+module.exports = function (config) {
+  config.set({
+    basePath: '',
+    frameworks: ['jasmine', '@angular-devkit/build-angular'],
+    plugins: [
+      require('karma-jasmine'),
+      require('karma-chrome-launcher'),
+      require('karma-jasmine-html-reporter'),
+      require('karma-coverage'),
+      require('@angular-devkit/build-angular/plugins/karma')
+    ],
+    client: {
+      jasmine: {
+        // you can add configuration options for Jasmine here
+        // the possible options are listed at https://jasmine.github.io/api/edge/Configuration.html
+        // for example, you can disable the random execution with `random: false`
+        // or set a specific seed with `seed: 4321`
+      },
+      clearContext: false // leave Jasmine Spec Runner output visible in browser
+    },
+    jasmineHtmlReporter: {
+      suppressAll: true // removes the duplicated traces
+    },
+    coverageReporter: {
+      dir: require('path').join(__dirname, './coverage/angular-15-example'),
+      subdir: '.',
+      reporters: [
+        { type: 'html' },
+        { type: 'text-summary' }
+      ]
+    },
+    reporters: ['progress', 'kjhtml'],
+    port: 9876,
+    colors: true,
+    logLevel: config.LOG_INFO,
+    autoWatch: true,
+    browsers: ['Chrome'],
+    singleRun: false,
+    restartOnFileChange: true
+  });
+};
+
+
+================================================================================
+File: LICENSE
+Size: 1.1 kB
+================================================================================
+
+The MIT License (MIT)
+
+Copyright (c) 2023 Jason Watmore
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+
+================================================================================
+File: package.json
+Size: 1.44 kB
+================================================================================
+
+{
+  "$schema": "https://json.schemastore.org/package.json",
+  "name": "angular-15-example",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve --open",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test",
+    "export:all": "folder2txt --output Frontend.txt C:/Users/Public/frontend --exclude node_modules --exclude .vscode --exclude .git --exclude .angular --exclude .DS_Store --exclude *.log"
+  },
+  "dependencies": {
+    "@angular/animations": "^15.0.0",
+    "@angular/common": "^15.0.0",
+    "@angular/compiler": "^15.0.0",
+    "@angular/core": "^15.0.0",
+    "@angular/forms": "^15.0.0",
+    "@angular/platform-browser": "^15.0.0",
+    "@angular/platform-browser-dynamic": "^15.0.0",
+    "@angular/router": "^15.0.0",
+    "bootstrap": "^5.3.8",
+    "folder2txt": "^1.0.2",
+    "rxjs": "~7.5.0",
+    "tslib": "^2.3.0",
+    "zone.js": "~0.12.0"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "^15.0.1",
+    "@angular/cli": "~15.0.1",
+    "@angular/compiler-cli": "^15.0.0",
+    "@types/jasmine": "~4.3.0",
+    "@types/node": "^18.19.129",
+    "jasmine-core": "~4.5.0",
+    "karma": "~6.4.0",
+    "karma-chrome-launcher": "~3.1.0",
+    "karma-coverage": "~2.2.0",
+    "karma-jasmine": "~5.1.0",
+    "karma-jasmine-html-reporter": "~2.0.0",
+    "typescript": "^4.9.5"
+  }
+}
+
+
+================================================================================
+File: README.md
+Size: 12 B
+================================================================================
+
+# FrontendG
+
+
+================================================================================
+File: src\app\account\account-routing.module.ts
+Size: 1.08 kB
+================================================================================
+
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+
+import { LayoutComponent } from './layout.component';
+import { LoginComponent } from './login.component';
+import { RegisterComponent } from './register.component';
+import { VerifyEmailComponent } from './verify-email.component';
+import { ForgotPasswordComponent } from './forgot-password.component';
+import { ResetPasswordComponent } from './reset-password.component';
+
+const routes: Routes = [
+    {
+        path: '', component: LayoutComponent,
+        children: [
+            { path: 'login', component: LoginComponent },
+            { path: 'register', component: RegisterComponent },
+            { path: 'verify-email', component: VerifyEmailComponent },
+            { path: 'forgot-password', component: ForgotPasswordComponent },
+            { path: 'reset-password', component: ResetPasswordComponent }
+        ]
+    }
+];
+
+@NgModule({
+    imports: [RouterModule.forChild(routes)],
+    exports: [RouterModule]
+})
+export class AccountRoutingModule { }
+
+================================================================================
+File: src\app\account\account.module.ts
+Size: 950 B
+================================================================================
+
+import { NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+
+import { AccountRoutingModule } from './account-routing.module';
+import { LayoutComponent } from './layout.component';
+import { LoginComponent } from './login.component';
+import { RegisterComponent } from './register.component';
+import { VerifyEmailComponent } from './verify-email.component';
+import { ForgotPasswordComponent } from './forgot-password.component';
+import { ResetPasswordComponent } from './reset-password.component';
+
+@NgModule({
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        AccountRoutingModule
+    ],
+    declarations: [
+        LayoutComponent,
+        LoginComponent,
+        RegisterComponent,
+        VerifyEmailComponent,
+        ForgotPasswordComponent,
+        ResetPasswordComponent
+    ]
+})
+export class AccountModule { }
+
+================================================================================
+File: src\app\account\forgot-password.component.html
+Size: 956 B
+================================================================================
+
+﻿<h3 class="card-header">Forgot Password</h3>
+<div class="card-body">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="text" formControlName="email" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.email.errors }" />
+            <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+                <div *ngIf="f.email.errors.required">Email is required</div>
+                <div *ngIf="f.email.errors.email">Email is invalid</div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <button [disabled]="loading" class="btn btn-primary">
+                <span *ngIf="loading" class="spinner-border spinner-border-sm me-1"></span>
+                Submit
+            </button>
+            <a routerLink="../login" class="btn btn-link">Cancel</a>
+        </div>
+    </form>
+</div>
+
+================================================================================
+File: src\app\account\forgot-password.component.ts
+Size: 1.5 kB
+================================================================================
+
+﻿import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { first, finalize } from 'rxjs/operators';
+
+import { AccountService, AlertService } from '@app/_services';
+
+@Component({ templateUrl: 'forgot-password.component.html' })
+export class ForgotPasswordComponent implements OnInit {
+    form!: FormGroup;
+    loading = false;
+    submitted = false;
+
+    constructor(
+        private formBuilder: FormBuilder,
+        private accountService: AccountService,
+        private alertService: AlertService
+    ) { }
+
+    ngOnInit() {
+        this.form = this.formBuilder.group({
+            email: ['', [Validators.required, Validators.email]]
+        });
+    }
+
+    // convenience getter for easy access to form fields
+    get f() { return this.form.controls; }
+
+    onSubmit() {
+        this.submitted = true;
+
+        // reset alerts on submit
+        this.alertService.clear();
+
+        // stop here if form is invalid
+        if (this.form.invalid) {
+            return;
+        }
+
+        this.loading = true;
+        this.accountService.forgotPassword(this.f.email.value)
+            .pipe(first())
+            .pipe(finalize(() => this.loading = false))
+            .subscribe({
+                next: () => this.alertService.success('Please check your email for password reset instructions'),
+                error: error => this.alertService.error(error)
+            });
+    }
+}
+
+================================================================================
+File: src\app\account\layout.component.html
+Size: 239 B
+================================================================================
+
+﻿<div class="container">
+    <div class="row">
+        <div class="col-lg-8 offset-lg-2 mt-5">
+            <div class="card m-3">
+                <router-outlet></router-outlet>
+            </div>
+        </div>
+    </div>
+</div>
+
+================================================================================
+File: src\app\account\layout.component.ts
+Size: 498 B
+================================================================================
+
+﻿import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+
+import { AccountService } from '@app/_services';
+
+@Component({ templateUrl: 'layout.component.html' })
+export class LayoutComponent {
+    constructor(
+        private router: Router,
+        private accountService: AccountService
+    ) {
+        // redirect to home if already logged in
+        if (this.accountService.accountValue) {
+            this.router.navigate(['/']);
+        }
+    }
+}
+
+================================================================================
+File: src\app\account\login.component.html
+Size: 1.63 kB
+================================================================================
+
+﻿<h3 class="card-header">Login</h3>
+<div class="card-body">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="text" formControlName="email" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.email.errors }" />
+            <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+                <div *ngIf="f.email.errors.required">Email is required</div>
+                <div *ngIf="f.email.errors.email">Email is invalid</div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Password</label>
+            <input type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
+            <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+                <div *ngIf="f.password.errors.required">Password is required</div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="mb-3 col">
+                <button [disabled]="submitting" class="btn btn-primary">
+                    <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1"></span>
+                    Login
+                </button>
+                <a routerLink="../register" class="btn btn-link">Register</a>
+            </div>
+            <div class="mb-3 col text-end">
+                <a routerLink="../forgot-password" class="btn btn-link pe-0">Forgot Password?</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+================================================================================
+File: src\app\account\login.component.ts
+Size: 1.88 kB
+================================================================================
+
+﻿import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { first } from 'rxjs/operators';
+
+import { AccountService, AlertService } from '@app/_services';
+
+@Component({ templateUrl: 'login.component.html' })
+export class LoginComponent implements OnInit {
+    form!: FormGroup;
+    submitting = false;
+    submitted = false;
+
+    constructor(
+        private formBuilder: FormBuilder,
+        private route: ActivatedRoute,
+        private router: Router,
+        private accountService: AccountService,
+        private alertService: AlertService
+    ) { }
+
+    ngOnInit() {
+        this.form = this.formBuilder.group({
+            email: ['', [Validators.required, Validators.email]],
+            password: ['', Validators.required]
+        });
+    }
+
+    // convenience getter for easy access to form fields
+    get f() { return this.form.controls; }
+
+    onSubmit() {
+        this.submitted = true;
+
+        // reset alerts on submit
+        this.alertService.clear();
+
+        // stop here if form is invalid
+        if (this.form.invalid) {
+            return;
+        }
+
+        this.submitting = true;
+        this.accountService.login(this.f.email.value, this.f.password.value)
+            .pipe(first())
+            .subscribe({
+                next: () => {
+                    // get return url from query parameters or default to home page
+                    const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+                    this.router.navigateByUrl(returnUrl);
+                },
+                error: error => {
+                    this.alertService.error(error);
+                    this.submitting = false;
+                }
+            });
+    }
+}
+
+================================================================================
+File: src\app\account\register.component.html
+Size: 4.36 kB
+================================================================================
+
+﻿<h3 class="card-header">Register</h3>
+<div class="card-body">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="row">
+            <div class="mb-3 col-2">
+                <label class="form-label">Title</label>
+                <select formControlName="title" class="form-select" [ngClass]="{ 'is-invalid': submitted && f.title.errors }">
+                    <option value=""></option>
+                    <option value="Mr">Mr</option>
+                    <option value="Mrs">Mrs</option>
+                    <option value="Miss">Miss</option>
+                    <option value="Ms">Ms</option>
+                </select>
+                <div *ngIf="submitted && f.title.errors" class="invalid-feedback">
+                    <div *ngIf="f.title.errors.required">Title is required</div>
+                </div>
+            </div>
+            <div class="mb-3 col-5">
+                <label class="form-label">First Name</label>
+                <input type="text" formControlName="firstName" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }" />
+                <div *ngIf="submitted && f.firstName.errors" class="invalid-feedback">
+                    <div *ngIf="f.firstName.errors.required">First Name is required</div>
+                </div>
+            </div>
+            <div class="mb-3 col-5">
+                <label class="form-label">Last Name</label>
+                <input type="text" formControlName="lastName" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.lastName.errors }" />
+                <div *ngIf="submitted && f.lastName.errors" class="invalid-feedback">
+                    <div *ngIf="f.lastName.errors.required">Last Name is required</div>
+                </div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="text" formControlName="email" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.email.errors }" />
+            <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+                <div *ngIf="f.email.errors.required">Email is required</div>
+                <div *ngIf="f.email.errors.email">Email must be a valid email address</div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="mb-3 col">
+                <label class="form-label">Password</label>
+                <input type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
+                <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+                    <div *ngIf="f.password.errors.required">Password is required</div>
+                    <div *ngIf="f.password.errors.minlength">Password must be at least 6 characters</div>
+                </div>
+            </div>
+            <div class="mb-3 col">
+                <label class="form-label">Confirm Password</label>
+                <input type="password" formControlName="confirmPassword" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.confirmPassword.errors }" />
+                <div *ngIf="submitted && f.confirmPassword.errors" class="invalid-feedback">
+                    <div *ngIf="f.confirmPassword.errors.required">Confirm Password is required</div>
+                    <div *ngIf="f.confirmPassword.errors.mustMatch">Passwords must match</div>
+                </div>
+            </div>
+        </div>
+        <div class="mb-3 form-check">
+            <input type="checkbox" formControlName="acceptTerms" id="acceptTerms" class="form-check-input" [ngClass]="{ 'is-invalid': submitted && f.acceptTerms.errors }" />
+            <label for="acceptTerms" class="form-check-label">Accept Terms & Conditions</label>
+            <div *ngIf="submitted && f.acceptTerms.errors" class="invalid-feedback">Accept Ts & Cs is required</div>
+        </div>
+        <div class="mb-3">
+            <button [disabled]="submitting" class="btn btn-primary">
+                <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1"></span>
+                Register
+            </button>
+            <a routerLink="../login" href="" class="btn btn-link">Cancel</a>
+        </div>
+    </form>
+</div>
+
+================================================================================
+File: src\app\account\register.component.ts
+Size: 2.29 kB
+================================================================================
+
+﻿import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { first } from 'rxjs/operators';
+
+import { AccountService, AlertService } from '@app/_services';
+import { MustMatch } from '@app/_helpers';
+
+@Component({ templateUrl: 'register.component.html' })
+export class RegisterComponent implements OnInit {
+    form!: FormGroup;
+    submitting = false;
+    submitted = false;
+
+    constructor(
+        private formBuilder: FormBuilder,
+        private route: ActivatedRoute,
+        private router: Router,
+        private accountService: AccountService,
+        private alertService: AlertService
+    ) { }
+
+    ngOnInit() {
+        this.form = this.formBuilder.group({
+            title: ['', Validators.required],
+            firstName: ['', Validators.required],
+            lastName: ['', Validators.required],
+            email: ['', [Validators.required, Validators.email]],
+            password: ['', [Validators.required, Validators.minLength(6)]],
+            confirmPassword: ['', Validators.required],
+            acceptTerms: [false, Validators.requiredTrue]
+        }, {
+            validator: MustMatch('password', 'confirmPassword')
+        });
+    }
+
+    // convenience getter for easy access to form fields
+    get f() { return this.form.controls; }
+
+    onSubmit() {
+        this.submitted = true;
+
+        // reset alerts on submit
+        this.alertService.clear();
+
+        // stop here if form is invalid
+        if (this.form.invalid) {
+            return;
+        }
+
+        this.submitting = true;
+        this.accountService.register(this.form.value)
+            .pipe(first())
+            .subscribe({
+                next: () => {
+                    this.alertService.success('Registration successful, please check your email for verification instructions', { keepAfterRouteChange: true });
+                    this.router.navigate(['../login'], { relativeTo: this.route });
+                },
+                error: error => {
+                    this.alertService.error(error);
+                    this.submitting = false;
+                }
+            });
+    }
+}
+
+================================================================================
+File: src\app\account\reset-password.component.html
+Size: 1.94 kB
+================================================================================
+
+﻿<h3 class="card-header">Reset Password</h3>
+<div class="card-body">
+    <div *ngIf="tokenStatus == TokenStatus.Validating">
+        Validating token...
+    </div>
+    <div *ngIf="tokenStatus == TokenStatus.Invalid">
+        Token validation failed, if the token has expired you can get a new one at the <a routerLink="../forgot-password">forgot password</a> page.
+    </div>
+    <form *ngIf="tokenStatus == TokenStatus.Valid" [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+            <label class="form-label">Password</label>
+            <input type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
+            <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+                <div *ngIf="f.password.errors.required">Password is required</div>
+                <div *ngIf="f.password.errors.minlength">Password must be at least 6 characters</div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Confirm Password</label>
+            <input type="password" formControlName="confirmPassword" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.confirmPassword.errors }" />
+            <div *ngIf="submitted && f.confirmPassword.errors" class="invalid-feedback">
+                <div *ngIf="f.confirmPassword.errors.required">Confirm Password is required</div>
+                <div *ngIf="f.confirmPassword.errors.mustMatch">Passwords must match</div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <button [disabled]="loading" class="btn btn-primary">
+                <span *ngIf="loading" class="spinner-border spinner-border-sm me-1"></span>
+                Reset Password
+            </button>
+            <a routerLink="../login" class="btn btn-link">Cancel</a>
+        </div>
+    </form>
+</div>
+
+================================================================================
+File: src\app\account\reset-password.component.ts
+Size: 2.81 kB
+================================================================================
+
+﻿import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { first } from 'rxjs/operators';
+
+import { AccountService, AlertService } from '@app/_services';
+import { MustMatch } from '@app/_helpers';
+
+enum TokenStatus {
+    Validating,
+    Valid,
+    Invalid
+}
+
+@Component({ templateUrl: 'reset-password.component.html' })
+export class ResetPasswordComponent implements OnInit {
+    TokenStatus = TokenStatus;
+    tokenStatus = TokenStatus.Validating;
+    token?: string;
+    form!: FormGroup;
+    loading = false;
+    submitted = false;
+
+    constructor(
+        private formBuilder: FormBuilder,
+        private route: ActivatedRoute,
+        private router: Router,
+        private accountService: AccountService,
+        private alertService: AlertService
+    ) { }
+
+    ngOnInit() {
+        this.form = this.formBuilder.group({
+            password: ['', [Validators.required, Validators.minLength(6)]],
+            confirmPassword: ['', Validators.required],
+        }, {
+            validator: MustMatch('password', 'confirmPassword')
+        });
+
+        const token = this.route.snapshot.queryParams['token'];
+
+        // remove token from url to prevent http referer leakage
+        this.router.navigate([], { relativeTo: this.route, replaceUrl: true });
+
+        this.accountService.validateResetToken(token)
+            .pipe(first())
+            .subscribe({
+                next: () => {
+                    this.token = token;
+                    this.tokenStatus = TokenStatus.Valid;
+                },
+                error: () => {
+                    this.tokenStatus = TokenStatus.Invalid;
+                }
+            });
+    }
+
+    // convenience getter for easy access to form fields
+    get f() { return this.form.controls; }
+
+    onSubmit() {
+        this.submitted = true;
+
+        // reset alerts on submit
+        this.alertService.clear();
+
+        // stop here if form is invalid
+        if (this.form.invalid) {
+            return;
+        }
+
+        this.loading = true;
+        this.accountService.resetPassword(this.token!, this.f.password.value, this.f.confirmPassword.value)
+            .pipe(first())
+            .subscribe({
+                next: () => {
+                    this.alertService.success('Password reset successful, you can now login', { keepAfterRouteChange: true });
+                    this.router.navigate(['../login'], { relativeTo: this.route });
+                },
+                error: error => {
+                    this.alertService.error(error);
+                    this.loading = false;
+                }
+            });
+    }
+}
+
+================================================================================
+File: src\app\account\verify-email.component.html
+Size: 363 B
+================================================================================
+
+﻿<h3 class="card-header">Verify Email</h3>
+<div class="card-body">
+    <div *ngIf="emailStatus == EmailStatus.Verifying">
+        Verifying...
+    </div>
+    <div *ngIf="emailStatus == EmailStatus.Failed">
+        Verification failed, you can also verify your account using the <a routerLink="forgot-password">forgot password</a> page.
+    </div>
+</div>
+
+================================================================================
+File: src\app\account\verify-email.component.ts
+Size: 1.4 kB
+================================================================================
+
+﻿import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { first } from 'rxjs/operators';
+
+import { AccountService, AlertService } from '@app/_services';
+
+enum EmailStatus {
+    Verifying,
+    Failed
+}
+
+@Component({ templateUrl: 'verify-email.component.html' })
+export class VerifyEmailComponent implements OnInit {
+    EmailStatus = EmailStatus;
+    emailStatus = EmailStatus.Verifying;
+
+    constructor(
+        private route: ActivatedRoute,
+        private router: Router,
+        private accountService: AccountService,
+        private alertService: AlertService
+    ) { }
+
+    ngOnInit() {
+        const token = this.route.snapshot.queryParams['token'];
+
+        // remove token from url to prevent http referer leakage
+        this.router.navigate([], { relativeTo: this.route, replaceUrl: true });
+
+        this.accountService.verifyEmail(token)
+            .pipe(first())
+            .subscribe({
+                next: () => {
+                    this.alertService.success('Verification successful, you can now login', { keepAfterRouteChange: true });
+                    this.router.navigate(['../login'], { relativeTo: this.route });
+                },
+                error: () => {
+                    this.emailStatus = EmailStatus.Failed;
+                }
+            });
+    }
+}
+
+================================================================================
+File: src\app\admin\accounts\accounts-routing.module.ts
+Size: 527 B
+================================================================================
+
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+
+import { ListComponent } from './list.component';
+import { AddEditComponent } from './add-edit.component';
+
+const routes: Routes = [
+    { path: '', component: ListComponent },
+    { path: 'add', component: AddEditComponent },
+    { path: 'edit/:id', component: AddEditComponent }
+];
+
+@NgModule({
+    imports: [RouterModule.forChild(routes)],
+    exports: [RouterModule]
+})
+export class AccountsRoutingModule { }
+
+================================================================================
+File: src\app\admin\accounts\accounts.module.ts
+Size: 640 B
+================================================================================
+
+import { NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';  // ✅ add this
+
+import { AccountsRoutingModule } from './accounts-routing.module'; // ✅ correct one
+import { ListComponent } from './list.component';
+import { AddEditComponent } from './add-edit.component';
+
+@NgModule({
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterModule, 
+    AccountsRoutingModule
+  ],
+  declarations: [
+    ListComponent,
+    AddEditComponent
+  ]
+})
+export class AccountsModule {}
+
+
+================================================================================
+File: src\app\admin\accounts\add-edit.component.html
+Size: 5.86 kB
+================================================================================
+
+﻿<h1>{{ title }}</h1>
+
+<form *ngIf="!loading" [formGroup]="form" (ngSubmit)="onSubmit()" autocomplete="off">
+
+    <!-- Hidden dummy inputs to prevent browser autofill -->
+    <input type="text" name="fakeusernameremembered" style="display:none">
+    <input type="password" name="fakepasswordremembered" style="display:none">
+
+    <!-- Title / Name Fields -->
+    <div class="row">
+        <div class="mb-3 col-2">
+            <label class="form-label">Title</label>
+            <select formControlName="title" class="form-select" [ngClass]="{ 'is-invalid': submitted && f.title.errors }" autocomplete="off">
+                <option value=""></option>
+                <option value="Mr">Mr</option>
+                <option value="Mrs">Mrs</option>
+                <option value="Miss">Miss</option>
+                <option value="Ms">Ms</option>
+            </select>
+            <div *ngIf="submitted && f.title.errors" class="invalid-feedback">
+                <div *ngIf="f.title.errors.required">Title is required</div>
+            </div>
+        </div>
+
+        <div class="mb-3 col-5">
+            <label class="form-label">First Name</label>
+            <input type="text" formControlName="firstName" class="form-control" autocomplete="off" [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }" />
+            <div *ngIf="submitted && f.firstName.errors" class="invalid-feedback">
+                <div *ngIf="f.firstName.errors.required">First Name is required</div>
+            </div>
+        </div>
+
+        <div class="mb-3 col-5">
+            <label class="form-label">Last Name</label>
+            <input type="text" formControlName="lastName" class="form-control" autocomplete="off" [ngClass]="{ 'is-invalid': submitted && f.lastName.errors }" />
+            <div *ngIf="submitted && f.lastName.errors" class="invalid-feedback">
+                <div *ngIf="f.lastName.errors.required">Last Name is required</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Email Field -->
+    <div class="row">
+        <div class="mb-3 col-12">
+            <label class="form-label">Email</label>
+            <input type="text" formControlName="email" class="form-control" autocomplete="new-email" [ngClass]="{ 'is-invalid': submitted && f.email.errors }" />
+            <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+                <div *ngIf="f.email.errors.required">Email is required</div>
+                <div *ngIf="f.email.errors.email">Email must be a valid email address</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Role / Status Fields -->
+    <div class="row">
+        <div class="mb-3 col-12 col-md-6">
+            <label class="form-label">Role</label>
+            <select formControlName="role" class="form-select" autocomplete="off" [ngClass]="{ 'is-invalid': submitted && f.role.errors }">
+                <option value=""></option>
+                <option value="User">User</option>
+                <option value="Admin">Admin</option>
+            </select>
+            <div *ngIf="submitted && f.role.errors" class="invalid-feedback">
+                <div *ngIf="f.role.errors.required">Role is required</div>
+            </div>
+        </div>
+
+        <div class="mb-3 col-12 col-md-6">
+            <label class="form-label">Status</label>
+            <select formControlName="status" class="form-select" autocomplete="off" [ngClass]="{ 'is-invalid': submitted && f.status.errors }">
+                <option value=""></option>
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+            </select>
+            <div *ngIf="submitted && f.status.errors" class="invalid-feedback">
+                <div *ngIf="f.status.errors.required">Status is required</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Password Field -->
+    <div *ngIf="id">
+        <h3 class="pt-3">Change Password</h3>
+        <p>Leave blank to keep the same password</p>
+    </div>
+
+    <div class="row">
+        <div class="mb-3 col">
+            <label class="form-label">Password</label>
+            <input type="password" formControlName="password" class="form-control" autocomplete="new-password" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
+            <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+                <div *ngIf="f.password.errors.required">Password is required</div>
+                <div *ngIf="f.password.errors.minlength">Password must be at least 6 characters</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+    <div class="mb-3 col">
+        <label class="form-label">Confirm Password</label>
+        <input 
+        type="password" 
+        formControlName="confirmPassword" 
+        class="form-control" 
+        autocomplete="new-password"
+        [ngClass]="{ 'is-invalid': submitted && f.confirmPassword.errors }" 
+        />
+        <div *ngIf="submitted && f.confirmPassword.errors" class="invalid-feedback">
+        <div *ngIf="f.confirmPassword.errors.required">Confirm Password is required</div>
+        <div *ngIf="f.confirmPassword.errors.mustMatch">Passwords must match</div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="mb-3">
+        <button type="submit" [disabled]="submitting" class="btn btn-primary">
+            <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1"></span>
+            Save
+        </button>
+        <a routerLink="/admin/accounts" class="btn btn-link">Cancel</a>
+    </div>
+</form>
+
+<!-- Loading Spinner -->
+<div *ngIf="loading" class="text-center m-5">
+    <span class="spinner-border spinner-border-lg align-center"></span>
+</div>
+
+
+================================================================================
+File: src\app\admin\accounts\add-edit.component.ts
+Size: 3.7 kB
+================================================================================
+
+﻿import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { first } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+
+import { AccountService, AlertService } from '@app/_services';
+import { MustMatch } from '@app/_helpers';
+
+@Component({ templateUrl: 'add-edit.component.html' })
+export class AddEditComponent implements OnInit, OnDestroy {
+  form!: FormGroup;
+  id?: string;
+  title!: string;
+  loading = false;
+  submitting = false;
+  submitted = false;    
+  private routeSub!: Subscription;
+
+  constructor(
+    private formBuilder: FormBuilder,
+    private route: ActivatedRoute,
+    private router: Router,
+    private accountService: AccountService,
+    private alertService: AlertService
+  ) {}
+
+  ngOnInit() {
+    this.routeSub = this.route.params.subscribe(params => {
+      this.id = params['id'];
+      this.initForm();
+      this.title = this.id ? 'Edit Account' : 'Create Account';
+
+      if (this.id) {
+        // Editing existing account → load values
+        this.loading = true;
+        this.accountService.getById(this.id)
+          .pipe(first())
+          .subscribe({
+            next: x => {
+              this.form.patchValue({
+                title: x.title,
+                firstName: x.firstName,
+                lastName: x.lastName,
+                email: x.email,
+                role: x.role,
+                status: x.status // ✅ use exact value from backend
+              });
+              this.loading = false;
+            },
+            error: () => this.loading = false
+          });
+      } else {
+        // Creating new → optionally set default (can be left blank if desired)
+        this.form.patchValue({ status: 'Active' }); // or leave blank if you want admin to choose
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.routeSub) this.routeSub.unsubscribe();
+  }
+
+  private initForm() {
+    this.submitted = false;
+    this.submitting = false;
+    this.loading = false;
+
+    this.form = this.formBuilder.group({
+      title: ['', Validators.required],
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      role: ['', Validators.required],
+      status: ['Active', Validators.required], // must send user selection
+      password: ['', [
+        Validators.minLength(6),
+        ...(!this.id ? [Validators.required] : [])
+      ]],
+        confirmPassword:['']
+    },
+  {
+    validator:MustMatch('password', 'confirmPassword')
+  });
+  }
+
+  get f() { return this.form.controls; }
+
+  onSubmit() {
+  this.submitted = true;
+  this.alertService.clear();
+  if (this.form.invalid) return;
+
+  this.submitting = true;
+
+  const payload: any = { ...this.form.value };
+
+  // 🔹 Remove password + confirmPassword if blank (edit case)
+  if (!payload.password) {
+    delete payload.password;
+    delete payload.confirmPassword;
+  }
+
+  let request$;
+  let message: string;
+
+  if (this.id) {
+    request$ = this.accountService.update(this.id!, payload);
+    message = 'Account updated';
+  } else {
+    request$ = this.accountService.create(payload);
+    message = 'Account created';
+  }
+
+  request$.pipe(first()).subscribe({
+    next: () => {
+      this.alertService.success(message, { keepAfterRouteChange: true });
+      this.router.navigateByUrl('/admin/accounts');
+    },
+    error: (error: any) => {
+      this.alertService.error(error);
+      this.submitting = false;
+    }
+  });
+ }
+}
+
+
+================================================================================
+File: src\app\admin\accounts\list.component.html
+Size: 1.51 kB
+================================================================================
+
+﻿<h1>Accounts</h1>
+<p>All accounts from secure (admin only) api end point:</p>
+<p><a routerLink="add" class="btn btn-sm btn-success mb-2">Create Account</a></p>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th style="width: 10%">Title</th>
+            <th style="width: 10%">First Name</th>
+            <th style="width: 15%">Last Name</th>
+            <th style="width: 30%">Email</th>
+            <th style="width: 10%">Role</th>
+            <th style="width: 10%">Status</th>
+            <th style="width: 15%">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let account of accounts">
+            <td>{{account.title}}</td>
+            <td>{{account.firstName}}</td> 
+            <td>{{account.lastName}}</td>
+            <td>{{account.email}}</td>
+            <td>{{account.role}}</td>
+           <td>
+        <span 
+    class="badge" 
+    [ngClass]="{
+      'bg-success': account.status === 'Active',
+      'bg-danger': account.status === 'Inactive'
+    }">
+    {{ account.status }}
+        </span>
+        </td>
+
+            <td style="white-space: nowrap">
+                <a routerLink="edit/{{account.id}}" class="btn btn-sm btn-primary me-1">Edit</a>    
+            </td>
+        </tr>
+        <tr *ngIf="!accounts">
+            <td colspan="4" class="text-center">
+                <span class="spinner-border spinner-border-lg align-center"></span>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+
+================================================================================
+File: src\app\admin\accounts\list.component.ts
+Size: 1.39 kB
+================================================================================
+
+﻿import { Component, OnInit } from '@angular/core';
+import { first } from 'rxjs/operators';
+import { Account } from '@app/_models';   // 👈 make sure you have this model
+import { AccountService } from '@app/_services';
+
+@Component({ templateUrl: 'list.component.html' })
+export class ListComponent implements OnInit {
+  accounts?: Account[];
+
+  constructor(private accountService: AccountService) {}
+
+  ngOnInit() {
+    this.accountService
+      .getAll()
+      .pipe(first())
+      .subscribe((accounts: Account[]) => (this.accounts = accounts));
+  }
+
+  deactivateAccount(id: string) {
+    const account = this.accounts!.find((x) => x.id === id);
+    if (!account) return;
+
+    (account as any).isDeactivating = true;
+    this.accountService
+      .update(id, { status: 'Inactive' }) // 👈 call update with correct status
+      .pipe(first())
+      .subscribe(() => {
+        (account as any).isDeactivating = false;
+        account.status = 'Inactive';
+      });
+  }
+
+  activateAccount(id: string) {
+    const account = this.accounts!.find((x) => x.id === id);
+    if (!account) return;
+
+    (account as any).isActivating = true;
+    this.accountService
+      .update(id, { status: 'Active' })
+      .pipe(first())
+      .subscribe(() => {
+        (account as any).isActivating = false;
+        account.status = 'Active';
+      });
+  }
+}
+
+
+================================================================================
+File: src\app\admin\admin-routing.module.ts
+Size: 1.68 kB
+================================================================================
+
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+
+import { SubNavComponent } from './subnav.component';
+import { LayoutComponent } from './layout.component';
+import { OverviewComponent } from './overview.component';
+
+const accountsModule = () => import('./accounts/accounts.module').then(x => x.AccountsModule);
+const employeesModule = () => import('./employees/employees.module').then(x => x.EmployeesModule);
+const requestsModule = () => import('./requests/requests.module').then(x => x.RequestsModule);
+const departmentsModule = () => import('./departments/departments.module').then(x => x.DepartmentsModule);
+const workflowsModule = () => import('./workflows/workflows.module').then(x => x.WorkflowsModule); // ✅ added
+const positionsModule = () => import('./positions/positions.module').then(x => x.PositionsModule);
+
+const routes: Routes = [
+  { path: '', component: SubNavComponent, outlet: 'subnav' },
+
+  {
+    path: '',
+    component: LayoutComponent,
+    children: [
+      { path: '', component: OverviewComponent },
+      { path: 'accounts', loadChildren: accountsModule },
+      { path: 'employees', loadChildren: employeesModule },
+      { path: 'requests', loadChildren: requestsModule },
+      { path: 'workflows', loadChildren: workflowsModule }, // ✅ fixed comma
+      { path: 'departments', loadChildren: departmentsModule },
+      { path: 'positions', loadChildren: positionsModule } // ✅ new
+    ]
+  },
+
+  { path: '**', redirectTo: '' }
+];
+
+@NgModule({
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
+})
+export class AdminRoutingModule {}
+
+
+================================================================================
+File: src\app\admin\admin.module.ts
+Size: 737 B
+================================================================================
+
+import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+
+import { AdminRoutingModule } from './admin-routing.module';
+import { SubNavComponent } from './subnav.component';
+import { LayoutComponent } from './layout.component';
+import { OverviewComponent } from './overview.component';
+
+@NgModule({
+    imports: [
+        CommonModule,
+        FormsModule,         
+        ReactiveFormsModule,
+        AdminRoutingModule
+    ],
+    declarations: [
+        SubNavComponent,
+        LayoutComponent,
+        OverviewComponent
+        // ❌ do NOT redeclare ListComponent here
+    ]
+})
+export class AdminModule { }
+
+
+================================================================================
+File: src\app\admin\departments\add-edit.component.html
+Size: 1.7 kB
+================================================================================
+
+<div class="card shadow-sm rounded-3">
+  <div class="card-header bg-light">
+    <h3 class="mb-0">{{ title }}</h3>
+  </div>
+
+  <div class="card-body">
+    <form *ngIf="!loading" [formGroup]="form" (ngSubmit)="onSubmit()">
+
+      <!-- Department Name -->
+      <div class="mb-3">
+        <label class="form-label">Department Name</label>
+        <input type="text"
+               formControlName="name"
+               class="form-control"
+               [ngClass]="{ 'is-invalid': submitted && f.name.errors }" />
+        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+          Department name is required
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="mb-3">
+        <label class="form-label">Description</label>
+        <textarea formControlName="description"
+                  class="form-control"
+                  rows="3"
+                  [ngClass]="{ 'is-invalid': submitted && f.description.errors }"></textarea>
+        <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
+          Description is required
+        </div>
+      </div>
+
+      <!-- Buttons -->
+      <div class="d-flex justify-content-start">
+        <button type="submit" [disabled]="submitting" class="btn btn-primary me-2">
+          <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1"></span>
+          Save
+        </button>
+        <a routerLink="/admin/departments" class="btn btn-secondary">Cancel</a>
+      </div>
+
+    </form>
+
+    <!-- Loader -->
+    <div *ngIf="loading" class="text-center my-4">
+      <span class="spinner-border spinner-border-lg"></span>
+    </div>
+  </div>
+</div>
+
+
+================================================================================
+File: src\app\admin\departments\add-edit.component.ts
+Size: 2.45 kB
+================================================================================
+
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { DepartmentsService, AlertService } from '@app/_services';
+import { Subscription } from 'rxjs';
+
+@Component({
+  selector: 'app-department-add-edit',
+  templateUrl: './add-edit.component.html'
+})
+export class AddEditComponent implements OnInit, OnDestroy {
+  form!: FormGroup;
+  id!: number;
+  isAddMode!: boolean;
+  title = '';             // 👈 for HTML
+  loading = false;        // 👈 for HTML
+  submitting = false;     // 👈 for HTML
+  submitted = false;      // 👈 for HTML
+  private sub!: Subscription;
+
+  constructor(
+    private fb: FormBuilder,
+    private route: ActivatedRoute,
+    private router: Router,
+    private departmentService: DepartmentsService,
+    private alertService: AlertService
+  ) {}
+
+  ngOnInit() {
+    this.id = Number(this.route.snapshot.params['id']);
+    this.isAddMode = !this.id;
+
+    this.title = this.isAddMode ? 'Create Department' : 'Edit Department';
+
+    this.form = this.fb.group({
+      name: ['', Validators.required],
+      description: ['']
+    });
+
+    if (!this.isAddMode) {
+      this.loading = true;
+      this.sub = this.departmentService.getById(this.id).subscribe(dept => {
+        this.form.patchValue(dept);
+        this.loading = false;
+      });
+    }
+  }
+
+  // 👇 getter for f.name, f.description in template
+  get f() {
+    return this.form.controls;
+  }
+
+  onSubmit() {
+    this.submitted = true;
+    this.alertService.clear();
+
+    if (this.form.invalid) return;
+
+    this.submitting = true;
+
+    if (this.isAddMode) {
+      this.sub = this.departmentService.create(this.form.value).subscribe({
+        next: () => {
+          this.alertService.success('Department created');
+          this.router.navigate(['../'], { relativeTo: this.route });
+        },
+        error: () => (this.submitting = false)
+      });
+    } else {
+      this.sub = this.departmentService.update(this.id, this.form.value).subscribe({
+        next: () => {
+          this.alertService.success('Department updated');
+          this.router.navigate(['../../'], { relativeTo: this.route });
+        },
+        error: () => (this.submitting = false)
+      });
+    }
+  }
+
+  ngOnDestroy() {
+    this.sub?.unsubscribe();
+  }
+}
+
+
+================================================================================
+File: src\app\admin\departments\departments-routing.module.ts
+Size: 646 B
+================================================================================
+
+// file: departments/departments-routing.module.ts
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+
+import { ListComponent } from './list.component';
+import { AddEditComponent } from './add-edit.component';
+
+const routes: Routes = [
+  { path: '', component: ListComponent },           // /departments
+  { path: 'add', component: AddEditComponent },     // /departments/add
+  { path: 'edit/:id', component: AddEditComponent } // /departments/edit/1
+];
+
+@NgModule({
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
+})
+export class DepartmentsRoutingModule {}
+
+
+================================================================================
+File: src\app\admin\departments\departments.module.ts
+Size: 673 B
+================================================================================
+
+// file: departments/departments.module.ts
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
+import { DepartmentsRoutingModule } from './departments-routing.module';
+import { ListComponent } from './list.component';
+import { AddEditComponent } from './add-edit.component';
+
+@NgModule({
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,           // ✅ Needed for ngModel (if ever used)
+    DepartmentsRoutingModule
+  ],
+  declarations: [
+    ListComponent,
+    AddEditComponent
+  ]
+})
+export class DepartmentsModule {}
+
+
+================================================================================
+File: src\app\admin\departments\list.component.html
+Size: 1 kB
+================================================================================
+
+<h1>Departments</h1>
+<p>
+  <a routerLink="add" class="btn btn-sm btn-primary mb-2">Add Department</a>
+</p>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th style="width: 25%">Name</th>
+      <th style="width: 35%">Description</th>
+      <th style="width: 20%">Employee Count</th>
+      <th style="width: 20%">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let department of departments">
+      <td>{{ department.name || '—' }}</td>
+      <td>{{ department.description || '—' }}</td>
+      <td>{{ department.employeeCount || 0 }}</td>
+      <td style="white-space: nowrap">
+        <a [routerLink]="['edit', department.id]" class="btn btn-sm btn-primary">Edit</a>
+      </td>
+    </tr>
+
+    <!-- Loading spinner -->
+    <tr *ngIf="!departments || departments.length === 0">
+      <td colspan="4" class="text-center">
+        <span class="spinner-border spinner-border-lg align-center"></span>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+================================================================================
+File: src\app\admin\departments\list.component.ts
+Size: 743 B
+================================================================================
+
+import { Component, OnInit } from '@angular/core';
+import { DepartmentsService } from '@app/_services/department.service';
+import { Department } from '@app/_models/department';
+
+@Component({
+  selector: 'app-departments-list',
+  templateUrl: './list.component.html'
+})
+export class ListComponent implements OnInit {
+  departments: Department[] = [];
+
+  constructor(private departmentService: DepartmentsService) {}
+
+  ngOnInit() {
+    this.loadDepartments();
+  }
+
+  loadDepartments() {
+    this.departmentService.getAll().subscribe({
+      next: (departments: Department[]) => {
+        this.departments = departments;
+      },
+      error: (err: any) => console.error('Error loading departments', err)
+    });
+  }
+}
+
+
+================================================================================
+File: src\app\admin\employees\add-edit.component.html
+Size: 3.67 kB
+================================================================================
+
+<div class="card shadow-sm rounded-3">
+  <div class="card-header bg-light">
+    <h3 class="mb-0">{{ title }}</h3>
+  </div>
+
+      <div class="card-body">
+        <form *ngIf="!loading" [formGroup]="form" (ngSubmit)="onSubmit()">
+
+      <div class="mb-3">
+      <label class="form-label">Employee ID</label>
+      <input type="text"
+            formControlName="employeeId"
+            class="form-control"
+            readonly />
+      </div>
+
+      <div class="mb-3">
+      <label class="form-label">Account</label>
+      <select formControlName="accountId" class="form-select">
+        <option value="" disabled selected>
+          {{ accounts.length ? 'Select Account' : 'All accounts are used' }}
+        </option>
+        <option *ngFor="let acc of accounts" [value]="acc.id">
+          {{ acc.email }}
+        </option>
+      </select>
+      <div *ngIf="submitted && f['accountId'].errors" class="invalid-feedback d-block">
+        Account is required
+      </div>
+    </div>
+
+     <!-- Position -->
+      <div class="mb-3">
+        <label class="form-label">Position</label>
+        <select formControlName="position" class="form-select">
+          <option value="">-- Select Position --</option>
+          <option *ngFor="let pos of positions" [value]="pos.name">{{ pos.name }}</option>
+        </select>
+        <div *ngIf="submitted && f.position.errors" class="invalid-feedback">
+          Position is required
+        </div>
+      </div>
+
+      
+      <!-- Department -->
+      <div class="mb-3 col-12 col-md-12">
+        <label class="form-label">Department</label>
+        <select formControlName="department" class="form-select"
+                [ngClass]="{ 'is-invalid': submitted && f.department.errors }">
+          <option value="">-- Select Department --</option>
+          <option *ngFor="let dept of departments" [value]="dept.name">
+            {{ dept.name }}
+          </option>
+        </select>
+        <div *ngIf="submitted && f.department.errors" class="invalid-feedback">
+          Department is required
+        </div>
+      </div>
+
+
+      <!-- Hire Date -->
+      <div class="mb-3">
+        <label class="form-label">Hire Date</label>
+        <input type="date" formControlName="hireDate" class="form-control"
+               [ngClass]="{ 'is-invalid': submitted && f.hireDate.errors }" />
+       <div *ngIf="submitted && f.hireDate.errors?.maxYear" class="invalid-feedback">
+       The hire date shouldn't be beyond the current year. {{ currentYear }}
+      </div>
+
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Status</label>
+        <select formControlName="status" class="form-select"
+                [ngClass]="{ 'is-invalid': submitted && f.status.errors }">
+          <option value="">Select status</option>
+          <option value="Active">Active</option>
+          <option value="Inactive">Inactive</option>
+        </select>
+        <div *ngIf="submitted && f.status.errors" class="invalid-feedback">
+          Status is required
+        </div>
+      </div>
+
+      <!-- Buttons -->
+      <div class="d-flex justify-content-start">
+        <button type="submit" [disabled]="submitting" class="btn btn-primary me-2">
+          <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1"></span>
+          Save
+        </button>
+        <a routerLink="/admin/employees" class="btn btn-secondary">Cancel</a>
+      </div>
+
+    </form>
+
+    <!-- Loader -->
+    <div *ngIf="loading" class="text-center my-4">
+      <span class="spinner-border spinner-border-lg"></span>
+    </div>
+  </div>
+</div>
+
+
+================================================================================
+File: src\app\admin\employees\add-edit.component.ts
+Size: 6.1 kB
+================================================================================
+
+// file: employees/add-edit.component.ts
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { first } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+import { PositionsService } from '@app/_services/position.service';
+
+import { EmployeesService, AlertService, AccountService } from '@app/_services';
+
+import { AbstractControl, ValidatorFn } from '@angular/forms';
+
+// Custom validator: hireDate cannot be in a future year
+function maxYearValidator(maxYear: number): ValidatorFn {
+return (control: AbstractControl) => {
+if (!control.value) return null; // allow empty here, required handled separately
+const selectedYear = new Date(control.value).getFullYear();
+return selectedYear > maxYear ? { maxYear: { value: control.value } } : null;
+};
+}
+
+@Component({
+selector: 'app-employee-add-edit',
+templateUrl: './add-edit.component.html'
+})
+export class AddEditComponent implements OnInit, OnDestroy {
+form!: FormGroup;
+id?: string;
+title!: string;
+loading = false;
+submitting = false;
+submitted = false;
+private routeSub!: Subscription;
+currentYear: number = new Date().getFullYear();
+
+accounts: any[] = []; // accounts for dropdown
+departments: any[] = [];
+positions: any[] = [];
+
+constructor(
+  private formBuilder: FormBuilder,
+  private route: ActivatedRoute,
+  private router: Router,
+  private employeeService: EmployeesService,
+  private accountService: AccountService,
+  private alertService: AlertService,
+  private positionsService: PositionsService   // ✅ new
+) {}
+
+
+ngOnInit() {
+this.initForm();
+
+// 1️⃣ Load accounts but exclude those already linked to employees
+// inside ngOnInit(), after loading accounts
+this.accountService.getAll()
+  .pipe(first())
+  .subscribe({
+    next: (accounts: any[]) => {
+      this.employeeService.getAll()
+        .pipe(first())
+        .subscribe({
+          next: (employees: any[]) => {
+            const usedAccountIds = employees.map(e => e.accountId);
+
+            // 🔹 If editing, allow current account even if it's "used"
+            let currentAccountId: number | null = null;
+            if (this.id) {
+              this.employeeService.getById(this.id)
+                .pipe(first())
+                .subscribe(emp => {
+                  currentAccountId = emp.accountId;
+
+                  this.accounts = accounts.filter(acc =>
+                    acc.status === 'Active' &&
+                    (!usedAccountIds.includes(acc.id) || acc.id === currentAccountId)
+                  );
+                });
+            } else {
+              // Creating new employee → exclude all used accounts
+              this.accounts = accounts.filter(acc =>
+                acc.status === 'Active' && !usedAccountIds.includes(acc.id)
+              );
+            }
+          },
+          error: (err) => console.error('Error loading employees', err)
+        });
+    },
+    error: (err) => console.error('Error loading accounts', err)
+  });
+
+
+  // 3️⃣ Load positions dynamically
+this.positionsService.getAll()
+  .pipe(first())
+  .subscribe({
+    next: (pos: any[]) => {
+      this.positions = pos;
+    },
+    error: (err) => console.error('Error loading positions', err)
+  });
+
+
+// 2️⃣ Load departments dynamically
+this.employeeService.getDepartments()
+  .pipe(first())
+  .subscribe({
+    next: (depts: any[]) => {
+      this.departments = depts;
+    },
+    error: (err) => console.error('Error loading departments', err)
+  });
+
+// 3️⃣ Check route params for edit vs. create
+this.routeSub = this.route.params.subscribe(params => {
+  this.id = params['id'];
+  this.title = this.id ? 'Edit Employee' : 'Create Employee';
+
+  if (this.id) {
+    // Editing existing employee
+    this.loading = true;
+    this.employeeService.getById(this.id)
+      .pipe(first())
+      .subscribe({
+        next: (x: any) => {
+          this.form.patchValue({
+            employeeId: x.employeeId,
+            accountId: x.accountId,
+            position: x.position,
+            department: x.department,
+            hireDate: x.hireDate,
+            status: x.status ?? 'Active'
+          });
+          this.loading = false;
+        },
+        error: () => this.loading = false
+      });
+  } else {
+    // Creating new employee → get next employeeId
+    this.employeeService.getNextId()
+      .pipe(first())
+      .subscribe({
+        next: (res: any) => {
+          this.form.get('employeeId')?.setValue(res.nextId);
+        },
+        error: (err) => console.error('Error loading next employeeId', err)
+      });
+    }
+  });
+}
+
+ngOnDestroy() {
+if (this.routeSub) this.routeSub.unsubscribe();
+}
+
+private initForm() {
+this.submitted = false;
+this.submitting = false;
+this.loading = false;
+
+this.form = this.formBuilder.group({
+  employeeId: [''],
+  accountId: ['', Validators.required],
+  position: ['', Validators.required],
+  department: ['', Validators.required],
+  hireDate: ['', [Validators.required, maxYearValidator(this.currentYear)]],
+  status: ['', Validators.required]
+  });
+}
+
+get f() { return this.form.controls; }
+
+onSubmit() {
+this.submitted = true;
+this.alertService.clear();
+
+
+if (this.form.invalid) return;
+
+this.submitting = true;
+
+const raw = this.form.getRawValue();
+let payload: any;
+let request$;
+let message: string;
+
+if (this.id) {
+  payload = { ...raw };
+  request$ = this.employeeService.update(this.id!, payload);
+  message = 'Employee updated';
+} else {
+  payload = { ...raw };
+  request$ = this.employeeService.create(payload);
+  message = 'Employee created';
+}
+
+request$.pipe(first()).subscribe({
+  next: () => {
+    this.alertService.success(message, { keepAfterRouteChange: true });
+    this.router.navigateByUrl('/admin/employees');
+  },
+  error: (error: any) => {
+    this.alertService.error(error);
+    this.submitting = false;
+        }
+     });
+   }
+}
+
+
+================================================================================
+File: src\app\admin\employees\employees-routing.module.ts
+Size: 591 B
+================================================================================
+
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+
+import { ListComponent } from './list.component';
+import { AddEditComponent } from './add-edit.component';
+
+const routes: Routes = [
+  { path: '', component: ListComponent },           // /employees
+  { path: 'add', component: AddEditComponent },     // /employees/add
+  { path: 'edit/:id', component: AddEditComponent } // /employees/edit/EMP001
+];
+
+@NgModule({
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
+})
+export class EmployeesRoutingModule {}
+
+
+================================================================================
+File: src\app\admin\employees\employees.module.ts
+Size: 603 B
+================================================================================
+
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
+import { EmployeesRoutingModule } from './employees-routing.module';
+import { ListComponent } from './list.component';
+import { AddEditComponent } from './add-edit.component';
+
+@NgModule({
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,        // ✅ Needed for ngModel
+    EmployeesRoutingModule
+  ],
+  declarations: [
+    ListComponent,
+    AddEditComponent
+  ]
+})
+export class EmployeesModule {}
+
+
+================================================================================
+File: src\app\admin\employees\list.component.html
+Size: 3.31 kB
+================================================================================
+
+<h1>Employees</h1>
+<p>
+  <a routerLink="add" class="btn btn-sm btn-primary mb-2">Add Employee</a>
+</p>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th style="width: 15%">Employee ID</th>
+      <th style="width: 20%">Account</th>
+      <th style="width: 15%">Position</th>
+      <th style="width: 15%">Department</th>
+      <th style="width: 15%">Hire Date</th>
+      <th style="width: 10%">Status</th>
+      <th style="width: 20%">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let employee of employees">
+      <td>{{ employee.employeeId || '—' }}</td>
+      <td>{{ employee.account?.email || '—' }}</td>
+      <td>{{ employee.position || '—' }}</td>
+      <td>{{ employee.department || '—' }}</td>
+      <td>{{ employee.hireDate ? (employee.hireDate | date:'shortDate') : '—' }}</td>
+      <td>
+        <span
+          class="badge"
+          [ngClass]="{
+            'bg-success': employee.status && employee.status.trim().toLowerCase() === 'active',
+            'bg-danger': employee.status && employee.status.trim().toLowerCase() === 'inactive'
+          }"
+        >
+          {{ employee.status || '—' }}
+        </span>
+      </td>
+      <td style="white-space: nowrap">
+        <a [routerLink]="['/admin/requests']" class="btn btn-sm btn-info me-1">Requests</a>
+        <a [routerLink]="['/admin/workflows', employee.employeeId]" class="btn btn-sm btn-info me-1">Workflows</a>
+
+        <!-- Transfer button -->
+        <button
+          class="btn btn-sm btn-warning me-1"
+          (click)="openTransferModal(employee)">
+          Transfer
+        </button>
+
+        <!-- Fixed Edit button -->
+        <a [routerLink]="['edit', employee.employeeId]" class="btn btn-sm btn-primary">Edit</a>
+      </td>
+    </tr>
+
+    <!-- Loading spinner -->
+    <tr *ngIf="!employees || employees.length === 0">
+      <td colspan="7" class="text-center">
+        <span class="spinner-border spinner-border-lg align-center"></span>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Transfer Modal -->
+<div class="modal fade" id="transferModal" tabindex="-1" aria-labelledby="transferModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+      <!-- Header -->
+      <div class="modal-header">
+        <h5 class="modal-title" id="transferModalLabel">
+          Transfer Employee: {{ selectedEmployee?.employeeId }}
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body">
+        <div class="mb-3">
+          <label class="form-label">Select Department</label>
+          <select [(ngModel)]="selectedDepartment" class="form-select">
+          <option *ngFor="let dept of departments" [ngValue]="dept.id">
+            {{ dept.name }}
+          </option>
+        </select>
+
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-warning" (click)="transferEmployee()">Confirm Transfer</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+================================================================================
+File: src\app\admin\employees\list.component.ts
+Size: 2.73 kB
+================================================================================
+
+import { Component, OnInit } from '@angular/core';
+import { first } from 'rxjs/operators';
+import { Employee } from '@app/_models/employee';
+import { EmployeesService } from '@app/_services/employee.service';
+import { DepartmentsService } from '@app/_services/department.service'; // ✅ import
+import { Department } from '@app/_models/department'; // ✅ import
+
+@Component({
+  selector: 'app-employees-list',
+  templateUrl: './list.component.html'
+})
+export class ListComponent implements OnInit {
+  employees?: Employee[];
+  departments: Department[] = [];   // ✅ store full department objects
+
+  selectedEmployee: Employee | null = null;
+  selectedDepartment: number | null = null; // ✅ use departmentId
+  // 🔹 Needed for the modal
+  // selectedEmployee: Employee | null = null;
+  // selectedDepartment: string = '';
+  // departments: string[] = ['Engineering', 'Marketing'];
+
+    constructor(
+    private employeeService: EmployeesService,
+    private departmentsService: DepartmentsService // ✅ inject
+  ) {}
+
+  ngOnInit() {
+    this.loadEmployees();
+    this.loadDepartments(); // ✅ fetch departments
+  }
+
+  loadEmployees() {
+    this.employeeService.getAll()
+      .pipe(first())
+      .subscribe({
+        next: (employees) => {
+          this.employees = employees;
+        },
+        error: (err) => console.error('Error loading employees', err)
+      });
+  }
+  
+  loadDepartments() {
+  this.departmentsService.getAll()
+    .pipe(first())
+    .subscribe({
+      next: (departments) => this.departments = departments,
+      error: (err) => console.error('Error loading departments', err)
+    });
+}
+  // 🔹 Open modal
+   openTransferModal(employee: Employee) {
+    this.selectedEmployee = employee;
+    this.selectedDepartment = null; // reset
+
+    const modal = document.getElementById('transferModal');
+    if (modal) {
+      const modalInstance = new (window as any).bootstrap.Modal(modal);
+      modalInstance.show();
+    }
+  }
+
+   transferEmployee() {
+    if (!this.selectedEmployee || !this.selectedDepartment) return;
+
+    const updatedEmployee = {
+      ...this.selectedEmployee,
+      departmentId: this.selectedDepartment   // ✅ link by ID
+    };
+
+    this.employeeService.update(this.selectedEmployee.employeeId, updatedEmployee)
+      .subscribe({
+        next: () => {
+          this.loadEmployees();
+          const modal = document.getElementById('transferModal');
+          if (modal) {
+            const modalInstance = (window as any).bootstrap.Modal.getInstance(modal);
+            modalInstance.hide();
+          }
+        },
+        error: (err) => console.error('Transfer failed', err)
+      });
+  }
+}
+
+
+================================================================================
+File: src\app\admin\layout.component.html
+Size: 110 B
+================================================================================
+
+﻿<div class="p-4">
+    <div class="container">
+        <router-outlet></router-outlet>
+    </div>
+</div>
+
+================================================================================
+File: src\app\admin\layout.component.ts
+Size: 135 B
+================================================================================
+
+﻿import { Component } from '@angular/core';
+
+@Component({ templateUrl: 'layout.component.html' })
+export class LayoutComponent { }
+
+================================================================================
+File: src\app\admin\overview.component.html
+Size: 223 B
+================================================================================
+
+﻿<div class="p-4">
+    <div class="container">
+        <h1>Admin</h1>
+        <p>This section can only be accessed by administrators.</p>
+        <p><a routerLink="accounts">Manage Accounts</a></p>
+    </div>
+</div>
+
+================================================================================
+File: src\app\admin\overview.component.ts
+Size: 139 B
+================================================================================
+
+﻿import { Component } from '@angular/core';
+
+@Component({ templateUrl: 'overview.component.html' })
+export class OverviewComponent { }
+
+================================================================================
+File: src\app\admin\positions\add-edit.component.html
+Size: 1.47 kB
+================================================================================
+
+<div class="card shadow-sm rounded-3">
+  <div class="card-header bg-light">
+    <h3 class="mb-0">{{ title }}</h3>
+  </div>
+
+  <div class="card-body">
+    <form *ngIf="!loading" [formGroup]="form" (ngSubmit)="onSubmit()">
+      <!-- Position Name -->
+      <div class="mb-3">
+        <label class="form-label">Position Name</label>
+        <input
+          type="text"
+          formControlName="name"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.name.errors }" />
+        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+          Position name is required
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="mb-3">
+        <label class="form-label">Description</label>
+        <textarea
+          formControlName="description"
+          class="form-control"
+          rows="3"></textarea>
+      </div>
+
+      <!-- Buttons -->
+      <div class="d-flex justify-content-start">
+        <button type="submit" [disabled]="submitting" class="btn btn-primary me-2">
+          <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1"></span>
+          Save
+        </button>
+        <a routerLink="/admin/positions" class="btn btn-secondary">Cancel</a>
+      </div>
+    </form>
+
+    <!-- Loader -->
+    <div *ngIf="loading" class="text-center my-4">
+      <span class="spinner-border spinner-border-lg"></span>
+    </div>
+  </div>
+</div>
+
+
+================================================================================
+File: src\app\admin\positions\add-edit.component.ts
+Size: 1.91 kB
+================================================================================
+
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { first } from 'rxjs/operators';
+import { PositionsService } from '@app/_services/position.service';
+
+@Component({
+  selector: 'app-positions-add-edit',
+  templateUrl: './add-edit.component.html'
+})
+export class AddEditComponent implements OnInit {
+  form!: FormGroup;
+  id?: string;
+  title!: string;
+  loading = false;
+  submitting = false;
+  submitted = false;
+
+  constructor(
+    private formBuilder: FormBuilder,
+    private route: ActivatedRoute,
+    private router: Router,
+    private positionsService: PositionsService
+  ) {}
+
+  ngOnInit() {
+    this.id = this.route.snapshot.params['id'];
+    this.title = this.id ? 'Edit Position' : 'Add Position';
+
+    this.form = this.formBuilder.group({
+      name: ['', Validators.required],
+      description: ['']
+    });
+
+    if (this.id) {
+      this.loading = true;
+      this.positionsService.getById(this.id)
+        .pipe(first())
+        .subscribe({
+          next: (x) => {
+            this.form.patchValue(x);
+            this.loading = false;
+          },
+          error: () => (this.loading = false)
+        });
+    }
+  }
+
+  // convenience getter for easy access to form fields
+  get f() {
+    return this.form.controls;
+  }
+
+  onSubmit() {
+    this.submitted = true;
+    if (this.form.invalid) return;
+
+    this.submitting = true;
+    const saveRequest = this.id
+      ? this.positionsService.update(this.id, this.form.value)
+      : this.positionsService.create(this.form.value);
+
+    saveRequest
+      .pipe(first())
+      .subscribe({
+        next: () => {
+          this.router.navigateByUrl('/admin/positions');
+        },
+        error: () => (this.submitting = false)
+      });
+  }
+}
+
+
+================================================================================
+File: src\app\admin\positions\list.component.html
+Size: 890 B
+================================================================================
+
+<!-- positions/list.component.html -->
+<h1>Positions</h1>
+<p>
+  <a routerLink="add" class="btn btn-sm btn-primary mb-2">Add Position</a>
+</p>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th style="width: 40%">Name</th>
+      <th style="width: 40%">Description</th>
+      <th style="width: 20%">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let position of positions">
+      <td>{{ position.name || '—' }}</td>
+      <td>{{ position.description || '—' }}</td>
+      <td style="white-space: nowrap">
+        <a [routerLink]="['edit', position.id]" class="btn btn-sm btn-primary">Edit</a>
+      </td>
+    </tr>
+
+    <tr *ngIf="!positions || positions.length === 0">
+      <td colspan="3" class="text-center">
+        <span class="spinner-border spinner-border-lg align-center"></span>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+================================================================================
+File: src\app\admin\positions\list.component.ts
+Size: 741 B
+================================================================================
+
+// positions/list.component.ts
+import { Component, OnInit } from '@angular/core';
+import { PositionsService } from '@app/_services/position.service';
+import { Position } from '@app/_models/position';
+
+@Component({
+  selector: 'app-positions-list',
+  templateUrl: './list.component.html'
+})
+export class ListComponent implements OnInit {
+  positions: Position[] = [];
+
+  constructor(private positionService: PositionsService) {}
+
+  ngOnInit() {
+    this.loadPositions();
+  }
+
+  loadPositions() {
+    this.positionService.getAll().subscribe({
+      next: (positions: Position[]) => {
+        this.positions = positions;
+      },
+      error: (err: any) => console.error('Error loading positions', err)
+    });
+  }
+}
+
+
+================================================================================
+File: src\app\admin\positions\positions-routing.module.ts
+Size: 561 B
+================================================================================
+
+// positions/positions-routing.module.ts
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+
+import { ListComponent } from './list.component';
+import { AddEditComponent } from './add-edit.component';
+
+const routes: Routes = [
+  { path: '', component: ListComponent },
+  { path: 'add', component: AddEditComponent },
+  { path: 'edit/:id', component: AddEditComponent }
+];
+
+@NgModule({
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
+})
+export class PositionsRoutingModule {}
+
+
+================================================================================
+File: src\app\admin\positions\positions.module.ts
+Size: 537 B
+================================================================================
+
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { PositionsRoutingModule } from './positions-routing.module';
+import { ListComponent } from './list.component';
+import { AddEditComponent } from './add-edit.component';
+
+@NgModule({
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    PositionsRoutingModule
+  ],
+  declarations: [
+    ListComponent,
+    AddEditComponent
+  ]
+})
+export class PositionsModule {}
+
+
+================================================================================
+File: src\app\admin\requests\add-edit.component.html
+Size: 2.51 kB
+================================================================================
+
+<div class="card shadow-sm rounded-3">
+  <div class="card-header bg-light">
+    <h3 class="mb-0">{{ title }}</h3>
+  </div>
+
+  <div class="card-body">
+    <form *ngIf="!loading" [formGroup]="form" (ngSubmit)="onSubmit()">
+
+      <!-- Type -->
+      <div class="mb-3">
+        <label class="form-label">Type</label>
+        <select class="form-select" formControlName="type"
+                [ngClass]="{ 'is-invalid': submitted && f.type.errors }">
+          <option value="">-- Select Type --</option>
+          <option value="Equipment">Equipment</option>
+          <option value="Leave">Leave</option>
+          <option value="Resources">Resources</option>
+        </select>
+        <div *ngIf="submitted && f.type.errors" class="invalid-feedback">
+          Type is required
+        </div>
+      </div>
+
+      <!-- Employee -->
+      <div class="mb-3">
+        <label class="form-label">Employee</label>
+        <select class="form-control" formControlName="employeeId">
+        <option value="">-- Select Employee --</option>
+      <option *ngFor="let emp of employees" [value]="emp.id">
+        {{ emp.employeeId }}{{ emp.account?.status !== 'Active' ? ' (Inactive)' : '' }}
+     </option>
+        </select>
+
+        <div *ngIf="submitted && f.employeeId.errors" class="invalid-feedback d-block">
+          Employee is required
+        </div>
+      </div>
+
+      <!-- Items (Dynamic List) -->
+      <div formArrayName="items" class="mb-3">
+        <label class="form-label">Items</label>
+
+        <div *ngFor="let item of items.controls; let i = index" [formGroupName]="i" class="d-flex gap-2 mb-2">
+          <input type="text" formControlName="name" placeholder="Name" class="form-control" />
+          <input type="number" formControlName="quantity" placeholder="Quantity" min="1" class="form-control w-25" />
+          <button type="button" class="btn btn-danger" (click)="removeItem(i)">Remove</button>
+        </div>
+
+        <button type="button" class="btn btn-secondary mt-2" (click)="addItem()">Add Item</button>
+      </div>
+
+      <!-- Save / Cancel -->
+      <div class="d-flex justify-content-start mt-3">
+        <button type="submit" [disabled]="submitting" class="btn btn-primary me-2">
+          <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1"></span>
+          Save
+        </button>
+        <a routerLink="/admin/requests" class="btn btn-secondary">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+================================================================================
+File: src\app\admin\requests\add-edit.component.ts
+Size: 4.76 kB
+================================================================================
+
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { FormBuilder, FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
+import { first } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+
+import { RequestsService, EmployeesService, AlertService } from '@app/_services';
+
+@Component({
+  selector: 'app-request-add-edit',
+  templateUrl: './add-edit.component.html'
+})
+export class RequestAddEditComponent implements OnInit, OnDestroy {
+  form!: FormGroup;
+  id?: string;
+  title!: string;
+  loading = false;
+  submitting = false;
+  submitted = false;
+  private routeSub!: Subscription;
+
+  // Employees for dropdown
+  employees: any[] = [];
+
+  constructor(
+    private formBuilder: FormBuilder,
+    private route: ActivatedRoute,
+    private router: Router,
+    private requestsService: RequestsService,
+    private employeesService: EmployeesService,
+    private alertService: AlertService
+  ) {}
+
+  ngOnInit() {
+    this.loadEmployees();
+
+    this.routeSub = this.route.params.subscribe(params => {
+      this.id = params['id'];
+      this.initForm();
+      this.title = this.id ? 'Edit Request' : 'Create Request';
+
+      if (this.id) {
+  this.loading = true;
+  this.requestsService.getById(+this.id)
+    .pipe(first())
+    .subscribe({
+      next: (x: any) => {
+        // Reset items FormArray
+        this.items.clear();
+
+        // Parse items string -> array
+        if (x.items) {
+          const parts = x.items.split(',').map((s: string) => s.trim());
+          parts.forEach((p: string) => {
+            // Match "Name (Qty)"
+            const match = p.match(/^(.*)\((\d+)\)$/);
+            if (match) {
+              this.items.push(this.formBuilder.group({
+                name: [match[1].trim(), Validators.required],
+                quantity: [parseInt(match[2], 10), [Validators.required, Validators.min(1)]]
+              }));
+            }
+          });
+        }
+
+        // If no items parsed, at least keep one blank row
+        if (this.items.length === 0) this.addItem();
+
+        // Patch other fields
+        this.form.patchValue({
+          type: x.type,
+          employeeId: x.employeeId,
+          status: x.status ?? 'Pending'
+        });
+
+        this.loading = false;
+      },
+      error: () => this.loading = false
+    });
+  }
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.routeSub) this.routeSub.unsubscribe();
+  }
+
+  private loadEmployees() {
+    this.loading = true;
+    this.employeesService.getAllEmployees()
+      .pipe(first())
+      .subscribe({
+        next: (data: any[]) => {
+          this.employees = data;
+          this.loading = false;
+        },
+        error: (err: any) => {
+          console.error('Error loading employees', err);
+          this.loading = false;
+        }
+      });
+  }
+
+  private initForm() {
+  this.submitted = false;
+  this.submitting = false;
+  this.loading = false;
+
+  this.form = this.formBuilder.group({
+    type: ['', Validators.required],
+    employeeId: ['', Validators.required],
+    items: this.formBuilder.array([]),
+    status: ['Pending', Validators.required]
+  });
+
+  // ✅ Add one blank item row by default
+  this.addItem();
+}
+
+get f() { return this.form.controls; }
+get items(): FormArray {
+  return this.form.get('items') as FormArray;
+}
+
+addItem() {
+  const itemForm = this.formBuilder.group({
+    name: ['', Validators.required],
+    quantity: [1, [Validators.required, Validators.min(1)]]
+  });
+  this.items.push(itemForm);
+}
+
+removeItem(index: number) {
+  this.items.removeAt(index);
+}
+
+  onSubmit() {
+    this.submitted = true;
+    this.alertService.clear();
+
+    if (this.form.invalid) return;
+
+    this.submitting = true;
+    const payload = { ...this.form.value };
+
+    
+    // ✅ Convert FormArray -> string
+    if (Array.isArray(payload.items)) {
+    payload.items = payload.items
+    .map((x: any) => `${x.name} (${x.quantity})`)
+    .join(', ');
+    }
+
+    let request$;
+    let message: string;
+
+    if (this.id) {
+      request$ = this.requestsService.update(+this.id, payload);
+      message = 'Request updated';
+    } else {
+      request$ = this.requestsService.create(payload);
+      message = 'Request created';
+    }
+
+    request$.pipe(first()).subscribe({
+      next: () => {
+        this.alertService.success(message, { keepAfterRouteChange: true });
+        this.router.navigateByUrl('/admin/requests');
+      },
+       error: (error: any) => {
+      this.alertService.error(error?.message || 'Failed to save request');
+      this.submitting = false;
+      }
+    });
+  }
+}
+
+
+================================================================================
+File: src\app\admin\requests\list.component.html
+Size: 1.78 kB
+================================================================================
+
+<h1>Requests</h1>
+<p>
+  <a routerLink="add" class="btn btn-sm btn-primary mb-2">Add Request</a>
+</p>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th style="width: 15%">Type</th>
+      <th style="width: 20%">Employee</th>
+      <th style="width: 25%">Items</th>
+      <th style="width: 15%">Status</th>
+      <th style="width: 15%">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let req of requests">
+      <td>{{ req.type || '—' }}</td>
+      <!-- ✅ show employeeId instead of account email -->
+      <td>
+  {{ req.employee?.account?.email || '—' }}
+  <span *ngIf="req.employee?.account?.status !== 'Active'"> (Inactive)</span>
+</td>
+      <td>{{ req.items || '—' }}</td>
+      <td>
+        <span 
+          class="badge"
+          [ngClass]="{
+            'bg-success': req.status === 'Approved',
+            'bg-warning': req.status === 'Pending',
+            'bg-danger': req.status === 'Rejected'
+          }">
+          {{ req.status }}
+        </span>
+      </td>
+      <td style="white-space: nowrap">
+      <a [routerLink]="['/admin/requests/edit', req.id]" class="btn btn-sm btn-primary">
+        Edit
+      </a>
+      <!-- <a [routerLink]="['/admin/workflows', req.employee?.employeeId]" 
+        class="btn btn-sm btn-outline-secondary ms-1">
+        Workflows
+      </a> -->
+    </td>
+
+    </tr>
+
+    <!-- Loading spinner -->
+    <tr *ngIf="!requests || requests.length === 0">
+      <td colspan="5" class="text-center">
+        <span class="spinner-border spinner-border-lg align-center"></span>
+      </td>
+    </tr>
+
+    <tr *ngIf="!loading && requests.length === 0">
+    <td colspan="5" class="text-center">No requests found</td>
+   </tr>
+
+  </tbody>
+</table>
+
+
+================================================================================
+File: src\app\admin\requests\list.component.ts
+Size: 583 B
+================================================================================
+
+import { Component, OnInit } from '@angular/core';
+import { first } from 'rxjs/operators';
+import { RequestsService } from '@app/_services/requests.service';
+
+@Component({
+  selector: 'app-requests-list',
+  templateUrl: './list.component.html'
+})
+export class RequestsListComponent implements OnInit {
+  requests: any[] = [];
+
+  constructor(private requestsService: RequestsService) {}
+
+  loading = true;
+  
+  ngOnInit() {
+    this.requestsService.getAll()
+      .pipe(first())
+      .subscribe((data: any[]) => {
+        this.requests = data;
+      });
+  }
+}
+
+
+================================================================================
+File: src\app\admin\requests\requests-routing.module.ts
+Size: 692 B
+================================================================================
+
+// file: src/app/admin/requests/requests-routing.module.ts
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+
+import { RequestsListComponent } from './list.component';
+import { RequestAddEditComponent } from './add-edit.component';
+
+const routes: Routes = [
+  { path: '', component: RequestsListComponent },           // list of requests
+  { path: 'add', component: RequestAddEditComponent },      // add new request
+  { path: 'edit/:id', component: RequestAddEditComponent }  // edit request by id
+];
+
+@NgModule({
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
+})
+export class RequestsRoutingModule {}
+
+
+================================================================================
+File: src\app\admin\requests\requests.module.ts
+Size: 617 B
+================================================================================
+
+// file: src/app/admin/requests/requests.module.ts
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+
+import { RequestsRoutingModule } from './requests-routing.module';
+import { RequestsListComponent } from './list.component';
+import { RequestAddEditComponent } from './add-edit.component';
+
+@NgModule({
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RequestsRoutingModule
+  ],
+  declarations: [
+    RequestsListComponent,
+    RequestAddEditComponent
+  ]
+})
+export class RequestsModule {}
+
+
+================================================================================
+File: src\app\admin\subnav.component.html
+Size: 0 B
+================================================================================
+
+
+
+================================================================================
+File: src\app\admin\subnav.component.ts
+Size: 132 B
+================================================================================
+
+import { Component } from '@angular/core';
+
+@Component({ templateUrl: 'subnav.component.html' })
+export class SubNavComponent { }
+
+================================================================================
+File: src\app\admin\workflows\add-edit.component.html
+Size: 2.35 kB
+================================================================================
+
+<div class="card shadow-sm rounded-3">
+  <div class="card-header bg-light">
+    <h3 class="mb-0">{{ title }}</h3>
+  </div>
+
+  <div class="card-body" *ngIf="!loading; else loadingTpl">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <!-- Type -->
+      <div class="mb-3">
+        <label class="form-label">Type</label>
+        <input
+          type="text"
+          formControlName="type"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': f.type.touched && f.type.invalid }"
+        />
+        <div *ngIf="f.type.touched && f.type.invalid" class="invalid-feedback">
+          Type is required
+        </div>
+      </div>
+
+      <!-- Items -->
+      <div class="mb-3">
+        <label class="form-label">Items</label>
+        <input
+          type="text"
+          formControlName="items"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': f.items.touched && f.items.invalid }"
+        />
+        <div *ngIf="f.items.touched && f.items.invalid" class="invalid-feedback">
+          Items are required
+        </div>
+      </div>
+
+      <!-- Status -->
+      <div class="mb-3">
+        <label class="form-label">Status</label>
+        <select formControlName="status" class="form-select">
+          <option value="Pending">Pending</option>
+          <option value="Approved">Approved</option>
+          <option value="Rejected">Rejected</option>
+        </select>
+      </div>
+
+      <!-- Request -->
+      <div class="mb-3">
+        <label class="form-label">Request (optional)</label>
+        <select formControlName="requestId" class="form-select">
+          <option [ngValue]="null">-- None --</option>
+          <option *ngFor="let req of requests" [value]="req.id">
+            {{ req.type }} - {{ req.items }}
+          </option>
+        </select>
+      </div>
+
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="submitting || form.invalid"
+      >
+        {{ submitting ? 'Saving...' : 'Save' }}
+      </button>
+      <a [routerLink]="['/admin/workflows', employeeId]" class="btn btn-secondary ms-2">
+        Cancel
+      </a>
+    </form>
+  </div>
+
+  <ng-template #loadingTpl>
+    <div class="text-center p-3">
+      <div class="spinner-border"></div>
+    </div>
+  </ng-template>
+</div>
+
+
+================================================================================
+File: src\app\admin\workflows\add-edit.component.ts
+Size: 2.5 kB
+================================================================================
+
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { WorkflowsService } from '@app/_services/workflows.service';
+import { RequestsService } from '@app/_services/requests.service';
+
+@Component({
+  selector: 'app-workflow-add-edit',
+  templateUrl: './add-edit.component.html'
+})
+
+export class WorkflowAddEditComponent implements OnInit {
+  form!: FormGroup;
+  id?: string;
+  employeeId!: string;
+  title!: string;
+  loading = false;
+  submitting = false;
+  requests: any[] = [];
+
+  constructor(
+    private fb: FormBuilder,
+    private route: ActivatedRoute,
+    private router: Router,
+    private workflowsService: WorkflowsService,
+    private requestsService: RequestsService
+  ) {}
+
+  ngOnInit() {
+    this.id = this.route.snapshot.paramMap.get('id') || undefined;
+    this.employeeId = this.route.snapshot.paramMap.get('employeeId')!;
+
+    this.form = this.fb.group({
+      type: ['', Validators.required],
+      items: ['', Validators.required],
+      status: ['Pending', Validators.required],
+      requestId: [null]
+    });
+
+    this.title = this.id ? 'Edit Workflow' : 'Add Workflow';
+
+    // Load available requests for dropdown
+    this.requestsService.getAll().subscribe({
+      next: (res) => (this.requests = res),
+      error: (err) => console.error('Error loading requests', err)
+    });
+
+    if (this.id) {
+      this.loading = true;
+      this.workflowsService.getById(+this.id) .subscribe({
+        next: (wf) => {
+          this.form.patchValue(wf);
+          this.loading = false;
+        },
+        error: (err) => {
+          console.error('Error loading workflow', err);
+          this.loading = false;
+        }
+      });
+    }
+  }
+
+  get f() { return this.form.controls; }
+
+  onSubmit() {
+    if (this.form.invalid) return;
+
+    this.submitting = true;
+
+    const workflowData = {
+      ...this.form.value,
+      employeeId: this.employeeId
+    };
+
+    const request$ = this.id
+      ? this.workflowsService.update(+this.id, workflowData)
+      : this.workflowsService.create(workflowData);
+
+    request$.subscribe({
+      next: () => {
+        this.router.navigate(['/admin/workflows', this.employeeId]);
+      },
+      error: (err) => {
+        console.error('Error saving workflow', err);
+        this.submitting = false;
+      }
+    });
+  }
+}
+
+
+================================================================================
+File: src\app\admin\workflows\list.component.html
+Size: 1.54 kB
+================================================================================
+
+<h3>WORKFLOWS FOR EMPLOYEE</h3>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Details</th>
+      <th>Status</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let wf of workflows">
+      <td>
+        <span class="badge bg-info">{{ wf.type }}</span>
+      </td>
+      <td>
+        <!-- Main details -->
+        <div>{{ wf.details }}</div>
+
+        <!-- Extra request info -->
+        <div *ngIf="wf.request">
+          <strong>requestId:</strong> {{ wf.request.id }} <br>
+          <strong>requestType:</strong> {{ wf.request.type }} <br>
+          <strong>requesterId:</strong> {{ wf.employeeId }} <br>
+          <strong>message:</strong> Review {{ wf.request.type }} request #{{ wf.request.id }} from Employee ID {{ wf.employeeId }}.
+        </div>
+      </td>
+      <td>
+        <span 
+          class="badge"
+          [ngClass]="{
+            'bg-success': wf.status === 'Approved',
+            'bg-warning': wf.status === 'Pending',
+            'bg-danger': wf.status === 'Rejected'
+          }">
+          {{ wf.status }}
+        </span>
+      </td>
+      <td>
+        <select class="form-select form-select-sm" [(ngModel)]="wf.status" (change)="updateStatus(wf)">
+          <option>Pending</option>
+          <option>Approved</option>
+          <option>Rejected</option>
+        </select>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<a routerLink="/admin/employees" class="btn btn-secondary">Back to Employees</a>
+
+
+================================================================================
+File: src\app\admin\workflows\list.component.ts
+Size: 1.33 kB
+================================================================================
+
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { WorkflowsService } from '@app/_services/workflows.service';
+import { Workflow } from '@app/_models/workflow';
+
+@Component({ templateUrl: 'list.component.html' })
+export class WorkflowListComponent implements OnInit {
+  workflows: Workflow[] = [];
+  employeeId!: string;
+  loading = false;
+
+  constructor(
+    private route: ActivatedRoute,
+    private workflowsService: WorkflowsService
+  ) {}
+
+  ngOnInit() {
+  // just get the raw string from the route param
+  this.employeeId = this.route.snapshot.paramMap.get('employeeId')!;
+  this.loadWorkflows();
+ }
+  
+  updateStatus(wf: Workflow) {
+  this.workflowsService.update(wf.id, { status: wf.status })
+    .subscribe({
+      next: () => console.log('Workflow status updated'),
+      error: err => console.error('Failed to update workflow', err)
+    });
+}
+
+  loadWorkflows() {
+    this.loading = true;
+    this.workflowsService.getByEmployeeId(this.employeeId)
+      .subscribe({
+        next: (data) => {
+          this.workflows = data;
+          this.loading = false;
+        },
+        error: (err) => {
+          console.error('Failed to load workflows:', err);
+          this.loading = false;
+        }
+      });
+  }
+}
+
+  
+
+
+================================================================================
+File: src\app\admin\workflows\workflows-routing.module.ts
+Size: 595 B
+================================================================================
+
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+import { WorkflowListComponent } from './list.component';
+import { WorkflowAddEditComponent } from './add-edit.component';
+
+const routes: Routes = [
+  { path: ':employeeId', component: WorkflowListComponent },
+  { path: ':employeeId/add', component: WorkflowAddEditComponent },
+  { path: ':employeeId/edit/:id', component: WorkflowAddEditComponent }
+];  
+
+@NgModule({
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
+})
+export class WorkflowsRoutingModule { }
+
+
+================================================================================
+File: src\app\admin\workflows\workflows.module.ts
+Size: 679 B
+================================================================================
+
+// workflows.module.ts
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms'; // <-- add FormsModule
+import { WorkflowsRoutingModule } from './workflows-routing.module';
+
+import { WorkflowListComponent } from './list.component';
+import { WorkflowAddEditComponent } from './add-edit.component';
+
+@NgModule({
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,              // ✅ add this
+    WorkflowsRoutingModule
+  ],
+  declarations: [
+    WorkflowListComponent,
+    WorkflowAddEditComponent
+  ]
+})
+export class WorkflowsModule { }
+
+
+================================================================================
+File: src\app\app-routing.module.ts
+Size: 1.12 kB
+================================================================================
+
+    import { NgModule } from '@angular/core';
+    import { Routes, RouterModule } from '@angular/router';
+
+    import { HomeComponent } from './home';
+    import { AuthGuard } from './_helpers';
+    import { Role } from './_models';
+
+    const accountModule = () => import('./account/account.module').then(x => x.AccountModule);
+    const adminModule = () => import('./admin/admin.module').then(x => x.AdminModule);
+    const profileModule = () => import('./profile/profile.module').then(x => x.ProfileModule);
+
+    const routes: Routes = [
+        { path: '', component: HomeComponent, canActivate: [AuthGuard] },
+        { path: 'account', loadChildren: accountModule },
+        { path: 'profile', loadChildren: profileModule, canActivate: [AuthGuard] },
+        { path: 'admin', loadChildren: adminModule, canActivate: [AuthGuard], data: { roles: [Role.Admin] } },
+
+        // otherwise redirect to home
+        { path: '**', redirectTo: '' }
+    ];
+ 
+    @NgModule({
+        imports: [RouterModule.forRoot(routes)],
+        exports: [RouterModule]
+    })
+    export class AppRoutingModule { }
+
+
+================================================================================
+File: src\app\app.component.html
+Size: 1.66 kB
+================================================================================
+
+﻿<div class="app-container" [ngClass]="{ 'bg-light': account }">
+    <!-- main nav -->
+    <nav class="navbar navbar-expand navbar-dark bg-dark px-3" *ngIf="account">
+        <!-- Left side -->
+        <div class="navbar-nav me-auto">
+            <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-item nav-link">Home</a>
+            <a routerLink="/profile" routerLinkActive="active" class="nav-item nav-link">Profile</a>
+        </div>
+
+        <!-- Right side -->
+        <div class="navbar-nav ms-auto">
+            <a *ngIf="account.role === Role.Admin" routerLink="/admin/accounts" routerLinkActive="active" class="nav-item nav-link">Accounts</a>
+            <a *ngIf="account.role === Role.Admin" routerLink="/admin/employees" routerLinkActive="active" class="nav-item nav-link">Employees</a>
+            <a *ngIf="account.role === Role.Admin" routerLink="/admin/departments" routerLinkActive="active" class="nav-item nav-link">Departments</a>
+            <a *ngIf="account.role === Role.Admin" routerLink="/admin/positions" routerLinkActive="active" class="nav-item nav-link">Positions</a>
+            <a *ngIf="account.role === Role.Admin" routerLink="/admin/requests" routerLinkActive="active" class="nav-item nav-link">Request</a>
+            
+            <button (click)="logout()" class="btn btn-link nav-item nav-link">Logout</button>
+        </div>
+    </nav>
+
+    <!-- subnav router outlet -->
+    <router-outlet name="subnav"></router-outlet>
+
+    <!-- global alert -->
+    <alert></alert>
+
+    <!-- main router outlet -->
+    <router-outlet></router-outlet>
+</div>
+
+
+================================================================================
+File: src\app\app.component.ts
+Size: 497 B
+================================================================================
+
+﻿import { Component } from '@angular/core';
+
+import { AccountService } from './_services';
+import { Account, Role } from './_models';
+
+@Component({ selector: 'app-root', templateUrl: 'app.component.html' })
+export class AppComponent {
+    Role = Role;
+    account?: Account | null;
+
+    constructor(private accountService: AccountService) {
+        this.accountService.account.subscribe(x => this.account = x);
+    }
+
+    logout() {
+        this.accountService.logout();
+    }
+}
+
+================================================================================
+File: src\app\app.module.ts
+Size: 1.57 kB
+================================================================================
+
+﻿import { NgModule, APP_INITIALIZER } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { RouterModule } from '@angular/router';   // ✅ for routerLink
+import { CommonModule } from '@angular/common';   // ✅ for ngClass, ngIf, ngFor
+
+// used to create fake backend
+//import { fakeBackendProvider } from './_helpers';
+
+import { AppRoutingModule } from './app-routing.module';
+import { JwtInterceptor, ErrorInterceptor, appInitializer } from './_helpers';
+import { AccountService } from './_services';
+import { AppComponent } from './app.component';
+import { AlertComponent } from './_components';
+import { HomeComponent } from './home';
+
+
+@NgModule({
+  imports: [
+    BrowserModule,
+    ReactiveFormsModule,
+    FormsModule,         // ✅ added
+    HttpClientModule,
+    RouterModule,        // ✅ added
+    CommonModule,        // ✅ added
+    AppRoutingModule
+  ],
+  declarations: [
+    AppComponent,
+    AlertComponent,
+    HomeComponent,
+  ],
+  providers: [
+    { provide: APP_INITIALIZER, useFactory: appInitializer, multi: true, deps: [AccountService] },
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+    //fakeBackendProvider   // ⚠️ if you still need fake backend
+  ],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+
+
+================================================================================
+File: src\app\home\home.component.html
+Size: 157 B
+================================================================================
+
+﻿<div class="p-4">
+ <div class="container">
+   <h1>Hi {{account?.firstName}}!</h1>
+   <p>You're logged in with Angular 15 & JWT!!</p>
+  </div>
+ </div>
+
+================================================================================
+File: src\app\home\home.component.ts
+Size: 291 B
+================================================================================
+
+﻿import { Component } from '@angular/core';
+import { AccountService } from '@app/_services'; 
+@Component({ templateUrl: 'home.component.html' }) 
+export class HomeComponent { 
+ account = this.accountService.accountValue; 
+
+ constructor(private accountService: AccountService) { } 
+}
+
+================================================================================
+File: src\app\home\index.ts
+Size: 36 B
+================================================================================
+
+﻿export * from './home.component';
+
+================================================================================
+File: src\app\profile\details.component.html
+Size: 243 B
+================================================================================
+
+﻿<h1>My Profile</h1>
+<p *ngIf="account">
+    <strong>Name: </strong> {{account.title}} {{account.firstName}} {{account.lastName}}<br />
+    <strong>Email: </strong> {{account.email}}
+</p>
+<p><a routerLink="update">Update Profile</a></p>
+
+================================================================================
+File: src\app\profile\details.component.ts
+Size: 302 B
+================================================================================
+
+﻿import { Component } from '@angular/core';
+
+import { AccountService } from '@app/_services';
+
+@Component({ templateUrl: 'details.component.html' })
+export class DetailsComponent {
+    account = this.accountService.accountValue;
+
+    constructor(private accountService: AccountService) { }
+}
+
+================================================================================
+File: src\app\profile\layout.component.html
+Size: 110 B
+================================================================================
+
+﻿<div class="p-4">
+    <div class="container">
+        <router-outlet></router-outlet>
+    </div>
+</div>
+
+================================================================================
+File: src\app\profile\layout.component.ts
+Size: 135 B
+================================================================================
+
+﻿import { Component } from '@angular/core';
+
+@Component({ templateUrl: 'layout.component.html' })
+export class LayoutComponent { }
+
+================================================================================
+File: src\app\profile\profile-routing.module.ts
+Size: 642 B
+================================================================================
+
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+
+import { LayoutComponent } from './layout.component';
+import { DetailsComponent } from './details.component';
+import { UpdateComponent } from './update.component';
+
+const routes: Routes = [
+    {
+        path: '', component: LayoutComponent,
+        children: [
+            { path: '', component: DetailsComponent },
+            { path: 'update', component: UpdateComponent }
+        ]
+    }
+];
+
+@NgModule({
+    imports: [RouterModule.forChild(routes)],
+    exports: [RouterModule]
+})
+export class ProfileRoutingModule { }
+
+================================================================================
+File: src\app\profile\profile.module.ts
+Size: 644 B
+================================================================================
+
+import { NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+
+import { ProfileRoutingModule } from './profile-routing.module';
+import { LayoutComponent } from './layout.component';
+import { DetailsComponent } from './details.component';
+import { UpdateComponent } from './update.component';
+
+@NgModule({
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        ProfileRoutingModule
+    ],
+    declarations: [
+        LayoutComponent,
+        DetailsComponent,
+        UpdateComponent
+    ]
+})
+export class ProfileModule { }
+
+================================================================================
+File: src\app\profile\update.component.html
+Size: 3.94 kB
+================================================================================
+
+﻿<h1>Update Profile</h1>
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="row">
+        <div class="mb-3 col-2">
+            <label class="form-label">Title</label>
+            <select formControlName="title" class="form-select" [ngClass]="{ 'is-invalid': submitted && f.title.errors }">
+                <option value=""></option>
+                <option value="Mr">Mr</option>
+                <option value="Mrs">Mrs</option>
+                <option value="Miss">Miss</option>
+                <option value="Ms">Ms</option>
+            </select>
+            <div *ngIf="submitted && f.title.errors" class="invalid-feedback">
+                <div *ngIf="f.title.errors.required">Title is required</div>
+            </div>
+        </div>
+        <div class="mb-3 col-5">
+            <label class="form-label">First Name</label>
+            <input type="text" formControlName="firstName" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }" />
+            <div *ngIf="submitted && f.firstName.errors" class="invalid-feedback">
+                <div *ngIf="f.firstName.errors.required">First Name is required</div>
+            </div>
+        </div>
+        <div class="mb-3 col-5">
+            <label class="form-label">Last Name</label>
+            <input type="text" formControlName="lastName" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.lastName.errors }" />
+            <div *ngIf="submitted && f.lastName.errors" class="invalid-feedback">
+                <div *ngIf="f.lastName.errors.required">Last Name is required</div>
+            </div>
+        </div>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input type="text" formControlName="email" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.email.errors }" />
+        <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+            <div *ngIf="f.email.errors.required">Email is required</div>
+            <div *ngIf="f.email.errors.email">Email must be a valid email address</div>
+        </div>
+    </div>
+    <h3 class="pt-3">Change Password</h3>
+    <p>Leave blank to keep the same password</p>
+    <div class="row">
+        <div class="mb-3 col">
+            <label class="form-label">Password</label>
+            <input type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
+            <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+                <div *ngIf="f.password.errors.required">Password is required</div>
+                <div *ngIf="f.password.errors.minlength">Password must be at least 6 characters</div>
+            </div>
+        </div>
+        <div class="mb-3 col">
+            <label class="form-label">Confirm Password</label>
+            <input type="password" formControlName="confirmPassword" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.confirmPassword.errors }" />
+            <div *ngIf="submitted && f.confirmPassword.errors" class="invalid-feedback">
+                <div *ngIf="f.confirmPassword.errors.required">Confirm Password is required</div>
+                <div *ngIf="f.confirmPassword.errors.mustMatch">Passwords must match</div>
+            </div>
+        </div>
+    </div>
+    <div class="mb-3">
+        <button type="submit" [disabled]="submitting" class="btn btn-primary me-2">
+            <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1"></span>
+            Update
+        </button>
+        <button type="button" (click)="onDelete()" [disabled]="deleting" class="btn btn-danger">
+            <span *ngIf="deleting" class="spinner-border spinner-border-sm me-1"></span>
+            Delete
+        </button>
+        <a routerLink="../" href="" class="btn btn-link">Cancel</a>
+    </div>
+</form>
+
+================================================================================
+File: src\app\profile\update.component.ts
+Size: 2.65 kB
+================================================================================
+
+﻿import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { first } from 'rxjs/operators';
+
+import { AccountService, AlertService } from '@app/_services';
+import { MustMatch } from '@app/_helpers';
+
+@Component({ templateUrl: 'update.component.html' })
+export class UpdateComponent implements OnInit {
+    account = this.accountService.accountValue!;
+    form!: FormGroup;
+    submitting = false;
+    submitted = false;
+    deleting = false;
+
+    constructor(
+        private formBuilder: FormBuilder,
+        private route: ActivatedRoute,
+        private router: Router,
+        private accountService: AccountService,
+        private alertService: AlertService
+    ) { }
+
+    ngOnInit() {
+        this.form = this.formBuilder.group({
+            title: [this.account.title, Validators.required],
+            firstName: [this.account.firstName, Validators.required],
+            lastName: [this.account.lastName, Validators.required],
+            email: [this.account.email, [Validators.required, Validators.email]],
+            password: ['', [Validators.minLength(6)]],
+            confirmPassword: ['']
+        }, {
+            validator: MustMatch('password', 'confirmPassword')
+        });
+    }
+
+    // convenience getter for easy access to form fields
+    get f() { return this.form.controls; }
+
+    onSubmit() {
+        this.submitted = true;
+
+        // reset alerts on submit
+        this.alertService.clear();
+
+        // stop here if form is invalid
+        if (this.form.invalid) {
+            return;
+        }
+
+        this.submitting = true;
+        this.accountService.update(this.account.id!, this.form.value)
+            .pipe(first())
+            .subscribe({
+                next: () => {
+                    this.alertService.success('Update successful', { keepAfterRouteChange: true });
+                    this.router.navigate(['../'], { relativeTo: this.route });
+                },
+                error: error => {
+                    this.alertService.error(error);
+                    this.submitting = false;
+                }
+            });
+    }
+
+    onDelete() {
+        if (confirm('Are you sure?')) {
+            this.deleting = true;
+            this.accountService.deactivate(this.account.id!)
+                .pipe(first())
+                .subscribe(() => {
+                    this.alertService.success('Account deleted successfully', { keepAfterRouteChange: true });
+                });
+        }
+    }
+}
+
+================================================================================
+File: src\app\_components\alert.component.html
+Size: 314 B
+================================================================================
+
+﻿<div *ngIf="alerts.length" class="container">
+    <div class="m-3">
+        <div *ngFor="let alert of alerts" class="{{cssClasses(alert)}}">
+            <span [innerHTML]="alert.message"></span>
+            <button class="btn-close" (click)="removeAlert(alert)"></button>
+        </div>
+    </div>
+</div>
+
+================================================================================
+File: src\app\_components\alert.component.ts
+Size: 3.16 kB
+================================================================================
+
+﻿import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { Router, NavigationStart } from '@angular/router';
+import { Subscription } from 'rxjs';
+
+import { Alert, AlertType } from '@app/_models';
+import { AlertService } from '@app/_services';
+
+@Component({ selector: 'alert', templateUrl: 'alert.component.html' })
+export class AlertComponent implements OnInit, OnDestroy {
+    @Input() id = 'default-alert';
+    @Input() fade = true;
+
+    alerts: Alert[] = [];
+    alertSubscription!: Subscription;
+    routeSubscription!: Subscription;
+
+    constructor(private router: Router, private alertService: AlertService) { }
+
+    ngOnInit() {
+        // subscribe to new alert notifications
+        this.alertSubscription = this.alertService.onAlert(this.id)
+            .subscribe(alert => {
+                // clear alerts when an empty alert is received
+                if (!alert.message) {
+                    // filter out alerts without 'keepAfterRouteChange' flag
+                    this.alerts = this.alerts.filter(x => x.keepAfterRouteChange);
+
+                    // remove 'keepAfterRouteChange' flag on the rest
+                    this.alerts.forEach(x => delete x.keepAfterRouteChange);
+                    return;
+                }
+
+                // add alert to array
+                this.alerts.push(alert);
+
+                // auto close alert if required
+                if (alert.autoClose) {
+                    setTimeout(() => this.removeAlert(alert), 3000);
+                }
+            });
+
+        // clear alerts on location change
+        this.routeSubscription = this.router.events.subscribe(event => {
+            if (event instanceof NavigationStart) {
+                this.alertService.clear(this.id);
+            }
+        });
+    }
+
+    ngOnDestroy() {
+        // unsubscribe to avoid memory leaks
+        this.alertSubscription.unsubscribe();
+        this.routeSubscription.unsubscribe();
+    }
+
+    removeAlert(alert: Alert) {
+        // check if already removed to prevent error on auto close
+        if (!this.alerts.includes(alert)) return;
+
+        if (this.fade) {
+            // fade out alert
+            alert.fade = true;
+
+            // remove alert after faded out
+            setTimeout(() => {
+                this.alerts = this.alerts.filter(x => x !== alert);
+            }, 250);
+        } else {
+            // remove alert
+            this.alerts = this.alerts.filter(x => x !== alert);
+        }
+    }
+
+    cssClasses(alert: Alert) {
+        if (!alert) return;
+
+        const classes = ['alert', 'alert-dismissible', 'mt-4', 'container'];
+
+        const alertTypeClass = {
+            [AlertType.Success]: 'alert-success',
+            [AlertType.Error]: 'alert-danger',
+            [AlertType.Info]: 'alert-info',
+            [AlertType.Warning]: 'alert-warning'
+        }
+
+        if (alert.type !== undefined) {
+            classes.push(alertTypeClass[alert.type]);
+        }
+
+        if (alert.fade) {
+            classes.push('fade');
+        }
+
+        return classes.join(' ');
+    }
+}
+
+================================================================================
+File: src\app\_components\index.ts
+Size: 36 B
+================================================================================
+
+export * from './alert.component';
+
+
+================================================================================
+File: src\app\_helpers\app.initializer.ts
+Size: 336 B
+================================================================================
+
+import { catchError, of } from 'rxjs';
+
+import { AccountService } from '@app/_services';
+
+export function appInitializer(accountService: AccountService) {
+    return () => accountService.refreshToken()
+        .pipe(
+            // catch error to start app on success or failure
+            catchError(() => of())
+        );
+}
+
+================================================================================
+File: src\app\_helpers\auth.guard.ts
+Size: 1.13 kB
+================================================================================
+
+﻿import { Injectable } from '@angular/core';
+import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+
+import { AccountService } from '@app/_services';
+
+@Injectable({ providedIn: 'root' })
+export class AuthGuard implements CanActivate {
+    constructor(
+        private router: Router,
+        private accountService: AccountService
+    ) { }
+
+    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+        const account = this.accountService.accountValue;
+        if (account) {
+            // check if route is restricted by role
+            if (route.data.roles && !route.data.roles.includes(account.role)) {
+                // role not authorized so redirect to home page
+                this.router.navigate(['/']);
+                return false;
+            }
+
+            // authorized so return true
+            return true;
+        }
+
+        // not logged in so redirect to login page with the return url 
+        this.router.navigate(['/account/login'], { queryParams: { returnUrl: state.url } });
+        return false;
+    }
+}
+
+================================================================================
+File: src\app\_helpers\error.interceptor.ts
+Size: 988 B
+================================================================================
+
+import { Injectable } from '@angular/core';
+import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+
+import { AccountService } from '@app/_services';
+
+@Injectable()
+export class ErrorInterceptor implements HttpInterceptor {
+    constructor(private accountService: AccountService) { }
+
+    intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+        return next.handle(request).pipe(catchError(err => {
+            if ([401, 403].includes(err.status) && this.accountService.accountValue) {
+                // auto logout if 401 or 403 response returned from api
+                this.accountService.logout();
+            }
+
+            const error = (err && err.error && err.error.message) || err.statusText;
+            console.error(err);
+            return throwError(() => error);
+        }))
+    }
+}
+
+================================================================================
+File: src\app\_helpers\fake-backend.ts
+Size: 16.29 kB
+================================================================================
+
+﻿import { Injectable } from '@angular/core';
+import { HttpRequest, HttpResponse, HttpHandler, HttpEvent, HttpInterceptor, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { Observable, of, throwError } from 'rxjs';
+import { delay, materialize, dematerialize } from 'rxjs/operators';
+
+import { AlertService } from '@app/_services';
+import { Role } from '@app/_models';
+
+// array in local storage for accounts
+const accountsKey = 'angular-15-signup-verification-boilerplate-accounts';
+let accounts: any[] = JSON.parse(localStorage.getItem(accountsKey)!) || [];
+
+@Injectable()
+export class FakeBackendInterceptor implements HttpInterceptor {
+    constructor(private alertService: AlertService) { }
+
+    intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+        const { url, method, headers, body } = request;
+        const alertService = this.alertService;
+
+        return handleRoute();
+
+        function handleRoute() {
+            switch (true) {
+                case url.endsWith('/accounts/authenticate') && method === 'POST':
+                    return authenticate();
+                case url.endsWith('/accounts/refresh-token') && method === 'POST':
+                    return refreshToken();
+                case url.endsWith('/accounts/revoke-token') && method === 'POST':
+                    return revokeToken();
+                case url.endsWith('/accounts/register') && method === 'POST':
+                    return register();
+                case url.endsWith('/accounts/verify-email') && method === 'POST':
+                    return verifyEmail();
+                case url.endsWith('/accounts/forgot-password') && method === 'POST':
+                    return forgotPassword();
+                case url.endsWith('/accounts/validate-reset-token') && method === 'POST':
+                    return validateResetToken();
+                case url.endsWith('/accounts/reset-password') && method === 'POST':
+                    return resetPassword();
+                case url.endsWith('/accounts') && method === 'GET':
+                    return getAccounts();
+                case url.match(/\/accounts\/\d+$/) && method === 'GET':
+                    return getAccountById();
+                case url.endsWith('/accounts') && method === 'POST':
+                    return createAccount();
+                case url.match(/\/accounts\/\d+$/) && method === 'PUT':
+                    return updateAccount();
+                case url.match(/\/accounts\/\d+$/) && method === 'DELETE':
+                    return deleteAccount();
+                default:
+                    // pass through any requests not handled above
+                    return next.handle(request);
+            }    
+        }
+
+        // route functions
+
+        function authenticate() {
+            const { email, password } = body;
+            const account = accounts.find(x => x.email === email && x.password === password && x.isVerified);
+            
+            if (!account) return error('Email or password is incorrect');
+
+            // add refresh token to account
+            account.refreshTokens.push(generateRefreshToken());
+            localStorage.setItem(accountsKey, JSON.stringify(accounts));
+
+            return ok({
+                ...basicDetails(account),
+                jwtToken: generateJwtToken(account)
+            });
+        }
+
+        function refreshToken() {
+            const refreshToken = getRefreshToken();
+            
+            if (!refreshToken) return unauthorized();
+
+            const account = accounts.find(x => x.refreshTokens.includes(refreshToken));
+            
+            if (!account) return unauthorized();
+
+            // replace old refresh token with a new one and save
+            account.refreshTokens = account.refreshTokens.filter((x: any) => x !== refreshToken);
+            account.refreshTokens.push(generateRefreshToken());
+            localStorage.setItem(accountsKey, JSON.stringify(accounts));
+
+            return ok({
+                ...basicDetails(account),
+                jwtToken: generateJwtToken(account)
+            });
+        }
+
+        function revokeToken() {
+            if (!isAuthenticated()) return unauthorized();
+            
+            const refreshToken = getRefreshToken();
+            const account = accounts.find(x => x.refreshTokens.includes(refreshToken));
+            
+            // revoke token and save
+            account.refreshTokens = account.refreshTokens.filter((x: any) => x !== refreshToken);
+            localStorage.setItem(accountsKey, JSON.stringify(accounts));
+
+            return ok();
+        }
+
+        function register() {
+            const account = body;
+
+            if (accounts.find(x => x.email === account.email)) {
+                // display email already registered "email" in alert
+                setTimeout(() => {
+                    alertService.info(`
+                        <h4>Email Already Registered</h4>
+                        <p>Your email ${account.email} is already registered.</p>
+                        <p>If you don't know your password please visit the <a href="${location.origin}/account/forgot-password">forgot password</a> page.</p>
+                        <div><strong>NOTE:</strong> The fake backend displayed this "email" so you can test without an api. A real backend would send a real email.</div>
+                    `, { autoClose: false });
+                }, 1000);
+
+                // always return ok() response to prevent email enumeration
+                return ok();
+            }
+
+            // assign account id and a few other properties then save
+            account.id = newAccountId();
+            if (account.id === 1) {
+                // first registered account is an admin
+                account.role = Role.Admin;
+            } else {
+                account.role = Role.User;
+            }
+            account.dateCreated = new Date().toISOString();
+            account.verificationToken = new Date().getTime().toString();
+            account.isVerified = false;
+            account.refreshTokens = [];
+            delete account.confirmPassword;
+            accounts.push(account);
+            localStorage.setItem(accountsKey, JSON.stringify(accounts));
+
+            // display verification email in alert
+            setTimeout(() => {
+                const verifyUrl = `${location.origin}/account/verify-email?token=${account.verificationToken}`;
+                alertService.info(`
+                    <h4>Verification Email</h4>
+                    <p>Thanks for registering!</p>
+                    <p>Please click the below link to verify your email address:</p>
+                    <p><a href="${verifyUrl}">${verifyUrl}</a></p>
+                    <div><strong>NOTE:</strong> The fake backend displayed this "email" so you can test without an api. A real backend would send a real email.</div>
+                `, { autoClose: false });
+            }, 1000);
+
+            return ok();
+        }
+        
+        function verifyEmail() {
+            const { token } = body;
+            const account = accounts.find(x => !!x.verificationToken && x.verificationToken === token);
+            
+            if (!account) return error('Verification failed');
+            
+            // set is verified flag to true if token is valid
+            account.isVerified = true;
+            localStorage.setItem(accountsKey, JSON.stringify(accounts));
+
+            return ok();
+        }
+
+        function forgotPassword() {
+            const { email } = body;
+            const account = accounts.find(x => x.email === email);
+            
+            // always return ok() response to prevent email enumeration
+            if (!account) return ok();
+            
+            // create reset token that expires after 24 hours
+            account.resetToken = new Date().getTime().toString();
+            account.resetTokenExpires = new Date(Date.now() + 24*60*60*1000).toISOString();
+            localStorage.setItem(accountsKey, JSON.stringify(accounts));
+
+            // display password reset email in alert
+            setTimeout(() => {
+                const resetUrl = `${location.origin}/account/reset-password?token=${account.resetToken}`;
+                alertService.info(`
+                    <h4>Reset Password Email</h4>
+                    <p>Please click the below link to reset your password, the link will be valid for 1 day:</p>
+                    <p><a href="${resetUrl}">${resetUrl}</a></p>
+                    <div><strong>NOTE:</strong> The fake backend displayed this "email" so you can test without an api. A real backend would send a real email.</div>
+                `, { autoClose: false });
+            }, 1000);
+
+            return ok();
+        }
+        
+        function validateResetToken() {
+            const { token } = body;
+            const account = accounts.find(x =>
+                !!x.resetToken && x.resetToken === token &&
+                new Date() < new Date(x.resetTokenExpires)
+            );
+            
+            if (!account) return error('Invalid token');
+            
+            return ok();
+        }
+
+        function resetPassword() {
+            const { token, password } = body;
+            const account = accounts.find(x =>
+                !!x.resetToken && x.resetToken === token &&
+                new Date() < new Date(x.resetTokenExpires)
+            );
+            
+            if (!account) return error('Invalid token');
+            
+            // update password and remove reset token
+            account.password = password;
+            account.isVerified = true;
+            delete account.resetToken;
+            delete account.resetTokenExpires;
+            localStorage.setItem(accountsKey, JSON.stringify(accounts));
+
+            return ok();
+        }
+
+        function getAccounts() {
+            if (!isAuthenticated()) return unauthorized();
+            return ok(accounts.map(x => basicDetails(x)));
+        }
+
+        function getAccountById() {
+            if (!isAuthenticated()) return unauthorized();
+
+            let account = accounts.find(x => x.id === idFromUrl());
+
+            // user accounts can get own profile and admin accounts can get all profiles
+            if (account.id !== currentAccount().id && !isAuthorized(Role.Admin)) {
+                return unauthorized();
+            }
+
+            return ok(basicDetails(account));
+        }
+
+        function createAccount() {
+            if (!isAuthorized(Role.Admin)) return unauthorized();
+
+            const account = body;
+            if (accounts.find(x => x.email === account.email)) {
+                return error(`Email ${account.email} is already registered`);
+            }
+
+            // assign account id and a few other properties then save
+            account.id = newAccountId();
+            account.dateCreated = new Date().toISOString();
+            account.isVerified = true;
+            account.refreshTokens = [];
+            delete account.confirmPassword;
+            accounts.push(account);
+            localStorage.setItem(accountsKey, JSON.stringify(accounts));
+
+            return ok();
+        }
+
+        function updateAccount() {
+            if (!isAuthenticated()) return unauthorized();
+
+            let params = body;
+            let account = accounts.find(x => x.id === idFromUrl());
+
+            // user accounts can update own profile and admin accounts can update all profiles
+            if (account.id !== currentAccount().id && !isAuthorized(Role.Admin)) {
+                return unauthorized();
+            }
+
+            // only update password if included
+            if (!params.password) {
+                delete params.password;
+            }
+            // don't save confirm password
+            delete params.confirmPassword;
+
+            // update and save account
+            Object.assign(account, params);
+            localStorage.setItem(accountsKey, JSON.stringify(accounts));
+
+            return ok(basicDetails(account));
+        }
+
+        function deleteAccount() {
+            if (!isAuthenticated()) return unauthorized();
+
+            let account = accounts.find(x => x.id === idFromUrl());
+
+            // user accounts can delete own account and admin accounts can delete any account
+            if (account.id !== currentAccount().id && !isAuthorized(Role.Admin)) {
+                return unauthorized();
+            }
+
+            // delete account then save
+            accounts = accounts.filter(x => x.id !== idFromUrl());
+            localStorage.setItem(accountsKey, JSON.stringify(accounts));
+            return ok();
+        }
+        
+        // helper functions
+
+        function ok(body?: any) {
+            return of(new HttpResponse({ status: 200, body }))
+                .pipe(delay(500)); // delay observable to simulate server api call
+        }
+
+        function error(message: string) {
+            return throwError(() => ({ error: { message } }))
+                .pipe(materialize(), delay(500), dematerialize()); // call materialize and dematerialize to ensure delay even if an error is thrown (https://github.com/Reactive-Extensions/RxJS/issues/648);
+        }
+
+        function unauthorized() {
+            return throwError(() => ({ status: 401, error: { message: 'Unauthorized' } }))
+                .pipe(materialize(), delay(500), dematerialize());
+        }
+
+        function basicDetails(account: any) {
+            const { id, title, firstName, lastName, email, role, dateCreated, isVerified } = account;
+            return { id, title, firstName, lastName, email, role, dateCreated, isVerified };
+        }
+
+        function isAuthenticated() {
+            return !!currentAccount();
+        }
+
+        function isAuthorized(role: any) {
+            const account = currentAccount();
+            if (!account) return false;
+            return account.role === role;
+        }
+
+        function idFromUrl() {
+            const urlParts = url.split('/');
+            return parseInt(urlParts[urlParts.length - 1]);
+        }
+
+        function newAccountId() {
+            return accounts.length ? Math.max(...accounts.map(x => x.id)) + 1 : 1;
+        }
+
+        function currentAccount() {
+            // check if jwt token is in auth header
+            const authHeader = headers.get('Authorization');
+            if (!authHeader?.startsWith('Bearer fake-jwt-token')) return;
+
+            // check if token is expired
+            const jwtToken = JSON.parse(atob(authHeader.split('.')[1]));
+            const tokenExpired = Date.now() > (jwtToken.exp * 1000);
+            if (tokenExpired) return;
+
+            const account = accounts.find(x => x.id === jwtToken.id);
+            return account;
+        }
+
+        function generateJwtToken(account: any) {
+            // create token that expires in 15 minutes
+            const tokenPayload = { 
+                exp: Math.round(new Date(Date.now() + 15*60*1000).getTime() / 1000),
+                id: account.id
+            }
+            return `fake-jwt-token.${btoa(JSON.stringify(tokenPayload))}`;
+        }
+
+        function generateRefreshToken() {
+            const token = new Date().getTime().toString();
+
+            // add token cookie that expires in 7 days
+            const expires = new Date(Date.now() + 7*24*60*60*1000).toUTCString();
+            document.cookie = `fakeRefreshToken=${token}; expires=${expires}; path=/`;
+
+            return token;
+        }
+
+        function getRefreshToken() {
+            // get refresh token from cookie
+            return (document.cookie.split(';').find(x => x.includes('fakeRefreshToken')) || '=').split('=')[1];
+        }
+    }
+}
+
+export let fakeBackendProvider = {
+    // use fake backend in place of Http service for backend-less development
+    provide: HTTP_INTERCEPTORS,
+    useClass: FakeBackendInterceptor,
+    multi: true
+};
+
+================================================================================
+File: src\app\_helpers\index.ts
+Size: 216 B
+================================================================================
+
+﻿export * from './app.initializer';
+export * from './auth.guard';
+export * from './error.interceptor';
+export * from './fake-backend';
+export * from './jwt.interceptor';
+export * from './must-match.validator';
+
+================================================================================
+File: src\app\_helpers\jwt.interceptor.ts
+Size: 1.02 kB
+================================================================================
+
+import { Injectable } from '@angular/core';
+import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+import { environment } from '@environments/environment';
+import { AccountService } from '@app/_services';
+
+@Injectable()
+export class JwtInterceptor implements HttpInterceptor {
+    constructor(private accountService: AccountService) { }
+
+    intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+        // add auth header with jwt if account is logged in and request is to the api url
+        const account = this.accountService.accountValue;
+        const isLoggedIn = account && account.jwtToken;
+        const isApiUrl = request.url.startsWith(environment.apiUrl);
+        if (isLoggedIn && isApiUrl) {
+            request = request.clone({
+                setHeaders: { Authorization: `Bearer ${account.jwtToken}` }
+            });
+        }
+
+        return next.handle(request);
+    }
+}
+
+================================================================================
+File: src\app\_helpers\must-match.validator.ts
+Size: 914 B
+================================================================================
+
+import { AbstractControl } from '@angular/forms';
+
+// custom validator to check that two fields match
+export function MustMatch(controlName: string, matchingControlName: string) {
+    return (group: AbstractControl) => {
+        const control = group.get(controlName);
+        const matchingControl = group.get(matchingControlName);
+
+        if (!control || !matchingControl) {
+            return null;
+        }
+
+        // return if another validator has already found an error on the matchingControl
+        if (matchingControl.errors && !matchingControl.errors.mustMatch) {
+            return null;
+        }
+
+        // set error on matchingControl if validation fails
+        if (control.value !== matchingControl.value) {
+            matchingControl.setErrors({ mustMatch: true });
+        } else {
+            matchingControl.setErrors(null);
+        }
+        return null;
+    }
+}
+
+================================================================================
+File: src\app\_models\account.ts
+Size: 235 B
+================================================================================
+
+﻿import { Role } from './role';
+
+export class Account {
+    id?: string;
+    title?: string;
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    role?: Role;
+    status?: string;
+    jwtToken?: string;
+}
+
+================================================================================
+File: src\app\_models\alert.ts
+Size: 453 B
+================================================================================
+
+export class Alert {
+    id?: string;
+    type?: AlertType;
+    message?: string;
+    autoClose?: boolean;
+    keepAfterRouteChange?: boolean;
+    fade?: boolean;
+
+    constructor(init?: Partial<Alert>) {
+        Object.assign(this, init);
+    }
+}
+
+export enum AlertType {
+    Success,
+    Error,
+    Info,
+    Warning
+}
+
+export class AlertOptions {
+    id?: string;
+    autoClose?: boolean;
+    keepAfterRouteChange?: boolean;
+}
+
+================================================================================
+File: src\app\_models\department.ts
+Size: 374 B
+================================================================================
+
+// file: src/app/_models/department.ts
+export interface Department {
+  id: number;             // Primary key (numeric ID from backend)
+  name: string;           // Department name (e.g., "Engineering")
+  description?: string;   // Optional description (e.g., "Software development team")
+  employeeCount?: number; // Auto-calculated in backend, displayed in table
+}
+
+
+================================================================================
+File: src\app\_models\employee.ts
+Size: 345 B
+================================================================================
+
+export interface Employee {
+  id: number;
+  employeeId: string;
+  accountId: number;
+  position: string;
+  // department (name) for display; departmentId is the actual FK
+  department?: string;
+  departmentId?: number;
+  hireDate: string;   // or Date
+  status: string;
+  account?: {
+    email: string;
+    status: string;
+  };
+}
+
+
+================================================================================
+File: src\app\_models\index.ts
+Size: 140 B
+================================================================================
+
+﻿export * from './account';
+export * from './alert';
+export * from './role';
+export * from './department';
+export * from './position';
+
+================================================================================
+File: src\app\_models\position.ts
+Size: 121 B
+================================================================================
+
+// src/app/_models/position.ts
+export interface Position {
+  id: number;
+  name: string;
+  description?: string;
+}
+
+
+================================================================================
+File: src\app\_models\request.ts
+Size: 183 B
+================================================================================
+
+export interface Request {
+  employeeId: number;
+  type: string;
+  items: string;
+  status: string;
+    account?: {
+      email: string;
+      status: string;
+    };
+  };
+
+
+
+================================================================================
+File: src\app\_models\role.ts
+Size: 62 B
+================================================================================
+
+export enum Role {
+    User = 'User',
+    Admin = 'Admin'
+}
+
+================================================================================
+File: src\app\_models\workflow.ts
+Size: 337 B
+================================================================================
+
+export interface Workflow {
+  id: number;
+  type: 'Onboarding' | 'Leave' | 'Transfer' | 'Promotion' | 'Resignation';
+  details: string;
+  status: 'Pending' | 'Approved' | 'Rejected';
+  employeeId: number;
+  request?: {
+    id: number;
+    type: string;
+    items: string;
+    status: string;
+    employeeId: string;
+  };
+}
+
+
+================================================================================
+File: src\app\_services\account.service.ts
+Size: 5.34 kB
+================================================================================
+
+﻿    import { Injectable } from '@angular/core';
+    import { Router } from '@angular/router';
+    import { HttpClient } from '@angular/common/http';
+    import { BehaviorSubject, Observable } from 'rxjs';
+    import { map, catchError } from 'rxjs/operators';
+
+    import { environment } from '@environments/environment';
+    import { Account } from '@app/_models';
+
+    const baseUrl = `${environment.apiUrl}/accounts`;
+
+    @Injectable({ providedIn: 'root' })
+    export class AccountService {
+        private accountSubject: BehaviorSubject<Account | null>;
+        public account: Observable<Account | null>;
+        private refreshTokenTimeout?: any;
+
+        constructor(private router: Router, private http: HttpClient) {
+            this.accountSubject = new BehaviorSubject<Account | null>(null);
+            this.account = this.accountSubject.asObservable();
+        }
+
+        // Current logged-in account
+        public get accountValue() {
+            return this.accountSubject.value;
+        }
+
+        // LOGIN
+        login(email: string, password: string) {
+            return this.http.post<Account>(`${baseUrl}/authenticate`, { email, password }, { withCredentials: true })
+                .pipe(
+                    map(account => {
+                        this.accountSubject.next(account);
+                        this.startRefreshTokenTimer();
+                        return account;
+                    }),
+                    catchError(err => { throw err; })
+                );
+        }
+
+        // LOGOUT
+        logout() {
+            this.http.post(`${baseUrl}/revoke-token`, {}, { withCredentials: true }).subscribe();
+            this.stopRefreshTokenTimer();
+            this.accountSubject.next(null);
+            this.router.navigate(['/account/login']);
+        }
+
+        // REFRESH TOKEN
+        refreshToken() {
+            return this.http.post<Account>(`${baseUrl}/refresh-token`, {}, { withCredentials: true })
+                .pipe(map(account => {
+                    this.accountSubject.next(account);
+                    this.startRefreshTokenTimer();
+                    return account;
+                }));
+        }
+
+            // CREATE ACCOUNT (Admin Dashboard)
+        create(account: Account) {
+            // use /accounts instead of /register to respect status field
+            return this.http.post<Account>(`${baseUrl}`, account)
+                .pipe(
+                    map(newAccount => newAccount),
+                    catchError(err => { throw err; })
+                );
+        }
+
+
+       // REGISTER
+        register(account: Account) {
+        return this.http.post<Account>(`${environment.apiUrl}/accounts/register`, account)
+        .pipe(
+            map(newAccount => newAccount),
+            catchError(err => { throw err; })
+        );
+}
+
+        // VERIFY EMAIL
+        verifyEmail(token: string) {
+            return this.http.post(`${baseUrl}/verify-email`, { token });
+        }
+
+        // FORGOT PASSWORD
+        forgotPassword(email: string) {
+            return this.http.post(`${baseUrl}/forgot-password`, { email });
+        }
+
+        // VALIDATE RESET TOKEN
+        validateResetToken(token: string) {
+            return this.http.post(`${baseUrl}/validate-reset-token`, { token });
+        }
+
+        // RESET PASSWORD
+        resetPassword(token: string, password: string, confirmPassword?: string) {
+            return this.http.post(`${baseUrl}/reset-password`, { token, password, confirmPassword });
+        }
+
+        // GET ALL ACCOUNTS
+        getAll() {
+            return this.http.get<Account[]>(baseUrl);
+        }
+
+        // GET ACCOUNT BY ID
+        getById(id: string) {
+            return this.http.get<Account>(`${baseUrl}/${id}`);
+        }
+
+        // UPDATE ACCOUNT
+        update(id: string, params: any) {
+            return this.http.put<Account>(`${baseUrl}/${id}`, params)
+                .pipe(map(account => {
+                    if (account.id === this.accountValue?.id) {
+                        const updated = { ...this.accountValue, ...account };
+                        this.accountSubject.next(updated);
+                    }
+                    return account;
+                }));
+        }
+
+        // DEACTIVATE ACCOUNT
+        deactivate(id: string) {
+            return this.http.delete(`${baseUrl}/${id}`)
+                .pipe(map(() => {
+                    if (this.accountValue?.id === id) this.accountSubject.next(null);
+                    return id;
+                }));
+        }
+
+        // --------------------------
+        // HELPER METHODS FOR JWT
+        // --------------------------
+        private startRefreshTokenTimer() {
+            const jwtBase64 = this.accountValue?.jwtToken?.split('.')[1];
+            if (!jwtBase64) return;
+
+            const jwtToken = JSON.parse(atob(jwtBase64));
+            const expires = new Date(jwtToken.exp * 1000);
+            const timeout = expires.getTime() - Date.now() - 60 * 1000;
+
+            this.refreshTokenTimeout = setTimeout(() => this.refreshToken().subscribe(), timeout);
+        }
+
+        private stopRefreshTokenTimer() {
+            clearTimeout(this.refreshTokenTimeout);
+        }
+    }
+
+
+================================================================================
+File: src\app\_services\alert.service.ts
+Size: 1.49 kB
+================================================================================
+
+﻿import { Injectable } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
+import { filter } from 'rxjs/operators';
+
+import { Alert, AlertOptions, AlertType } from '@app/_models';
+
+@Injectable({ providedIn: 'root' })
+export class AlertService {
+    private subject = new Subject<Alert>();
+    private defaultId = 'default-alert';
+
+    // enable subscribing to alerts observable
+    onAlert(id = this.defaultId): Observable<Alert> {
+        return this.subject.asObservable().pipe(filter(x => x && x.id === id));
+    }
+
+    // convenience methods
+    success(message: string, options?: AlertOptions) {
+        this.alert(new Alert({ ...options, type: AlertType.Success, message }));
+    }
+
+    error(message: string, options?: AlertOptions) {
+        this.alert(new Alert({ ...options, type: AlertType.Error, message }));
+    }
+
+    info(message: string, options?: AlertOptions) {
+        this.alert(new Alert({ ...options, type: AlertType.Info, message }));
+    }
+
+    warn(message: string, options?: AlertOptions) {
+        this.alert(new Alert({ ...options, type: AlertType.Warning, message }));
+    }
+
+    // core alert method
+    alert(alert: Alert) {
+        alert.id = alert.id || this.defaultId;
+        alert.autoClose = (alert.autoClose === undefined ? true : alert.autoClose);
+        this.subject.next(alert);
+    }
+
+    // clear alerts
+    clear(id = this.defaultId) {
+        this.subject.next(new Alert({ id }));
+    }
+}
+
+================================================================================
+File: src\app\_services\department.service.ts
+Size: 1.26 kB
+================================================================================
+
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Department } from '@app/_models/department';
+import { environment } from 'src/environments/environment';
+
+@Injectable({ providedIn: 'root' })
+export class DepartmentsService {
+  private baseUrl = `${environment.apiUrl}/departments`;
+
+  constructor(private http: HttpClient) {}
+
+  /** Fetch all departments */
+  getAll(): Observable<Department[]> {
+    return this.http.get<Department[]>(this.baseUrl);
+  }
+
+  /** Fetch a single department by ID */
+  getById(id: string | number): Observable<Department> {
+    return this.http.get<Department>(`${this.baseUrl}/${id}`);
+  }
+
+  /** Create new department */
+  create(department: Partial<Department>): Observable<Department> {
+    return this.http.post<Department>(this.baseUrl, department);
+  }
+
+  /** Update department */
+  update(id: string | number, department: Partial<Department>): Observable<Department> {
+    return this.http.put<Department>(`${this.baseUrl}/${id}`, department);
+  }
+
+  /** Delete department */
+  delete(id: string | number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${id}`);
+  }
+}
+
+
+================================================================================
+File: src\app\_services\employee.service.ts
+Size: 1.79 kB
+================================================================================
+
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
+import { Employee } from '@app/_models/employee';
+
+@Injectable({ providedIn: 'root' })
+export class EmployeesService {
+  private baseUrl = `${environment.apiUrl}/employees`;
+
+  constructor(private http: HttpClient) {}
+
+  // 🔹 Get all employees
+  getAll(): Observable<Employee[]> {
+    return this.http.get<Employee[]>(this.baseUrl);
+  }
+
+  // 🔹 Get all employees (active + inactive) for requests
+  getAllEmployees(): Observable<Employee[]> {
+    return this.http.get<Employee[]>(`${environment.apiUrl}/requests/all-employees`);
+  }
+
+  // 🔹 Get single employee by ID
+  getById(id: number | string): Observable<Employee> {
+    return this.http.get<Employee>(`${this.baseUrl}/${id}`);
+  }
+
+  // 🔹 Get next auto-generated employeeId
+  getNextId(): Observable<{ nextId: string }> {
+    return this.http.get<{ nextId: string }>(`${this.baseUrl}/next-id`);
+  }
+
+  // 🔹 Get all departments (for dropdowns)
+  getDepartments(): Observable<any[]> {
+    return this.http.get<any[]>(`${environment.apiUrl}/departments`);
+  }
+
+  // 🔹 Create new employee
+  create(employee: Partial<Employee>): Observable<Employee> {
+    return this.http.post<Employee>(this.baseUrl, employee);
+  }
+
+  // 🔹 Update existing employee (e.g. transfer department)
+  update(id: number | string, employee: Partial<Employee>): Observable<Employee> {
+    return this.http.put<Employee>(`${this.baseUrl}/${id}`, employee);
+  }
+
+  // 🔹 Delete employee
+  delete(id: number | string): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${id}`);
+  }
+}
+
+
+================================================================================
+File: src\app\_services\index.ts
+Size: 238 B
+================================================================================
+
+﻿export * from './account.service';
+export * from './alert.service';
+export * from './employee.service';
+export * from './requests.service';  // ✅ add this
+export * from './department.service';
+export * from './position.service';
+
+================================================================================
+File: src\app\_services\position.service.ts
+Size: 1.1 kB
+================================================================================
+
+// src/app/_services/position.service.ts
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Position } from '@app/_models/position';
+import { environment } from 'src/environments/environment';
+
+@Injectable({ providedIn: 'root' })
+export class PositionsService {
+  private baseUrl = `${environment.apiUrl}/positions`;
+
+  constructor(private http: HttpClient) {}
+
+  getAll(): Observable<Position[]> {
+    return this.http.get<Position[]>(this.baseUrl);
+  }
+
+  getById(id: string | number): Observable<Position> {
+    return this.http.get<Position>(`${this.baseUrl}/${id}`);
+  }
+
+  create(position: Partial<Position>): Observable<Position> {
+    return this.http.post<Position>(this.baseUrl, position);
+  }
+
+  update(id: string | number, position: Partial<Position>): Observable<Position> {
+    return this.http.put<Position>(`${this.baseUrl}/${id}`, position);
+  }
+
+  delete(id: string | number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${id}`);
+  }
+}
+
+
+================================================================================
+File: src\app\_services\requests.service.ts
+Size: 816 B
+================================================================================
+
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Request } from '@app/_models/request';
+
+@Injectable({ providedIn: 'root' })   // ✅ must be here
+export class RequestsService {
+  private apiUrl = 'http://localhost:4000/requests';
+
+  constructor(private http: HttpClient) {}
+
+  getAll(): Observable<Request[]> {
+    return this.http.get<Request[]>(this.apiUrl);
+  }
+
+  getById(id: number): Observable<Request> {
+    return this.http.get<Request>(`${this.apiUrl}/${id}`);
+  }
+
+  create(request: Request): Observable<any> {
+    return this.http.post(this.apiUrl, request);
+  }
+
+  update(id: number, request: Request): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}`, request);
+  }
+}
+
+
+================================================================================
+File: src\app\_services\workflows.service.ts
+Size: 969 B
+================================================================================
+
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Workflow } from '@app/_models/workflow';
+
+@Injectable({ providedIn: 'root' })
+export class WorkflowsService {
+  private apiUrl = 'http://localhost:4000/workflows';
+
+  constructor(private http: HttpClient) {}
+
+  getAll(): Observable<Workflow[]> {
+    return this.http.get<Workflow[]>(this.apiUrl);
+  }
+
+  getById(id: number): Observable<Workflow> {
+    return this.http.get<Workflow>(`${this.apiUrl}/${id}`);
+  }
+
+  getByEmployeeId(employeeId: string): Observable<Workflow[]> {
+    return this.http.get<Workflow[]>(`${this.apiUrl}/employee/${employeeId}`);
+  }
+
+  create(workflow: Workflow): Observable<any> {
+    return this.http.post(this.apiUrl, workflow);
+  }
+
+  update(id: number, workflow: Partial<Workflow>): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}`, workflow);
+  }
+}
+
+
+================================================================================
+File: src\environments\environment.prod.ts
+Size: 116 B
+================================================================================
+
+export const environment = {
+    production: true,
+    apiUrl: 'https://group-project-api-x1mr.onrender.com'
+};
+
+
+================================================================================
+File: src\environments\environment.ts
+Size: 718 B
+================================================================================
+
+// This file can be replaced during build by using the `fileReplacements` array.
+// `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
+// The list of file replacements can be found in `angular.json`.
+
+export const environment = {
+    production: false,
+    apiUrl: 'http://localhost:4000'
+};
+
+/*
+ * For easier debugging in development mode, you can import the following file
+ * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.
+ *
+ * This import should be commented out in production mode because it will have a negative impact
+ * on performance if an error is thrown.
+ */
+// import 'zone.js/dist/zone-error';  // Included with Angular CLI.
+
+
+================================================================================
+File: src\index.html
+Size: 503 B
+================================================================================
+
+<!DOCTYPE html>
+<html>
+<head>
+    <base href="/" />
+    <title>Angular 15 Auth Boilerplate - Sign Up with Verification, Login and Forgot Password</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- bootstrap css -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <app-root></app-root>
+
+    <!-- credits -->
+    <div class="text-center mt-4">
+    </div>
+</body>
+</html>
+
+================================================================================
+File: src\main.ts
+Size: 388 B
+================================================================================
+
+import { enableProdMode } from '@angular/core';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+
+import { AppModule } from './app/app.module';
+import { environment } from './environments/environment';
+
+if (environment.production) {
+    enableProdMode();
+}
+
+platformBrowserDynamic().bootstrapModule(AppModule)
+    .catch(err => console.error(err));
+
+
+================================================================================
+File: src\polyfills.ts
+Size: 2.39 kB
+================================================================================
+
+/**
+ * This file includes polyfills needed by Angular and is loaded before the app.
+ * You can add your own extra polyfills to this file.
+ *
+ * This file is divided into 2 sections:
+ *   1. Browser polyfills. These are applied before loading ZoneJS and are sorted by browsers.
+ *   2. Application imports. Files imported after ZoneJS that should be loaded before your main
+ *      file.
+ *
+ * The current setup is for so-called "evergreen" browsers; the last versions of browsers that
+ * automatically update themselves. This includes recent versions of Safari, Chrome (including
+ * Opera), Edge on the desktop, and iOS and Chrome on mobile.
+ *
+ * Learn more in https://angular.io/guide/browser-support
+ */
+
+/***************************************************************************************************
+ * BROWSER POLYFILLS
+ */
+
+/**
+ * By default, zone.js will patch all possible macroTask and DomEvents
+ * user can disable parts of macroTask/DomEvents patch by setting following flags
+ * because those flags need to be set before `zone.js` being loaded, and webpack
+ * will put import in the top of bundle, so user need to create a separate file
+ * in this directory (for example: zone-flags.ts), and put the following flags
+ * into that file, and then add the following code before importing zone.js.
+ * import './zone-flags';
+ *
+ * The flags allowed in zone-flags.ts are listed here.
+ *
+ * The following flags will work for all browsers.
+ *
+ * (window as any).__Zone_disable_requestAnimationFrame = true; // disable patch requestAnimationFrame
+ * (window as any).__Zone_disable_on_property = true; // disable patch onProperty such as onclick
+ * (window as any).__zone_symbol__UNPATCHED_EVENTS = ['scroll', 'mousemove']; // disable patch specified eventNames
+ *
+ *  in IE/Edge developer tools, the addEventListener will also be wrapped by zone.js
+ *  with the following flag, it will bypass `zone.js` patch for IE/Edge
+ *
+ *  (window as any).__Zone_enable_cross_context_check = true;
+ *
+ */
+
+/***************************************************************************************************
+ * Zone JS is required by default for Angular itself.
+ */
+import 'zone.js';  // Included with Angular CLI.
+
+
+/***************************************************************************************************
+ * APPLICATION IMPORTS
+ */
+
+
+================================================================================
+File: src\styles.less
+Size: 357 B
+================================================================================
+
+/* You can add global styles to this file, and also import other style files */
+.app-container {
+    min-height: 320px;
+}
+
+.admin-nav {
+    padding-top: 0;
+    padding-bottom: 0;
+    background-color: #e8e9ea;
+    border-bottom: 1px solid #ccc;
+}
+
+.btn-delete-account {
+    width: 40px;
+    text-align: center;
+    box-sizing: content-box;
+}
+
+================================================================================
+File: src\test.ts
+Size: 775 B
+================================================================================
+
+// This file is required by karma.conf.js and loads recursively all the .spec and framework files
+
+import 'zone.js/testing';
+import { getTestBed } from '@angular/core/testing';
+import {
+  BrowserDynamicTestingModule,
+  platformBrowserDynamicTesting
+} from '@angular/platform-browser-dynamic/testing';
+
+declare const require: {
+  context(path: string, deep?: boolean, filter?: RegExp): {
+    <T>(id: string): T;
+    keys(): string[];
+  };
+};
+
+// First, initialize the Angular testing environment.
+getTestBed().initTestEnvironment(
+  BrowserDynamicTestingModule,
+  platformBrowserDynamicTesting(),
+);
+
+// Then we find all the tests.
+const context = require.context('./', true, /\.spec\.ts$/);
+// And load the modules.
+context.keys().forEach(context);
+
+
+================================================================================
+File: tsconfig.app.json
+Size: 334 B
+================================================================================
+
+/* To learn more about this file see: https://angular.io/config/tsconfig. */
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "outDir": "./out-tsc/app",
+        "types": []
+    },
+    "files": [
+        "src/main.ts",
+        "src/polyfills.ts"
+    ],
+    "include": [
+        "src/**/*.d.ts"
+    ]
+}
+
+================================================================================
+File: tsconfig.json
+Size: 1.18 kB
+================================================================================
+
+/* To learn more about this file see: https://angular.io/config/tsconfig. */
+{
+    "compileOnSave": false,
+    "compilerOptions": {
+        "baseUrl": "./",
+        "outDir": "./dist/out-tsc",
+        "allowSyntheticDefaultImports": true,
+        "forceConsistentCasingInFileNames": true,
+        "strict": true,
+        "noImplicitOverride": true,
+        "noPropertyAccessFromIndexSignature": false,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+        "sourceMap": true,
+        "declaration": false,
+        "downlevelIteration": true,
+        "experimentalDecorators": true,
+        "moduleResolution": "node",
+        "importHelpers": true,
+        "target": "es2020",
+        "module": "es2020",
+        "lib": [
+            "es2020",
+            "dom"
+        ],
+        "paths": {
+            "@app/*": ["src/app/*"],
+            "@environments/*": ["src/environments/*"]
+        }
+    },
+    "angularCompilerOptions": {
+        "enableI18nLegacyMessageIdFormat": false,
+        "strictInjectionParameters": true,
+        "strictInputAccessModifiers": true,
+        "strictTemplates": true
+    }
+}
+
+================================================================================
+File: tsconfig.spec.json
+Size: 397 B
+================================================================================
+
+/* To learn more about this file see: https://angular.io/config/tsconfig. */
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "outDir": "./out-tsc/spec",
+        "types": [
+            "jasmine"
+        ]
+    },
+    "files": [
+        "src/test.ts",
+        "src/polyfills.ts"
+    ],
+    "include": [
+        "src/**/*.spec.ts",
+        "src/**/*.d.ts"
+    ]
+}
