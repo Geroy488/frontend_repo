@@ -5,8 +5,8 @@ import { Workflow } from '@app/_models/workflow';
 
 @Injectable({ providedIn: 'root' })
 export class WorkflowsService {
-  private apiUrl = 'http://localhost:4000/workflows';
-
+  private apiUrl = 'https://frontend-repo-g.vercel.app/';
+ //private apiUrl = 'http://localhost:4000/workflows';
   constructor(private http: HttpClient) {}
 
   getAll(): Observable<Workflow[]> {

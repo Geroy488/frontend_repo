@@ -5,8 +5,8 @@ import { Request } from '@app/_models/request';
 
 @Injectable({ providedIn: 'root' })   // ✅ must be here
 export class RequestsService {
-  private apiUrl = 'http://localhost:4000/requests';
-
+  private apiUrl = 'https://frontend-repo-g.vercel.app/';
+  //private apiUrl = 'http://localhost:4000/requests';
   constructor(private http: HttpClient) {}
 
   getAll(): Observable<Request[]> {
