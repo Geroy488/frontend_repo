@@ -1,30 +1,65 @@
 ﻿<div class="app-container" [ngClass]="{ 'bg-light': account }">
-    <!-- main nav -->
-    <nav class="navbar navbar-expand navbar-dark bg-dark px-3" *ngIf="account">
-        <!-- Left side -->
-        <div class="navbar-nav me-auto">
-            <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-item nav-link">Home</a>
-            <a routerLink="/profile" routerLinkActive="active" class="nav-item nav-link">Profile</a>
-        </div>
+  <!-- main nav -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark" *ngIf="account">
+    <div class="container-fluid">
+      <a class="navbar-brand" routerLink="/">My App</a>
 
-        <!-- Right side -->
-        <div class="navbar-nav ms-auto">
-            <a *ngIf="account.role === Role.Admin" routerLink="/admin/accounts" routerLinkActive="active" class="nav-item nav-link">Accounts</a>
-            <a *ngIf="account.role === Role.Admin" routerLink="/admin/employees" routerLinkActive="active" class="nav-item nav-link">Employees</a>
-            <a *ngIf="account.role === Role.Admin" routerLink="/admin/departments" routerLinkActive="active" class="nav-item nav-link">Departments</a>
-            <a *ngIf="account.role === Role.Admin" routerLink="/admin/positions" routerLinkActive="active" class="nav-item nav-link">Positions</a>
-            <a *ngIf="account.role === Role.Admin" routerLink="/admin/requests" routerLinkActive="active" class="nav-item nav-link">Request</a>
-            
-            <button (click)="logout()" class="btn btn-link nav-item nav-link">Logout</button>
-        </div>
-    </nav>
+      <!-- mobile toggle button -->
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-    <!-- subnav router outlet -->
-    <router-outlet name="subnav"></router-outlet>
+      <!-- navbar links -->
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <!-- left -->
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">Home</a>
+          </li>
+          <li class="nav-item">
+            <a routerLink="/profile" routerLinkActive="active" class="nav-link">Profile</a>
+          </li>
+        </ul>
 
-    <!-- global alert -->
+        <!-- right -->
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          <li *ngIf="account.role === Role.Admin" class="nav-item">
+            <a routerLink="/admin/accounts" routerLinkActive="active" class="nav-link">Accounts</a>
+          </li>
+          <li *ngIf="account.role === Role.Admin" class="nav-item">
+            <a routerLink="/admin/employees" routerLinkActive="active" class="nav-link">Employees</a>
+          </li>
+          <li *ngIf="account.role === Role.Admin" class="nav-item">
+            <a routerLink="/admin/departments" routerLinkActive="active" class="nav-link">Departments</a>
+          </li>
+          <li *ngIf="account.role === Role.Admin" class="nav-item">
+            <a routerLink="/admin/positions" routerLinkActive="active" class="nav-link">Positions</a>
+          </li>
+          <li *ngIf="account.role === Role.Admin" class="nav-item">
+            <a routerLink="/admin/requests" routerLinkActive="active" class="nav-link">Request</a>
+          </li>
+          <li class="nav-item">
+            <button (click)="logout()" class="btn btn-link nav-link text-danger">Logout</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- subnav router outlet -->
+  <router-outlet name="subnav"></router-outlet>
+
+  <!-- global alert -->
+  <div class="container mt-3">
     <alert></alert>
-
-    <!-- main router outlet -->
     <router-outlet></router-outlet>
+  </div>
 </div>
