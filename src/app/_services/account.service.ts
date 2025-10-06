@@ -27,7 +27,7 @@
 
         // LOGIN
         login(email: string, password: string) {
-            return this.http.post<Account>(`${baseUrl}/authenticate`, { username: email, password }, { withCredentials: true })
+            return this.http.post<Account>(`${baseUrl}/authenticate`, { email, password }, { withCredentials: true })
                 .pipe(
                     map(account => {
                         this.accountSubject.next(account);
