@@ -33,6 +33,7 @@ submitted = false;
 private routeSub!: Subscription;
 currentYear: number = new Date().getFullYear();
 currentDepartment: string | null = null;
+currentPosition: string | null = null; // ✅ new
 
 accounts: any[] = []; // accounts for dropdown
 departments: any[] = [];
@@ -100,6 +101,8 @@ ngOnInit() {
           next: (emp: any) => {
             const currentDepartmentName = emp.department;
             const currentPositionName = emp.position; // ✅ store current position
+            this.currentDepartment = currentDepartmentName;
+            this.currentPosition = currentPositionName; // ✅ store for HTML display
 
             // 🔹 Load departments but exclude current one
             this.employeeService.getDepartments()
@@ -107,9 +110,6 @@ ngOnInit() {
               .subscribe({
                 next: (depts: any[]) => {
                   this.departments = depts.filter(d => d.name !== currentDepartmentName);
-                  this.form.patchValue({
-                    department: emp.department,
-                  });
                 },
                 error: (err) => console.error('Error loading departments', err)
               });
@@ -120,22 +120,20 @@ ngOnInit() {
               .subscribe({
                 next: (pos: any[]) => {
                   this.positions = pos.filter(p => p.name !== currentPositionName);
-                  this.form.patchValue({
-                    position: emp.position,
-                  });
                 },
                 error: (err) => console.error('Error loading positions', err)
               });
 
-            // 🔹 Patch full form
+            // 🔹 Patch form
             this.form.patchValue({
               employeeId: emp.employeeId,
               accountId: emp.accountId,
+              position: emp.position,
+              department: emp.department,
               hireDate: emp.hireDate,
               status: emp.status ?? 'Active'
             });
 
-            this.currentDepartment = currentDepartmentName;
             this.loading = false;
           },
           error: () => this.loading = false

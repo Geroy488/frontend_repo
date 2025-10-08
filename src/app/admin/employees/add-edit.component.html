@@ -30,16 +30,24 @@
     </div>
 
      <!-- Position -->
-      <div class="mb-3">
-        <label class="form-label">Position</label>
-        <select formControlName="position" class="form-select">
-          <option value="">-- Select Position --</option>
-          <option *ngFor="let pos of positions" [value]="pos.name">{{ pos.name }}</option>
+      <div class="form-group">
+        <label for="position">Position</label>
+        <select id="position" formControlName="position" class="form-control" [disabled]="loading">
+          <!-- ✅ Show the current position first if editing -->
+          <option *ngIf="currentPosition" [value]="currentPosition">
+            {{ currentPosition }} (Current)
+          </option>
+
+          <!-- ✅ Show all other available positions -->
+          <option *ngFor="let pos of positions" [value]="pos.name">
+            {{ pos.name }}
+          </option>
         </select>
-        <div *ngIf="submitted && f.position.errors" class="invalid-feedback">
-          Position is required
+        <div *ngIf="submitted && f.position.errors" class="invalid-feedback d-block">
+          <div *ngIf="f.position.errors['required']">Position is required</div>
         </div>
       </div>
+
 
       
       <!-- Department -->
