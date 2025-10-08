@@ -87,17 +87,6 @@ ngOnInit() {
       error: (err) => console.error('Error loading accounts', err)
     });
 
-  // Load positions
-  this.positionsService.getAll()
-    .pipe(first())
-    .subscribe({
-      next: (pos: any[]) => this.positions = pos,
-      error: (err) => console.error('Error loading positions', err)
-    });
-
-  // Track current department
-  let currentDepartmentName: string | null = null;
-
   // Check if edit or create
   this.routeSub = this.route.params.subscribe(params => {
     this.id = params['id'];
@@ -109,9 +98,10 @@ ngOnInit() {
         .pipe(first())
         .subscribe({
           next: (emp: any) => {
-            currentDepartmentName = emp.department;
+            const currentDepartmentName = emp.department;
+            const currentPositionName = emp.position; // ✅ store current position
 
-            // Load departments but exclude current one
+            // 🔹 Load departments but exclude current one
             this.employeeService.getDepartments()
               .pipe(first())
               .subscribe({
@@ -124,18 +114,28 @@ ngOnInit() {
                 error: (err) => console.error('Error loading departments', err)
               });
 
-            // Patch full form
+            // 🔹 Load positions but exclude current one
+            this.positionsService.getAll()
+              .pipe(first())
+              .subscribe({
+                next: (pos: any[]) => {
+                  this.positions = pos.filter(p => p.name !== currentPositionName);
+                  this.form.patchValue({
+                    position: emp.position,
+                  });
+                },
+                error: (err) => console.error('Error loading positions', err)
+              });
+
+            // 🔹 Patch full form
             this.form.patchValue({
               employeeId: emp.employeeId,
               accountId: emp.accountId,
-              position: emp.position,
               hireDate: emp.hireDate,
               status: emp.status ?? 'Active'
             });
 
-            // Store current department for display
             this.currentDepartment = currentDepartmentName;
-
             this.loading = false;
           },
           error: () => this.loading = false
@@ -148,6 +148,14 @@ ngOnInit() {
         .subscribe({
           next: (depts: any[]) => this.departments = depts,
           error: (err) => console.error('Error loading departments', err)
+        });
+
+      // Create mode — load all positions
+      this.positionsService.getAll()
+        .pipe(first())
+        .subscribe({
+          next: (pos: any[]) => this.positions = pos,
+          error: (err) => console.error('Error loading positions', err)
         });
 
       // Get next employeeId
