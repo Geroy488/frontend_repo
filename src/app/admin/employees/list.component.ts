@@ -12,6 +12,7 @@ import { Department } from '@app/_models/department'; // ✅ import
 export class ListComponent implements OnInit {
   employees?: Employee[];
   departments: Department[] = [];   // ✅ store full department objects
+  filteredDepartments: Department[] = []; // ✅ dynamically filtered departments
 
   selectedEmployee: Employee | null = null;
   selectedDepartment: number | null = null; // ✅ use departmentId
@@ -50,9 +51,14 @@ export class ListComponent implements OnInit {
     });
 }
   // 🔹 Open modal
-   openTransferModal(employee: Employee) {
+    openTransferModal(employee: Employee) {
     this.selectedEmployee = employee;
-    this.selectedDepartment = null; // reset
+    this.selectedDepartment = null;
+
+    // ✅ Filter departments to exclude current one
+    this.filteredDepartments = this.departments.filter(
+      (dept) => dept.name !== employee.department
+    );
 
     const modal = document.getElementById('transferModal');
     if (modal) {

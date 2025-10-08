@@ -58,18 +58,20 @@
   </tbody>
 </table>
 
-<!-- Transfer Modal -->
-<div class="modal fade" id="transferModal" tabindex="-1" aria-labelledby="transferModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
+        <!-- Transfer Modal -->
+        <div class="mb-3">
+          <label class="form-label">Current Department</label>
+          <input type="text" class="form-control" [value]="selectedEmployee?.department" readonly />
+        </div>
 
-      <!-- Header -->
-      <div class="modal-header">
-        <h5 class="modal-title" id="transferModalLabel">
-          Transfer Employee: {{ selectedEmployee?.employeeId }}
-        </h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
+        <div class="mb-3">
+          <label class="form-label">Transfer To</label>
+          <select [(ngModel)]="selectedDepartment" class="form-select">
+            <option *ngFor="let dept of filteredDepartments" [ngValue]="dept.id">
+              {{ dept.name }}
+            </option>
+          </select>
+        </div>
 
       <!-- Body -->
       <div class="modal-body">
