@@ -32,6 +32,7 @@ submitting = false;
 submitted = false;
 private routeSub!: Subscription;
 currentYear: number = new Date().getFullYear();
+currentDepartment: string | null = null;
 
 accounts: any[] = []; // accounts for dropdown
 departments: any[] = [];
@@ -49,102 +50,113 @@ constructor(
 
 
 ngOnInit() {
-this.initForm();
+  this.initForm();
 
-// 1️⃣ Load accounts but exclude those already linked to employees
-// inside ngOnInit(), after loading accounts
-this.accountService.getAll()
-  .pipe(first())
-  .subscribe({
-    next: (accounts: any[]) => {
-      this.employeeService.getAll()
+  // Load accounts (same as before)
+  this.accountService.getAll()
+    .pipe(first())
+    .subscribe({
+      next: (accounts: any[]) => {
+        this.employeeService.getAll()
+          .pipe(first())
+          .subscribe({
+            next: (employees: any[]) => {
+              const usedAccountIds = employees.map(e => e.accountId);
+              let currentAccountId: number | null = null;
+
+              if (this.id) {
+                this.employeeService.getById(this.id)
+                  .pipe(first())
+                  .subscribe(emp => {
+                    currentAccountId = emp.accountId;
+
+                    this.accounts = accounts.filter(acc =>
+                      acc.status === 'Active' &&
+                      (!usedAccountIds.includes(acc.id) || acc.id === currentAccountId)
+                    );
+                  });
+              } else {
+                this.accounts = accounts.filter(acc =>
+                  acc.status === 'Active' && !usedAccountIds.includes(acc.id)
+                );
+              }
+            },
+            error: (err) => console.error('Error loading employees', err)
+          });
+      },
+      error: (err) => console.error('Error loading accounts', err)
+    });
+
+  // Load positions
+  this.positionsService.getAll()
+    .pipe(first())
+    .subscribe({
+      next: (pos: any[]) => this.positions = pos,
+      error: (err) => console.error('Error loading positions', err)
+    });
+
+  // Track current department
+  let currentDepartmentName: string | null = null;
+
+  // Check if edit or create
+  this.routeSub = this.route.params.subscribe(params => {
+    this.id = params['id'];
+    this.title = this.id ? 'Edit Employee' : 'Create Employee';
+
+    if (this.id) {
+      this.loading = true;
+      this.employeeService.getById(this.id)
         .pipe(first())
         .subscribe({
-          next: (employees: any[]) => {
-            const usedAccountIds = employees.map(e => e.accountId);
+          next: (emp: any) => {
+            currentDepartmentName = emp.department;
 
-            // 🔹 If editing, allow current account even if it's "used"
-            let currentAccountId: number | null = null;
-            if (this.id) {
-              this.employeeService.getById(this.id)
-                .pipe(first())
-                .subscribe(emp => {
-                  currentAccountId = emp.accountId;
+            // Load departments but exclude current one
+            this.employeeService.getDepartments()
+              .pipe(first())
+              .subscribe({
+                next: (depts: any[]) => {
+                  this.departments = depts.filter(d => d.name !== currentDepartmentName);
+                  this.form.patchValue({
+                    department: emp.department,
+                  });
+                },
+                error: (err) => console.error('Error loading departments', err)
+              });
 
-                  this.accounts = accounts.filter(acc =>
-                    acc.status === 'Active' &&
-                    (!usedAccountIds.includes(acc.id) || acc.id === currentAccountId)
-                  );
-                });
-            } else {
-              // Creating new employee → exclude all used accounts
-              this.accounts = accounts.filter(acc =>
-                acc.status === 'Active' && !usedAccountIds.includes(acc.id)
-              );
-            }
+            // Patch full form
+            this.form.patchValue({
+              employeeId: emp.employeeId,
+              accountId: emp.accountId,
+              position: emp.position,
+              hireDate: emp.hireDate,
+              status: emp.status ?? 'Active'
+            });
+
+            // Store current department for display
+            this.currentDepartment = currentDepartmentName;
+
+            this.loading = false;
           },
-          error: (err) => console.error('Error loading employees', err)
+          error: () => this.loading = false
         });
-    },
-    error: (err) => console.error('Error loading accounts', err)
-  });
 
+    } else {
+      // Create mode — load all departments
+      this.employeeService.getDepartments()
+        .pipe(first())
+        .subscribe({
+          next: (depts: any[]) => this.departments = depts,
+          error: (err) => console.error('Error loading departments', err)
+        });
 
-  // 3️⃣ Load positions dynamically
-this.positionsService.getAll()
-  .pipe(first())
-  .subscribe({
-    next: (pos: any[]) => {
-      this.positions = pos;
-    },
-    error: (err) => console.error('Error loading positions', err)
-  });
-
-
-// 2️⃣ Load departments dynamically
-this.employeeService.getDepartments()
-  .pipe(first())
-  .subscribe({
-    next: (depts: any[]) => {
-      this.departments = depts;
-    },
-    error: (err) => console.error('Error loading departments', err)
-  });
-
-// 3️⃣ Check route params for edit vs. create
-this.routeSub = this.route.params.subscribe(params => {
-  this.id = params['id'];
-  this.title = this.id ? 'Edit Employee' : 'Create Employee';
-
-  if (this.id) {
-    // Editing existing employee
-    this.loading = true;
-    this.employeeService.getById(this.id)
-      .pipe(first())
-      .subscribe({
-        next: (x: any) => {
-          this.form.patchValue({
-            employeeId: x.employeeId,
-            accountId: x.accountId,
-            position: x.position,
-            department: x.department,
-            hireDate: x.hireDate,
-            status: x.status ?? 'Active'
-          });
-          this.loading = false;
-        },
-        error: () => this.loading = false
-      });
-  } else {
-    // Creating new employee → get next employeeId
-    this.employeeService.getNextId()
-      .pipe(first())
-      .subscribe({
-        next: (res: any) => {
-          this.form.get('employeeId')?.setValue(res.nextId);
-        },
-        error: (err) => console.error('Error loading next employeeId', err)
-      });
+      // Get next employeeId
+      this.employeeService.getNextId()
+        .pipe(first())
+        .subscribe({
+          next: (res: any) => this.form.get('employeeId')?.setValue(res.nextId),
+          error: (err) => console.error('Error loading next employeeId', err)
+        });
     }
   });
 }

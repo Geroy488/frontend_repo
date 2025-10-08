@@ -45,9 +45,15 @@
       <!-- Department -->
       <div class="mb-3 col-12 col-md-12">
         <label class="form-label">Department</label>
+
+        <!-- Show current department label (only when editing) -->
+        <div *ngIf="id && currentDepartment" class="alert alert-info py-2 mb-2">
+          <strong>Current:</strong> {{ currentDepartment }}
+        </div>
+
         <select formControlName="department" class="form-select"
                 [ngClass]="{ 'is-invalid': submitted && f.department.errors }">
-          <option value="">-- Select Department --</option>
+          <option value="">-- Select New Department --</option>
           <option *ngFor="let dept of departments" [value]="dept.name">
             {{ dept.name }}
           </option>
@@ -56,7 +62,6 @@
           Department is required
         </div>
       </div>
-
 
       <!-- Hire Date -->
       <div class="mb-3">
