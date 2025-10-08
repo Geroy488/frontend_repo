@@ -51,25 +51,24 @@
 
       
       <!-- Department -->
-      <div class="mb-3 col-12 col-md-12">
-        <label class="form-label">Department</label>
+      <div class="form-group">
+        <label for="department">Department</label>
+        <select id="department" formControlName="department" class="form-control" [disabled]="loading">
+          <!-- ✅ Show the current department first if editing -->
+          <option *ngIf="currentDepartment" [value]="currentDepartment">
+            {{ currentDepartment }} (Current)
+          </option>
 
-        <!-- Show current department label (only when editing) -->
-        <div *ngIf="id && currentDepartment" class="alert alert-info py-2 mb-2">
-          <strong>Current:</strong> {{ currentDepartment }}
-        </div>
-
-        <select formControlName="department" class="form-select"
-                [ngClass]="{ 'is-invalid': submitted && f.department.errors }">
-          <option value="">-- Select New Department --</option>
+          <!-- ✅ Show all other available departments -->
           <option *ngFor="let dept of departments" [value]="dept.name">
             {{ dept.name }}
           </option>
         </select>
-        <div *ngIf="submitted && f.department.errors" class="invalid-feedback">
-          Department is required
+        <div *ngIf="submitted && f.department.errors" class="invalid-feedback d-block">
+          <div *ngIf="f.department.errors['required']">Department is required</div>
         </div>
       </div>
+
 
       <!-- Hire Date -->
       <div class="mb-3">
