@@ -8,7 +8,7 @@
     const accountModule = () => import('./account/account.module').then(x => x.AccountModule);
     const adminModule = () => import('./admin/admin.module').then(x => x.AdminModule);
     const profileModule = () => import('./profile/profile.module').then(x => x.ProfileModule);
-    const requestsModule = () => import('./requests/requests.module').then(x => x.RequestsModule);
+    const requestsModule = () => import('./request/request.module').then(x => x.RequestsModule);
 
     const routes: Routes = [
         { path: '', component: HomeComponent, canActivate: [AuthGuard] },
