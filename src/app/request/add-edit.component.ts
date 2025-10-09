@@ -1,105 +1,176 @@
-import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { first } from 'rxjs/operators';
-import { RequestsService } from '@app/_services/requests.service';
-import { AccountService } from '@app/_services/account.service';
-import { EmployeesService } from '@app/_services/employee.service';
+    import { Component, OnInit, OnDestroy } from '@angular/core';
+    import { Router, ActivatedRoute } from '@angular/router';
+    import { FormBuilder, FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
+    import { first } from 'rxjs/operators';
+    import { Subscription } from 'rxjs';
 
-@Component({
-  templateUrl: './add-edit.component.html'
-})
-export class RequestAddEditComponent implements OnInit {
-  form!: FormGroup;
-  id?: number;
-  title!: string;
-  loading = false;
-  submitting = false;
-  submitted = false;
-  employees: any[] = [];
-  currentUser: any;
-  isAdmin = false;
+    import { RequestsService, EmployeesService, AlertService } from '@app/_services';
 
-  constructor(
-    private formBuilder: FormBuilder,
-    private route: ActivatedRoute,
-    private router: Router,
-    private requestsService: RequestsService,
-    private accountService: AccountService,
-    private employeesService: EmployeesService
-  ) {}
+    @Component({
+    selector: 'app-request-add-edit',
+    templateUrl: './add-edit.component.html'
+    })
+    export class RequestAddEditComponent implements OnInit, OnDestroy {
+    form!: FormGroup;
+    id?: string;
+    title!: string;
+    loading = false;
+    submitting = false;
+    submitted = false;
+    private routeSub!: Subscription;
 
-  ngOnInit() {
-    this.currentUser = this.accountService.accountValue;
-    this.isAdmin = this.currentUser?.role === 'Admin';
+    // Employees for dropdown
+    employees: any[] = [];
 
-    this.id = this.route.snapshot.params['id'];
-    this.title = this.id ? 'Edit Request' : 'Create Request';
+    constructor(
+        private formBuilder: FormBuilder,
+        private route: ActivatedRoute,
+        private router: Router,
+        private requestsService: RequestsService,
+        private employeesService: EmployeesService,
+        private alertService: AlertService
+    ) {}
 
-    this.form = this.formBuilder.group({
-      type: ['', Validators.required],
-      employeeId: [this.isAdmin ? '' : this.currentUser?.employeeId],
-      items: this.formBuilder.array([])
-    });
+    ngOnInit() {
+        this.loadEmployees();
 
-    if (this.isAdmin) {
-      this.employeesService.getAll()
+        this.routeSub = this.route.params.subscribe(params => {
+        this.id = params['id'];
+        this.initForm();
+        this.title = this.id ? 'Edit Request' : 'Create Request';
+
+        if (this.id) {
+    this.loading = true;
+    this.requestsService.getById(+this.id)
         .pipe(first())
-        .subscribe(x => this.employees = x);
-    }
+        .subscribe({
+        next: (x: any) => {
+            // Reset items FormArray
+            this.items.clear();
 
-    if (this.id) {
-      this.loading = true;
-      this.requestsService.getById(this.id)
-        .pipe(first())
-        .subscribe(x => {
-          this.form.patchValue(x);
-          this.loading = false;
+            // Parse items string -> array
+            if (x.items) {
+            const parts = x.items.split(',').map((s: string) => s.trim());
+            parts.forEach((p: string) => {
+                // Match "Name (Qty)"
+                const match = p.match(/^(.*)\((\d+)\)$/);
+                if (match) {
+                this.items.push(this.formBuilder.group({
+                    name: [match[1].trim(), Validators.required],
+                    quantity: [parseInt(match[2], 10), [Validators.required, Validators.min(1)]]
+                }));
+                }
+            });
+            }
+
+            // If no items parsed, at least keep one blank row
+            if (this.items.length === 0) this.addItem();
+
+            // Patch other fields
+            this.form.patchValue({
+            type: x.type,
+            employeeId: x.employeeId,
+            status: x.status ?? 'Pending'
+            });
+
+            this.loading = false;
+        },
+        error: () => this.loading = false
         });
     }
-  }
+        });
+    }
 
-  get f() { return this.form.controls; }
-  get items() { return this.form.get('items') as FormArray; }
+    ngOnDestroy() {
+        if (this.routeSub) this.routeSub.unsubscribe();
+    }
 
-  addItem() {
-    this.items.push(this.formBuilder.group({
-      name: ['', Validators.required],
-      quantity: [1, [Validators.required, Validators.min(1)]]
-    }));
-  }
+    private loadEmployees() {
+        this.loading = true;
+        this.employeesService.getAllEmployees()
+        .pipe(first())
+        .subscribe({
+            next: (data: any[]) => {
+            this.employees = data;
+            this.loading = false;
+            },
+            error: (err: any) => {
+            console.error('Error loading employees', err);
+            this.loading = false;
+            }
+        });
+    }
 
-  removeItem(index: number) {
-    this.items.removeAt(index);
-  }
+    private initForm() {
+    this.submitted = false;
+    this.submitting = false;
+    this.loading = false;
 
-  onSubmit() {
-    this.submitted = true;
-    if (this.form.invalid) return;
-
-    const requestData = {
-      ...this.form.value,
-      employeeId: this.isAdmin
-        ? this.form.value.employeeId
-        : this.currentUser.employeeId // 👈 auto-attach for non-admins
-    };
-
-    this.submitting = true;
-
-    const save$ = this.id
-      ? this.requestsService.update(this.id, requestData)
-      : this.requestsService.create(requestData);
-
-    save$.pipe(first()).subscribe({
-      next: () => {
-        alert('Request saved successfully');
-        this.router.navigate(['/requests']);
-      },
-      error: err => {
-        console.error(err);
-        alert('Error saving request');
-        this.submitting = false;
-      }
+    this.form = this.formBuilder.group({
+        type: ['', Validators.required],
+        employeeId: ['', Validators.required],
+        items: this.formBuilder.array([]),
+        status: ['Pending', Validators.required]
     });
-  }
-}
+
+    // ✅ Add one blank item row by default
+    this.addItem();
+    }
+
+    get f() { return this.form.controls; }
+    get items(): FormArray {
+    return this.form.get('items') as FormArray;
+    }
+
+    addItem() {
+    const itemForm = this.formBuilder.group({
+        name: ['', Validators.required],
+        quantity: [1, [Validators.required, Validators.min(1)]]
+    });
+    this.items.push(itemForm);
+    }
+
+    removeItem(index: number) {
+    this.items.removeAt(index);
+    }
+
+    onSubmit() {
+        this.submitted = true;
+        this.alertService.clear();
+
+        if (this.form.invalid) return;
+
+        this.submitting = true;
+        const payload = { ...this.form.value };
+
+        
+        // ✅ Convert FormArray -> string
+        if (Array.isArray(payload.items)) {
+        payload.items = payload.items
+        .map((x: any) => `${x.name} (${x.quantity})`)
+        .join(', ');
+        }
+
+        let request$;
+        let message: string;
+
+        if (this.id) {
+        request$ = this.requestsService.update(+this.id, payload);
+        message = 'Request updated';
+        } else {
+        request$ = this.requestsService.create(payload);
+        message = 'Request created';
+        }
+
+        request$.pipe(first()).subscribe({
+        next: () => {
+            this.alertService.success(message, { keepAfterRouteChange: true });
+            this.router.navigateByUrl('/admin/requests');
+        },
+        error: (error: any) => {
+        this.alertService.error(error?.message || 'Failed to save request');
+        this.submitting = false;
+        }
+        });
+    }
+    }
