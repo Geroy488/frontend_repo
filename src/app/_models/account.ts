@@ -9,4 +9,5 @@ export class Account {
     role?: Role;
     status?: string;
     jwtToken?: string;
+    employeeId?: number; 
 }
