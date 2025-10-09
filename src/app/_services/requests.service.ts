@@ -19,7 +19,7 @@ export class RequestsService {
 
    // ✅ NEW: get requests by employee ID
   getByEmployeeId(employeeId: number): Observable<Request[]> {
-    return this.http.get<Request[]>(`${this.apiUrl}?employeeId=${employeeId}`);
+  return this.http.get<Request[]>(`${this.apiUrl}?employeeId=${employeeId}`);
   }
 
   create(request: Request): Observable<any> {
