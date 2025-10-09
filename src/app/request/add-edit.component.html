@@ -21,14 +21,15 @@
         </div>
       </div>
 
-      <!-- Employee -->
-      <div class="mb-3">
+      <!-- ✅ Employee (Only visible for Admins) -->
+      <div class="mb-3" *ngIf="isAdmin">
         <label class="form-label">Employee</label>
         <select class="form-control" formControlName="employeeId">
-        <option value="">-- Select Employee --</option>
-      <option *ngFor="let emp of employees" [value]="emp.id">
-        {{ emp.employeeId }}{{ emp.account?.status !== 'Active' ? ' (Inactive)' : '' }}
-     </option>
+          <option value="">-- Select Employee --</option>
+          <option *ngFor="let emp of employees" [value]="emp.id">
+            {{ emp.employeeId }}
+            {{ emp.account?.status !== 'Active' ? ' (Inactive)' : '' }}
+          </option>
         </select>
 
         <div *ngIf="submitted && f.employeeId.errors" class="invalid-feedback d-block">
@@ -36,7 +37,7 @@
         </div>
       </div>
 
-      <!-- Items (Dynamic List) -->
+      <!-- Items -->
       <div formArrayName="items" class="mb-3">
         <label class="form-label">Items</label>
 
@@ -55,7 +56,7 @@
           <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1"></span>
           Save
         </button>
-        <a routerLink="/admin/requests" class="btn btn-secondary">Cancel</a>
+        <a routerLink="/requests" class="btn btn-secondary">Cancel</a>
       </div>
     </form>
   </div>
