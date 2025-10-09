@@ -15,7 +15,7 @@
         { path: 'account', loadChildren: accountModule },
         { path: 'profile', loadChildren: profileModule, canActivate: [AuthGuard] },
         { path: 'admin', loadChildren: adminModule, canActivate: [AuthGuard], data: { roles: [Role.Admin] } },
-        { path: 'requests', loadChildren: requestsModule, canActivate: [AuthGuard], data: {roles: [Role.Admin] } },
+        { path: 'requests', loadChildren: requestsModule, canActivate: [AuthGuard] },
 
         // otherwise redirect to home
         { path: '**', redirectTo: '' }
