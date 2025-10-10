@@ -46,10 +46,14 @@ export class RequestAddEditComponent implements OnInit, OnDestroy {
       this.loadEmployees(); // only admins need dropdown
     } else {
       // ✅ Auto-set employeeId for normal users
-      if (this.currentUser?.employeeId) {
-        this.form.patchValue({ employeeId: this.currentUser.employeeId });
-      }
+      if (this.currentUser?.employee?.id) {
+    // if your currentUser object already includes employee object
+    this.form.patchValue({ employeeId: this.currentUser.employee.id });
+    } else if (this.currentUser?.employeeId) {
+    // fallback
+    this.form.patchValue({ employeeId: this.currentUser.employeeId });
     }
+}
 
     this.routeSub = this.route.params.subscribe(params => {
       this.id = params['id'];
@@ -143,6 +147,8 @@ export class RequestAddEditComponent implements OnInit, OnDestroy {
 
     this.submitting = true;
     const payload = { ...this.form.value };
+
+    console.log('🟢 Sending payload to backend:', payload); // Add this line
 
     if (Array.isArray(payload.items)) {
       payload.items = payload.items
