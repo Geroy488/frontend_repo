@@ -21,20 +21,24 @@
         </div>
       </div>
 
-      <!-- Employee -->
-      <div class="mb-3">
+      <!-- Employee (only for Admins) -->
+      <div class="mb-3" *ngIf="isAdmin; else userEmployee">
         <label class="form-label">Employee</label>
         <select class="form-control" formControlName="employeeId">
-        <option value="">-- Select Employee --</option>
-      <option *ngFor="let emp of employees" [value]="emp.id">
-        {{ emp.employeeId }}{{ emp.account?.status !== 'Active' ? ' (Inactive)' : '' }}
-     </option>
+          <option value="">-- Select Employee --</option>
+          <option *ngFor="let emp of employees" [value]="emp.id">
+            {{ emp.employeeId }}{{ emp.account?.status !== 'Active' ? ' (Inactive)' : '' }}
+          </option>
         </select>
-
         <div *ngIf="submitted && f.employeeId.errors" class="invalid-feedback d-block">
           Employee is required
         </div>
       </div>
+
+      <!-- For Users: auto-filled employeeId -->
+      <ng-template #userEmployee>
+        <input type="hidden" formControlName="employeeId" />
+      </ng-template>
 
       <!-- Items (Dynamic List) -->
       <div formArrayName="items" class="mb-3">

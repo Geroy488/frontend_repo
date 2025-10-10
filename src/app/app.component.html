@@ -27,9 +27,10 @@
           <li class="nav-item">
             <a routerLink="/profile" routerLinkActive="active" class="nav-link">Profile</a>
           </li>
-          <li *ngIf="account.role !== Role.Admin" class="nav-item">
+          <li *ngIf="account.role !== Role.Admin && account.employeeId" class="nav-item">
             <a routerLink="/requests" routerLinkActive="active" class="nav-link">My Requests</a>
           </li>
+
         </ul>
 
         <!-- right -->
