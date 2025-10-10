@@ -27,10 +27,10 @@
           <li class="nav-item">
             <a routerLink="/profile" routerLinkActive="active" class="nav-link">Profile</a>
           </li>
+           <!-- ✅ Show "My Requests" only for USER accounts that are employees -->
           <li *ngIf="account.role !== Role.Admin && account.employeeId" class="nav-item">
             <a routerLink="/requests" routerLinkActive="active" class="nav-link">My Requests</a>
           </li>
-
         </ul>
 
         <!-- right -->
