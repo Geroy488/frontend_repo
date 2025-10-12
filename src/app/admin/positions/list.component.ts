@@ -24,4 +24,12 @@ export class ListComponent implements OnInit {
       error: (err: any) => console.error('Error loading positions', err)
     });
   }
+
+ toggleStatus(position: Position) {
+  this.positionService.toggleStatus(position.id!).subscribe({
+    next: (updated) => position.status = updated.status,
+    error: (err) => console.error('Error toggling status', err)
+  });
+}
+
 }

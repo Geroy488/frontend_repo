@@ -24,27 +24,28 @@ export class AddEditComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.id = this.route.snapshot.params['id'];
-    this.title = this.id ? 'Edit Position' : 'Add Position';
+  this.id = this.route.snapshot.params['id'];
+  this.title = this.id ? 'Edit Position' : 'Add Position';
 
-    this.form = this.formBuilder.group({
-      name: ['', Validators.required],
-      description: ['']
-    });
+  this.form = this.formBuilder.group({
+    name: ['', Validators.required],
+    description: [''],
+    status: ['ENABLE', Validators.required]   // ✅ Add this line
+  });
 
-    if (this.id) {
-      this.loading = true;
-      this.positionsService.getById(this.id)
-        .pipe(first())
-        .subscribe({
-          next: (x) => {
-            this.form.patchValue(x);
-            this.loading = false;
-          },
-          error: () => (this.loading = false)
-        });
-    }
+  if (this.id) {
+    this.loading = true;
+    this.positionsService.getById(this.id)
+      .pipe(first())
+      .subscribe({
+        next: (x) => {
+          this.form.patchValue(x); // ✅ will fill status too
+          this.loading = false;
+        },
+        error: () => (this.loading = false)
+      });
   }
+}
 
   // convenience getter for easy access to form fields
   get f() {

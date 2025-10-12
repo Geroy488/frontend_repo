@@ -29,25 +29,31 @@
       </div>
     </div>
 
-     <!-- Position -->
-      <div class="form-group">
-        <label for="position">Position</label>
-        <select id="position" formControlName="position" class="form-control" [disabled]="loading">
-          <!-- ✅ Show the current position first if editing -->
-          <option *ngIf="currentPosition" [value]="currentPosition">
-            {{ currentPosition }} (Current)
-          </option>
+<div class="form-group">
+  <label for="position">Position</label>
+  <select id="position" formControlName="position" class="form-control" [disabled]="loading">
 
-          <!-- ✅ Show all other available positions -->
-          <option *ngFor="let pos of positions" [value]="pos.name">
-            {{ pos.name }}
-          </option>
-        </select>
-        <div *ngIf="submitted && f.position.errors" class="invalid-feedback d-block">
-          <div *ngIf="f.position.errors['required']">Position is required</div>
-        </div>
-      </div>
+    <!-- ✅ Show current position if editing -->
+    <ng-container *ngIf="currentPosition">
+      <option [value]="currentPosition">
+        {{ currentPosition }}
+        <span *ngIf="isCurrentPositionDisabled()"> (Disabled)</span>
+      </option>
+    </ng-container>
 
+    <!-- ✅ Show all enabled positions -->
+    <ng-container *ngFor="let pos of positions">
+      <option *ngIf="pos.name !== currentPosition" [value]="pos.name">
+        {{ pos.name }}
+      </option>
+    </ng-container>
+
+  </select>
+
+  <div *ngIf="submitted && f.position.errors" class="invalid-feedback d-block">
+    <div *ngIf="f.position.errors['required']">Position is required</div>
+  </div>
+</div>
 
       
       <!-- Department -->

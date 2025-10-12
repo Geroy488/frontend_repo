@@ -26,6 +26,21 @@
           class="form-control"
           rows="3"></textarea>
       </div>
+      
+      <!-- Status -->
+      <div class="mb-3">
+        <label class="form-label">Status</label>
+        <select
+          formControlName="status"
+          class="form-select"
+          [ngClass]="{ 'is-invalid': submitted && f.status.errors }">
+          <option value="ENABLE">Enable</option>
+          <option value="DISABLE">Disable</option>
+        </select>
+        <div *ngIf="submitted && f.status.errors" class="invalid-feedback">
+          Status is required
+        </div>
+      </div>
 
       <!-- Buttons -->
       <div class="d-flex justify-content-start">

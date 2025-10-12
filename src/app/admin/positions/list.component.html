@@ -7,24 +7,40 @@
 <table class="table table-striped">
   <thead>
     <tr>
-      <th style="width: 40%">Name</th>
-      <th style="width: 40%">Description</th>
-      <th style="width: 20%">Actions</th>
+      <th style="width: 10%">ID</th>
+      <th style="width: 30%">Name</th>
+      <th style="width: 30%">Description</th>
+      <th style="width: 15%">Status</th>
+      <th style="width: 15%">Actions</th>
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let position of positions">
-      <td>{{ position.name || '—' }}</td>
-      <td>{{ position.description || '—' }}</td>
-      <td style="white-space: nowrap">
-        <a [routerLink]="['edit', position.id]" class="btn btn-sm btn-primary">Edit</a>
-      </td>
-    </tr>
+  <tr *ngFor="let position of positions">
+    <td>{{ position.id }}</td>
+    <td>{{ position.name || '—' }}</td>
+    <td>{{ position.description || '—' }}</td>
 
-    <tr *ngIf="!positions || positions.length === 0">
-      <td colspan="3" class="text-center">
-        <span class="spinner-border spinner-border-lg align-center"></span>
-      </td>
-    </tr>
-  </tbody>
+    <!-- ✅ Status column -->
+    <td>
+      <span class="badge"
+            [ngClass]="{
+              'bg-success': position.status === 'ENABLE',
+              'bg-danger': position.status === 'DISABLE'
+            }">
+        {{ position.status }}
+      </span>
+    </td>
+
+    <!-- ✅ Actions column -->
+    <td style="white-space: nowrap">
+      <!--for toggle button-->
+      <!-- <button (click)="toggleStatus(position)"
+              class="btn btn-sm"
+              [ngClass]="position.status === 'ENABLE' ? 'btn-danger' : 'btn-success'">
+        {{ position.status === 'ENABLE' ? 'DISABLE' : 'ENABLE' }}
+      </button> -->
+      <a [routerLink]="['edit', position.id]" class="btn btn-sm btn-primary ms-2">Edit</a>
+    </td>
+  </tr>
+</tbody>
 </table>

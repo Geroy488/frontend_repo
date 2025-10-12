@@ -15,9 +15,17 @@ export class PositionsService {
     return this.http.get<Position[]>(this.baseUrl);
   }
 
+  getEnabled(): Observable<Position[]> {
+  return this.http.get<Position[]>(`${this.baseUrl}/enabled`);
+  }
+
   getById(id: string | number): Observable<Position> {
     return this.http.get<Position>(`${this.baseUrl}/${id}`);
   }
+ 
+  toggleStatus(id: number | string): Observable<Position> {
+  return this.http.put<Position>(`${this.baseUrl}/${id}/status`, {});
+ }
 
   create(position: Partial<Position>): Observable<Position> {
     return this.http.post<Position>(this.baseUrl, position);
@@ -27,7 +35,7 @@ export class PositionsService {
     return this.http.put<Position>(`${this.baseUrl}/${id}`, position);
   }
 
-  delete(id: string | number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/${id}`);
-  }
+  // delete(id: string | number): Observable<void> {
+  //   return this.http.delete<void>(`${this.baseUrl}/${id}`);
+  // }
 }
