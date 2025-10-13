@@ -155,12 +155,15 @@ removeItem(index: number) {
     let message: string;
 
     if (this.id) {
+      payload.createdByRole = 'Admin';   // 👈 add this line
       request$ = this.requestsService.update(+this.id, payload);
       message = 'Request updated';
     } else {
+      payload.createdByRole = 'Admin';  // 👈 ADD THIS LINE
       request$ = this.requestsService.create(payload);
       message = 'Request created';
     }
+
 
     request$.pipe(first()).subscribe({
       next: () => {

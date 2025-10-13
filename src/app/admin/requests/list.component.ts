@@ -7,17 +7,20 @@ import { RequestsService } from '@app/_services/requests.service';
   templateUrl: './list.component.html'
 })
 export class RequestsListComponent implements OnInit {
-  requests: any[] = [];
+  adminRequests: any[] = [];
+  userRequests: any[] = [];
+  loading = true;
 
   constructor(private requestsService: RequestsService) {}
 
-  loading = true;
-  
   ngOnInit() {
     this.requestsService.getAll()
       .pipe(first())
       .subscribe((data: any[]) => {
-        this.requests = data;
+        // Split requests based on creator
+        this.adminRequests = data.filter(r => r.createdByRole === 'Admin');
+        this.userRequests = data.filter(r => r.createdByRole === 'User');
+        this.loading = false;
       });
   }
 }
