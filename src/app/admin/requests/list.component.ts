@@ -16,11 +16,22 @@ export class RequestsListComponent implements OnInit {
   ngOnInit() {
     this.requestsService.getAll()
       .pipe(first())
-      .subscribe((data: any[]) => {
-        // Split requests based on creator
-        this.adminRequests = data.filter(r => r.createdByRole === 'Admin');
-        this.userRequests = data.filter(r => r.createdByRole === 'User');
-        this.loading = false;
+      .subscribe({
+        next: (data: any[]) => {
+          // ✅ Split requests by account role
+          this.adminRequests = data.filter(
+            r => r.employee?.account?.role === 'Admin'
+          );
+          this.userRequests = data.filter(
+            r => r.employee?.account?.role !== 'Admin'
+          );
+
+          this.loading = false;
+        },
+        error: (err) => {
+          console.error('Error loading requests:', err);
+          this.loading = false;
+        }
       });
   }
 }
