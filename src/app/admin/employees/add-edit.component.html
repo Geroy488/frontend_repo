@@ -33,17 +33,15 @@
   <label for="position">Position</label>
   <select id="position" formControlName="position" class="form-control" [disabled]="loading">
 
-    <!-- ✅ Show current position if editing -->
+        <!-- ✅ Position Dropdown -->
     <ng-container *ngIf="currentPosition">
-      <option [value]="currentPosition">
+      <option [value]="f['position'].value">
         {{ currentPosition }}
-        <span *ngIf="isCurrentPositionDisabled()"> (Disabled)</span>
       </option>
     </ng-container>
 
-    <!-- ✅ Show all enabled positions -->
     <ng-container *ngFor="let pos of positions">
-      <option *ngIf="pos.name !== currentPosition" [value]="pos.name">
+      <option *ngIf="pos.name !== f['position'].value" [value]="pos.name">
         {{ pos.name }}
       </option>
     </ng-container>

@@ -4,13 +4,13 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "ng": "ng",
-    "start": "ng serve --open",
-    "build": "ng build",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test",
-    "export:all": "folder2txt --output Frontend.txt C:/Users/Public/frontend --exclude node_modules --exclude .vscode --exclude .git --exclude .angular --exclude .DS_Store --exclude *.log"
-  },
+  "start": "ng serve --configuration development --open",        
+  "build": "ng build",
+  "build:prod": "ng build --configuration production",
+  "watch": "ng build --watch --configuration development",
+  "test": "ng test"
+},
+
   "dependencies": {
     "@angular/animations": "^15.0.0",
     "@angular/common": "^15.0.0",

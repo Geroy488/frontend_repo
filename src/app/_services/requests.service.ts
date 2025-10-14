@@ -2,11 +2,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Request } from '@app/_models/request';
+import { environment } from 'src/environments/environment';
 
-@Injectable({ providedIn: 'root' })   // ✅ must be here
+@Injectable({ providedIn: 'root' })
 export class RequestsService {
-  private apiUrl = 'https://group-project-api-x1mr.onrender.com/requests';
-  //private apiUrl = 'http://localhost:4000/requests';
+  private apiUrl = `${environment.apiUrl}/requests`; // ✅ consistent with your environments
+
   constructor(private http: HttpClient) {}
 
   getAll(): Observable<Request[]> {
@@ -17,9 +18,8 @@ export class RequestsService {
     return this.http.get<Request>(`${this.apiUrl}/${id}`);
   }
 
-   // ✅ NEW: get requests by employee ID
   getByEmployeeId(employeeId: number): Observable<Request[]> {
-  return this.http.get<Request[]>(`${this.apiUrl}?employeeId=${employeeId}`);
+    return this.http.get<Request[]>(`${this.apiUrl}?employeeId=${employeeId}`);
   }
 
   create(request: Request): Observable<any> {

@@ -108,24 +108,33 @@ export class AddEditComponent implements OnInit, OnDestroy {
                 });
 
               // Load positions — enabled ones + include current (even if disabled)
-              this.positionsService.getAll()
-                .pipe(first())
-                .subscribe({
-                  next: (pos: any[]) => {
-                    this.positions = pos.filter(p =>
-                      p.isEnabled === true || p.enabled === true || p.status === 'ENABLE' || p.name === emp.position
-                    );
+             this.positionsService.getAll()
+              .pipe(first())
+              .subscribe({
+                next: (pos: any[]) => {
+                  // Keep all ENABLE positions + include the current employee's position (even if DISABLE)
+                  this.positions = pos.filter(p =>
+                    p.status === 'ENABLE' || p.name === emp.position
+                  );
 
-                    // Sort: current position first if disabled
-                    this.positions.sort((a, b) => {
-                      if (a.name === emp.position) return -1;
-                      if (b.name === emp.position) return 1;
-                      return 0;
-                    });
-                  },
-                  error: (err) => console.error('Error loading positions', err)
-                });
+                  // If current position is DISABLE, mark it for labeling later
+                  const currentPos = pos.find(p => p.name === emp.position);
+                  if (currentPos && currentPos.status === 'DISABLE') {
+                    this.currentPosition = `${currentPos.name} (Disabled)`;
+                  } else {
+                    this.currentPosition = emp.position;
+                  }
 
+                  // Sort to put current position first
+                  this.positions.sort((a, b) => {
+                    if (a.name === emp.position) return -1;
+                    if (b.name === emp.position) return 1;
+                    return 0;
+                  });
+                },
+                error: (err) => console.error('Error loading positions', err)
+              });
+              
               // Patch form
               this.form.patchValue({
                 employeeId: emp.employeeId,

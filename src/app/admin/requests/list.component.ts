@@ -19,12 +19,8 @@ export class RequestsListComponent implements OnInit {
       .subscribe({
         next: (data: any[]) => {
           // ✅ Split requests by account role
-          this.adminRequests = data.filter(
-            r => r.employee?.account?.role === 'Admin'
-          );
-          this.userRequests = data.filter(
-            r => r.employee?.account?.role !== 'Admin'
-          );
+          this.adminRequests = data.filter(r => r.createdByRole === 'Admin');
+          this.userRequests = data.filter(r => r.createdByRole !== 'Admin');
 
           this.loading = false;
         },
