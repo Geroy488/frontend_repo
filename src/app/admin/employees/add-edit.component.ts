@@ -37,6 +37,8 @@ export class AddEditComponent implements OnInit, OnDestroy {
   departments: any[] = [];
   positions: any[] = [];
 
+  isCurrentPosDisabled: boolean = false;
+  
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
@@ -84,8 +86,8 @@ export class AddEditComponent implements OnInit, OnDestroy {
 
     // Check if edit or create
     this.routeSub = this.route.params.subscribe(params => {
-      this.id = params['id'];
-      this.title = this.id ? 'Edit Employee' : 'Create Employee';
+    this.id = params['id'];
+    this.title = this.id ? 'Edit Employee' : 'Create Employee';
 
       if (this.id) {
         // 🔹 EDIT MODE
@@ -107,39 +109,41 @@ export class AddEditComponent implements OnInit, OnDestroy {
                   error: (err) => console.error('Error loading departments', err)
                 });
 
-              // Load positions — enabled ones + include current (even if disabled)
-             this.positionsService.getAll()
-              .pipe(first())
-              .subscribe({
-                next: (pos: any[]) => {
-                  // Keep all ENABLE positions + include the current employee's position (even if DISABLE)
-                  this.positions = pos.filter(p =>
-                    p.status === 'ENABLE' || p.name === emp.position
-                  );
+          // Load positions — enabled ones + include current (even if disabled)
+          this.positionsService.getAll()
+            .pipe(first())
+            .subscribe({
+              next: (pos: any[]) => {
+                // Keep ENABLE positions + include current
+                this.positions = pos.filter(p =>
+                  p.status === 'ENABLE' || p.name === emp.position
+                );
 
-                  // If current position is DISABLE, mark it for labeling later
-                  const currentPos = pos.find(p => p.name === emp.position);
-                  if (currentPos && currentPos.status === 'DISABLE') {
-                    this.currentPosition = `${currentPos.name} (Disabled)`;
-                  } else {
-                    this.currentPosition = emp.position;
-                  }
+               // Determine if current position is disabled
+const currentPosObj = pos.find(p => p.name === emp.position);
+const isDisabled = !!(currentPosObj && currentPosObj.status === 'DISABLE');
 
-                  // Sort to put current position first
-                  this.positions.sort((a, b) => {
-                    if (a.name === emp.position) return -1;
-                    if (b.name === emp.position) return 1;
-                    return 0;
-                  });
-                },
-                error: (err) => console.error('Error loading positions', err)
-              });
-              
+// Store just the name (no label yet)
+this.currentPosition = emp.position;
+
+// Save a flag for HTML use
+this.isCurrentPosDisabled = isDisabled;
+
+
+                // ✅ Patch the form after positions load so the select shows the value
+                this.form.patchValue({
+                  position: this.currentPosition
+                });
+              },
+              error: (err) => console.error('Error loading positions', err)
+            });
+
+
               // Patch form
               this.form.patchValue({
                 employeeId: emp.employeeId,
                 accountId: emp.accountId,
-                position: emp.position,
+                //position: emp.position,
                 department: emp.department,
                 hireDate: emp.hireDate,
                 status: emp.status ?? 'Active'
@@ -181,10 +185,10 @@ export class AddEditComponent implements OnInit, OnDestroy {
   }
 
   // ✅ Helper method for HTML
-  isCurrentPositionDisabled(): boolean {
-    if (!this.positions || !this.currentPosition) return false;
-    return !this.positions.some(pos => pos.name === this.currentPosition);
-  }
+ isCurrentPositionDisabled(): boolean {
+  const current = this.positions.find(p => p.name === this.currentPosition);
+  return current ? current.status === 'DISABLE' : false;
+}
 
   ngOnDestroy() {
     if (this.routeSub) this.routeSub.unsubscribe();

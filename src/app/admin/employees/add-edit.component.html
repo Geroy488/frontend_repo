@@ -29,30 +29,32 @@
       </div>
     </div>
 
-<div class="form-group">
-  <label for="position">Position</label>
-  <select id="position" formControlName="position" class="form-control" [disabled]="loading">
+      <!-- Position -->
+     <div class="form-group">
+     <label for="position">Position</label>
+     <select id="position" formControlName="position" class="form-control" [disabled]="loading">
 
-        <!-- ✅ Position Dropdown -->
-    <ng-container *ngIf="currentPosition">
-      <option [value]="f['position'].value">
-        {{ currentPosition }}
+      <!-- ✅ Show current position -->
+      <option *ngIf="currentPosition" [value]="currentPosition">
+      {{ currentPosition }}
+      <span *ngIf="isCurrentPositionDisabled(); else currentEnabled">(Disabled)</span>
+      <ng-template #currentEnabled>(Current)</ng-template>
       </option>
-    </ng-container>
 
-    <ng-container *ngFor="let pos of positions">
-      <option *ngIf="pos.name !== f['position'].value" [value]="pos.name">
-        {{ pos.name }}
-      </option>
-    </ng-container>
-
-  </select>
+        <!-- ✅ Show only enabled positions (not current one) -->
+        <ng-container *ngFor="let pos of positions">
+          <option 
+            *ngIf="pos.status === 'ENABLE' && (!currentPosition || currentPosition.indexOf(pos.name) === -1)" 
+            [value]="pos.name">
+            {{ pos.name }}
+          </option>
+        </ng-container>
+      </select>
 
   <div *ngIf="submitted && f.position.errors" class="invalid-feedback d-block">
     <div *ngIf="f.position.errors['required']">Position is required</div>
   </div>
 </div>
-
       
       <!-- Department -->
       <div class="form-group">
