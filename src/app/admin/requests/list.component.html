@@ -1,11 +1,11 @@
 <div class="container mt-4">
 
-  <!-- Page Title -->
-  <h2 class="text-center mb-4" style="font-size: 1.6rem; font-weight: 600; color: #333;">
+  <!-- ✅ Page Title -->
+  <h2 class="text-center mb-4 fw-bold" style="font-size: 1.7rem; color: #343a40;">
     Requests
   </h2>
 
-  <!-- Create Button -->
+  <!-- ✅ Create Button -->
   <div class="d-flex justify-content-start mb-3">
     <a routerLink="add" class="btn btn-sm btn-primary shadow-sm">
       + Create Request
@@ -13,98 +13,107 @@
   </div>
 
   <!-- ================= ADMIN CREATED REQUESTS ================= -->
-  <h5 class="mb-3 mt-4" 
-      style="font-size: 1.05rem; font-weight: 600; color: #0d6efd; border-left: 4px solid #0d6efd; padding-left: 8px;">
-    Admin Created Requests
-  </h5>
-
-  <table class="table table-hover align-middle">
-    <thead class="table-light">
-      <tr>
-        <th style="width: 15%">Type</th>
-        <th style="width: 20%">Employee</th>
-        <th style="width: 25%">Items</th>
-        <th style="width: 15%">Status</th>
-        <th style="width: 15%">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let req of adminRequests">
-        <td>{{ req.type || '—' }}</td>
-        <td>{{ req.employee?.account?.email || '—' }}</td>
-        <td>{{ req.items || '—' }}</td>
-        <td>
-          <span 
-            class="badge"
-            [ngClass]="{
-              'bg-success': req.status === 'Approved',
-              'bg-warning': req.status === 'Pending',
-              'bg-danger': req.status === 'Rejected'
-            }">
-            {{ req.status }}
-          </span>
-        </td>
-        <td style="white-space: nowrap">
-          <a [routerLink]="['/admin/requests/edit', req.id]" class="btn btn-sm btn-outline-primary">
-            Edit
-          </a>
-        </td>
-      </tr>
-      <tr *ngIf="!loading && adminRequests.length === 0">
-        <td colspan="5" class="text-center text-muted py-3">
-          No admin-created requests found
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="card shadow-sm border-0 mb-5">
+    <div class="card-header bg-light py-2">
+      <h5 class="mb-0" style="font-weight: 600; color: #495057;">
+        Admin Created Requests
+      </h5>
+    </div>
+    <div class="card-body p-0">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="table-light text-secondary">
+          <tr>
+            <th style="width: 15%">Type</th>
+            <th style="width: 20%">Employee</th>
+            <th style="width: 25%">Items</th>
+            <th style="width: 15%">Status</th>
+            <th style="width: 15%">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let req of adminRequests">
+            <td>{{ req.type || '—' }}</td>
+            <td>{{ req.employee?.account?.email || '—' }}</td>
+            <td>{{ req.items || '—' }}</td>
+            <td>
+              <span
+                class="badge"
+                [ngClass]="{
+                  'bg-success': req.status === 'Approved',
+                  'bg-warning': req.status === 'Pending',
+                  'bg-danger': req.status === 'Rejected'
+                }">
+                {{ req.status }}
+              </span>
+            </td>
+            <td style="white-space: nowrap">
+              <a [routerLink]="['/admin/requests/edit', req.id]" class="btn btn-sm btn-primary ms-2">
+                Edit
+              </a>
+            </td>
+          </tr>
+          <tr *ngIf="!loading && adminRequests.length === 0">
+            <td colspan="5" class="text-center text-muted py-3">
+              No admin-created requests found
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
   <!-- ================= USER CREATED REQUESTS ================= -->
-  <h5 class="mb-3 mt-5"
-      style="font-size: 1.05rem; font-weight: 600; color: #198754; border-left: 4px solid #198754; padding-left: 8px;">
-    User Created Requests
-  </h5>
+  <div class="card shadow-sm border-0">
+    <div class="card-header bg-light py-2">
+      <h5 class="mb-0" style="font-weight: 600; color: #495057;">
+        User Created Requests
+      </h5>
+    </div>
+    <div class="card-body p-0">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="table-light text-secondary">
+          <tr>
+            <th style="width: 15%">Type</th>
+            <th style="width: 20%">Employee</th>
+            <th style="width: 25%">Items</th>
+            <th style="width: 15%">Status</th>
+            <th style="width: 15%">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let req of userRequests">
+            <td>{{ req.type || '—' }}</td>
+            <td>{{ req.employee?.account?.email || '—' }}</td>
+            <td>{{ req.items || '—' }}</td>
+            <td>
+              <span
+                class="badge"
+                [ngClass]="{
+                  'bg-success': req.status === 'Approved',
+                  'bg-warning': req.status === 'Pending',
+                  'bg-danger': req.status === 'Rejected'
+                }">
+                {{ req.status }}
+              </span>
+            </td>
+            <td style="white-space: nowrap">
+              <a [routerLink]="['/admin/requests/edit', req.id]" class="btn btn-sm btn-primary ms-2">
+                Edit
+              </a>
+        
+            </td>
+          </tr>
+          <tr *ngIf="!loading && userRequests.length === 0">
+            <td colspan="5" class="text-center text-muted py-3">
+              No user-created requests found
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
-  <table class="table table-hover align-middle">
-    <thead class="table-light">
-      <tr>
-        <th style="width: 15%">Type</th>
-        <th style="width: 20%">Employee</th>
-        <th style="width: 25%">Items</th>
-        <th style="width: 15%">Status</th>
-        <th style="width: 15%">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let req of userRequests">
-        <td>{{ req.type || '—' }}</td>
-        <td>{{ req.employee?.account?.email || '—' }}</td>
-        <td>{{ req.items || '—' }}</td>
-        <td>
-          <span 
-            class="badge"
-            [ngClass]="{
-              'bg-success': req.status === 'Approved',
-              'bg-warning': req.status === 'Pending',
-              'bg-danger': req.status === 'Rejected'
-            }">
-            {{ req.status }}
-          </span>
-        </td>
-        <td style="white-space: nowrap">
-          <a [routerLink]="['/admin/requests/edit', req.id]" class="btn btn-sm btn-outline-primary">
-            Edit
-          </a>
-        </td>
-      </tr>
-      <tr *ngIf="!loading && userRequests.length === 0">
-        <td colspan="5" class="text-center text-muted py-3">
-          No user-created requests found
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
-  <!-- Loading spinner -->
+  <!-- ✅ Loading spinner -->
   <div *ngIf="loading" class="text-center mt-4">
     <span class="spinner-border text-primary"></span>
   </div>
