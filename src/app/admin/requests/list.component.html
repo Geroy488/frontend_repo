@@ -1,121 +1,77 @@
-<div class="container mt-4">
+<h1>Requests</h1>
 
-  <!-- ✅ Page Title -->
-  <h2 class="text-center mb-4 fw-bold" style="font-size: 1.7rem; color: #343a40;">
-    Requests
-  </h2>
+<!-- Create Button -->
+<p>
+  <a routerLink="add" class="btn btn-sm btn-primary mb-2 shadow-sm">
+    + Create Request
+  </a>
+</p>
 
-  <!-- ✅ Create Button -->
-  <div class="d-flex justify-content-start mb-3">
-    <a routerLink="add" class="btn btn-sm btn-primary shadow-sm">
-      + Create Request
-    </a>
-  </div>
+<!-- Unified Requests Table -->
+<table class="table table-striped table-hover align-middle">
+  <thead class="table-light text-secondary">
+    <tr>
+      <th style="width: 15%">Type</th>
+      <th style="width: 20%">Employee</th>
+      <th style="width: 25%">Items</th>
+      <th style="width: 15%">Status</th>
+      <th style="width: 15%">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let req of requests">
+      <!-- Type -->
+      <td>{{ req.type || '—' }}</td>
 
-  <!-- ================= ADMIN CREATED REQUESTS ================= -->
-  <div class="card shadow-sm border-0 mb-5">
-    <div class="card-header bg-light py-2">
-      <h5 class="mb-0" style="font-weight: 600; color: #495057;">
-        Admin Created/Edited Requests
-      </h5>
-    </div>
-    <div class="card-body p-0">
-      <table class="table table-hover align-middle mb-0">
-        <thead class="table-light text-secondary">
-          <tr>
-            <th style="width: 15%">Type</th>
-            <th style="width: 20%">Employee</th>
-            <th style="width: 25%">Items</th>
-            <th style="width: 15%">Status</th>
-            <th style="width: 15%">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let req of adminRequests">
-            <td>{{ req.type || '—' }}</td>
-            <td>{{ req.employee?.account?.email || '—' }}</td>
-            <td>{{ req.items || '—' }}</td>
-            <td>
-              <span
-                class="badge"
-                [ngClass]="{
-                  'bg-success': req.status === 'Approved',
-                  'bg-warning': req.status === 'Pending',
-                  'bg-danger': req.status === 'Rejected'
-                }">
-                {{ req.status }}
-              </span>
-            </td>
-            <td style="white-space: nowrap">
-              <a [routerLink]="['/admin/requests/edit', req.id]" class="btn btn-sm btn-primary ms-2">
-                Edit
-              </a>
-            </td>
-          </tr>
-          <tr *ngIf="!loading && adminRequests.length === 0">
-            <td colspan="5" class="text-center text-muted py-3">
-              No admin-created requests found
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
+      <!-- Employee -->
+      <td>
+        {{ req.employee?.employeeId || '—' }}
+        <span *ngIf="req.employee?.account?.status !== 'Active'"> (Inactive)</span>
+      </td>
 
-  <!-- ================= USER CREATED REQUESTS ================= -->
-  <div class="card shadow-sm border-0">
-    <div class="card-header bg-light py-2">
-      <h5 class="mb-0" style="font-weight: 600; color: #495057;">
-        User Created Requests For Approval
-      </h5>
-    </div>
-    <div class="card-body p-0">
-      <table class="table table-hover align-middle mb-0">
-        <thead class="table-light text-secondary">
-          <tr>
-            <th style="width: 15%">Type</th>
-            <th style="width: 20%">Employee</th>
-            <th style="width: 25%">Items</th>
-            <th style="width: 15%">Status</th>
-            <th style="width: 15%">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let req of userRequests">
-            <td>{{ req.type || '—' }}</td>
-            <td>{{ req.employee?.account?.email || '—' }}</td>
-            <td>{{ req.items || '—' }}</td>
-            <td>
-              <span
-                class="badge"
-                [ngClass]="{
-                  'bg-success': req.status === 'Approved',
-                  'bg-warning': req.status === 'Pending',
-                  'bg-danger': req.status === 'Rejected'
-                }">
-                {{ req.status }}
-              </span>
-            </td>
-            <td style="white-space: nowrap">
-              <a [routerLink]="['/admin/requests/edit', req.id]" class="btn btn-sm btn-primary ms-2">
-                Edit
-              </a>
-        
-            </td>
-          </tr>
-          <tr *ngIf="!loading && userRequests.length === 0">
-            <td colspan="5" class="text-center text-muted py-3">
-              No user-created requests found
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
+      <!-- Items -->
+      <td>{{ req.items || '—' }}</td>
 
-  <!-- ✅ Loading spinner -->
-  <div *ngIf="loading" class="text-center mt-4">
-    <span class="spinner-border text-primary"></span>
-  </div>
+      <!-- Status Badge -->
+      <td>
+        <span 
+          class="badge"
+          [ngClass]="{
+            'bg-success': req.status === 'Approved',
+            'bg-warning': req.status === 'Pending',
+            'bg-danger': req.status === 'Rejected'
+          }">
+          {{ req.status }}
+        </span>
+      </td>
 
-</div>
+      <!-- Actions -->
+      <td style="white-space: nowrap">
+        <a [routerLink]="['/admin/requests/edit', req.id]" class="btn btn-sm btn-primary">
+          Edit
+        </a>
+        <!-- Optional workflow button -->
+        <!--
+        <a [routerLink]="['/admin/workflows', req.employee?.employeeId]" 
+          class="btn btn-sm btn-outline-secondary ms-1">
+          Workflows
+        </a>
+        -->
+      </td>
+    </tr>
+
+    <!-- Loading spinner while fetching -->
+    <tr *ngIf="!requests || loading">
+      <td colspan="5" class="text-center py-3">
+        <span class="spinner-border spinner-border-lg align-center"></span>
+      </td>
+    </tr>
+
+    <!-- No requests found -->
+    <tr *ngIf="!loading && (!requests || requests.length === 0)">
+      <td colspan="5" class="text-center text-muted py-3">
+        No requests found
+      </td>
+    </tr>
+  </tbody>
+</table>

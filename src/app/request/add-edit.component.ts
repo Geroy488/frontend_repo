@@ -139,48 +139,51 @@ export class RequestAddEditComponent implements OnInit, OnDestroy {
     this.items.removeAt(index);
   }
 
-  onSubmit() {
-    this.submitted = true;
-    this.alertService.clear();
+  submitToAdmin = false;
 
-    if (this.form.invalid) return;
+onSubmit(submitFlag: boolean = false) {
+  this.submitted = true;
+  this.alertService.clear();
+  this.submitToAdmin = submitFlag;
 
-    this.submitting = true;
-    const payload = { ...this.form.value };
+  if (this.form.invalid) return;
 
-    console.log('🟢 Sending payload to backend:', payload); // Add this line
+  this.submitting = true;
 
-    if (Array.isArray(payload.items)) {
-      payload.items = payload.items
-        .map((x: any) => `${x.name} (${x.quantity})`)
-        .join(', ');
-    }
+  const payload = { ...this.form.value };
 
-    let request$;
-    let message: string;
-
-    if (this.id) {
-      request$ = this.requestsService.update(+this.id, payload);
-      message = 'Request updated';
-    } else {
-      request$ = this.requestsService.create(payload);
-      message = 'Request created';
-    }
-
-    request$.pipe(first()).subscribe({
-      next: () => {
-        this.alertService.success(message, { keepAfterRouteChange: true });
-        // ✅ Redirect based on role
-        if (this.isAdmin) {
-          this.router.navigateByUrl('/admin/requests');
-        } else {
-          this.router.navigateByUrl('/requests');
-        }
-      },
-      error: (error: any) => {
-        this.alertService.error(error?.message || 'Failed to save request');
-        this.submitting = false;
-      }
-    });
+  // Convert items array to string
+  if (Array.isArray(payload.items)) {
+    payload.items = payload.items
+      .map((x: any) => `${x.name} (${x.quantity})`)
+      .join(', ');
   }
+
+  // Set status based on button
+  payload.status = this.submitToAdmin ? 'Pending' : 'Saved';
+
+  let request$;
+  let message: string;
+
+  if (this.id) {
+    request$ = this.requestsService.update(+this.id, payload);
+    message = this.submitToAdmin ? 'Request submitted' : 'Request saved';
+  } else {
+    request$ = this.requestsService.create(payload);
+    message = this.submitToAdmin ? 'Request submitted' : 'Request saved';
+  }
+
+  request$.pipe(first()).subscribe({
+    next: () => {
+      this.alertService.success(message, { keepAfterRouteChange: true });
+      // Redirect user to their own requests
+      this.router.navigateByUrl('/requests');
+    },
+    error: (error: any) => {
+      this.alertService.error(error?.message || 'Failed to save request');
+      this.submitting = false;
+    }
+  });
+}
+
 }

@@ -40,44 +40,44 @@ export class RequestAddEditComponent implements OnInit, OnDestroy {
       this.title = this.id ? 'Edit Request' : 'Create Request';
 
       if (this.id) {
-  this.loading = true;
-  this.requestsService.getById(+this.id)
-    .pipe(first())
-    .subscribe({
-      next: (x: any) => {
-        // Reset items FormArray
-        this.items.clear();
+      this.loading = true;
+      this.requestsService.getById(+this.id)
+        .pipe(first())
+        .subscribe({
+          next: (x: any) => {
+            // Reset items FormArray
+            this.items.clear();
 
-        // Parse items string -> array
-        if (x.items) {
-          const parts = x.items.split(',').map((s: string) => s.trim());
-          parts.forEach((p: string) => {
-            // Match "Name (Qty)"
-            const match = p.match(/^(.*)\((\d+)\)$/);
-            if (match) {
-              this.items.push(this.formBuilder.group({
-                name: [match[1].trim(), Validators.required],
-                quantity: [parseInt(match[2], 10), [Validators.required, Validators.min(1)]]
-              }));
-            }
-          });
-        }
+            // Parse items string -> array
+            if (x.items) {
+              const parts = x.items.split(',').map((s: string) => s.trim());
+              parts.forEach((p: string) => {
+                // Match "Name (Qty)"
+                const match = p.match(/^(.*)\((\d+)\)$/);
+                if (match) {
+                  this.items.push(this.formBuilder.group({
+                    name: [match[1].trim(), Validators.required],
+                    quantity: [parseInt(match[2], 10), [Validators.required, Validators.min(1)]]
+                  }));
+                }
+             });
+           }
 
-        // If no items parsed, at least keep one blank row
-        if (this.items.length === 0) this.addItem();
+            // If no items parsed, at least keep one blank row
+            if (this.items.length === 0) this.addItem();
 
-        // Patch other fields
-        this.form.patchValue({
-          type: x.type,
-          employeeId: x.employeeId,
-          status: x.status ?? 'Pending'
+            // Patch other fields
+            this.form.patchValue({
+              type: x.type,
+              employeeId: x.employeeId,
+              status: x.status ?? 'Pending'
+            });
+
+               this.loading = false;
+          },
+              error: () => this.loading = false
         });
-
-        this.loading = false;
-      },
-      error: () => this.loading = false
-    });
-  }
+      }
     });
   }
 
@@ -101,38 +101,38 @@ export class RequestAddEditComponent implements OnInit, OnDestroy {
       });
   }
 
-  private initForm() {
-  this.submitted = false;
-  this.submitting = false;
-  this.loading = false;
+    private initForm() {
+    this.submitted = false;
+    this.submitting = false;
+    this.loading = false;
 
-  this.form = this.formBuilder.group({
-    type: ['', Validators.required],
-    employeeId: ['', Validators.required],
-    items: this.formBuilder.array([]),
-    status: ['Pending', Validators.required]
-  });
+    this.form = this.formBuilder.group({
+      type: ['', Validators.required],
+      employeeId: ['', Validators.required],
+      items: this.formBuilder.array([]),
+      status: ['Pending', Validators.required]
+    });
 
-  // ✅ Add one blank item row by default
-  this.addItem();
-}
+    // ✅ Add one blank item row by default
+    this.addItem();
+  }
 
-get f() { return this.form.controls; }
-get items(): FormArray {
-  return this.form.get('items') as FormArray;
-}
+  get f() { return this.form.controls; }
+  get items(): FormArray {
+    return this.form.get('items') as FormArray;
+  }
 
-addItem() {
-  const itemForm = this.formBuilder.group({
-    name: ['', Validators.required],
-    quantity: [1, [Validators.required, Validators.min(1)]]
-  });
-  this.items.push(itemForm);
-}
+  addItem() {
+    const itemForm = this.formBuilder.group({
+      name: ['', Validators.required],
+      quantity: [1, [Validators.required, Validators.min(1)]]
+    });
+    this.items.push(itemForm);
+  }
 
-removeItem(index: number) {
-  this.items.removeAt(index);
-}
+    removeItem(index: number) {
+    this.items.removeAt(index);
+    }
 
   onSubmit() {
     this.submitted = true;

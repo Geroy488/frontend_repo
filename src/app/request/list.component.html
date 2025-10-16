@@ -28,6 +28,7 @@
           [ngClass]="{
             'bg-success': req.status === 'Approved',
             'bg-warning': req.status === 'Pending',
+            'bg-secondary text-white': req.status === 'Draft',  
             'bg-danger': req.status === 'Rejected'
           }">
           {{ req.status }}
