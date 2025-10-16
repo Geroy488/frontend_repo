@@ -22,8 +22,9 @@ export class RequestsService {
     return this.http.get<Request[]>(`${this.apiUrl}?employeeId=${employeeId}`);
   }
 
-  create(request: Request): Observable<any> {
-    return this.http.post(this.apiUrl, request);
+  create(request: any, user?: any): Observable<any> {
+    // Send both request and user info to backend
+    return this.http.post(this.apiUrl, { ...request, user });
   }
 
   update(id: number, request: Request): Observable<any> {

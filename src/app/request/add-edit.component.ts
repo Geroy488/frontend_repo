@@ -53,7 +53,7 @@ export class RequestAddEditComponent implements OnInit, OnDestroy {
     // fallback
     this.form.patchValue({ employeeId: this.currentUser.employeeId });
     }
-}
+ }
 
     this.routeSub = this.route.params.subscribe(params => {
       this.id = params['id'];
@@ -119,7 +119,7 @@ export class RequestAddEditComponent implements OnInit, OnDestroy {
       type: ['', Validators.required],
       employeeId: ['', Validators.required],
       items: this.formBuilder.array([]),
-      status: ['Pending', Validators.required]
+      status: ['Saved', Validators.required]
     });
     this.addItem();
   }
@@ -141,49 +141,50 @@ export class RequestAddEditComponent implements OnInit, OnDestroy {
 
   submitToAdmin = false;
 
-onSubmit(submitFlag: boolean = false) {
-  this.submitted = true;
-  this.alertService.clear();
-  this.submitToAdmin = submitFlag;
+  onSubmit(submitFlag: boolean = false) {
+    this.submitted = true;
+    this.alertService.clear();
+    this.submitToAdmin = submitFlag;
 
-  if (this.form.invalid) return;
+    if (this.form.invalid) return;
 
-  this.submitting = true;
+    this.submitting = true;
 
-  const payload = { ...this.form.value };
+    const payload = { ...this.form.value };
 
-  // Convert items array to string
-  if (Array.isArray(payload.items)) {
-    payload.items = payload.items
-      .map((x: any) => `${x.name} (${x.quantity})`)
-      .join(', ');
-  }
-
-  // Set status based on button
-  payload.status = this.submitToAdmin ? 'Pending' : 'Saved';
-
-  let request$;
-  let message: string;
-
-  if (this.id) {
-    request$ = this.requestsService.update(+this.id, payload);
-    message = this.submitToAdmin ? 'Request submitted' : 'Request saved';
-  } else {
-    request$ = this.requestsService.create(payload);
-    message = this.submitToAdmin ? 'Request submitted' : 'Request saved';
-  }
-
-  request$.pipe(first()).subscribe({
-    next: () => {
-      this.alertService.success(message, { keepAfterRouteChange: true });
-      // Redirect user to their own requests
-      this.router.navigateByUrl('/requests');
-    },
-    error: (error: any) => {
-      this.alertService.error(error?.message || 'Failed to save request');
-      this.submitting = false;
+    // Convert items array to string
+    if (Array.isArray(payload.items)) {
+      payload.items = payload.items
+        .map((x: any) => `${x.name} (${x.quantity})`)
+        .join(', ');
     }
-  });
+
+    // Set status based on button
+    payload.status = this.submitToAdmin ? 'Pending' : 'Saved';
+
+    let request$;
+    let message: string;
+
+   if (this.id) {
+  request$ = this.requestsService.update(+this.id, payload);
+  message = this.submitToAdmin ? 'Request submitted' : 'Request saved';
+} else {
+  // Pass the current user to backend
+  request$ = this.requestsService.create(payload, this.currentUser);
+  message = this.submitToAdmin ? 'Request submitted' : 'Request saved';
 }
+
+    request$.pipe(first()).subscribe({
+      next: () => {
+        this.alertService.success(message, { keepAfterRouteChange: true });
+        // Redirect user to their own requests
+        this.router.navigateByUrl('/requests');
+      },
+      error: (error: any) => {
+        this.alertService.error(error?.message || 'Failed to save request');
+        this.submitting = false;
+      }
+    });
+  }
 
 }
