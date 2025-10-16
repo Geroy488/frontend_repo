@@ -160,7 +160,7 @@ export class RequestAddEditComponent implements OnInit, OnDestroy {
     }
 
     // Set status based on button
-    payload.status = this.submitToAdmin ? 'Pending' : 'Saved';
+    payload.status = this.submitToAdmin ? 'Pending' : 'Draft';
 
     let request$;
     let message: string;
