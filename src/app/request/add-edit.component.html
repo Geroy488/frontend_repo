@@ -6,9 +6,30 @@
   <div class="card-body">
     <form *ngIf="!loading" [formGroup]="form">
 
+      <!-- Employee Login -->
+      <div class="mb-3">
+        <label class="form-label fw-bold">Employee Login</label>
+        <input type="text" class="form-control" [value]="employeeLogin || 'N/A'" readonly />
+      </div>
+
+      <!-- Approver -->
+      <div class="mb-3">
+        <label class="form-label fw-bold">Approver</label>
+        <select class="form-select" formControlName="approverId"
+                [ngClass]="{ 'is-invalid': submitted && f.approverId.errors }">
+          <option value="">-- Select Approver --</option>
+          <option *ngFor="let app of approvers" [value]="app.id">
+            {{ app.employeeId }} - {{ app.account?.firstName }} {{ app.account?.lastName }}
+          </option>
+        </select>
+        <div *ngIf="submitted && f.approverId.errors" class="invalid-feedback">
+          Approver is required
+        </div>
+      </div>
+
       <!-- Type -->
       <div class="mb-3">
-        <label class="form-label">Type</label>
+        <label class="form-label fw-bold">Type</label>
         <select class="form-select" formControlName="type"
                 [ngClass]="{ 'is-invalid': submitted && f.type.errors }">
           <option value="">-- Select Type --</option>
@@ -21,61 +42,37 @@
         </div>
       </div>
 
-      <!-- Employee (only for Admins) -->
-      <div class="mb-3" *ngIf="isAdmin; else userEmployee">
-        <label class="form-label">Employee</label>
-        <select class="form-control" formControlName="employeeId">
-          <option value="">-- Select Employee --</option>
-          <option *ngFor="let emp of employees" [value]="emp.id">
-            {{ emp.employeeId }}{{ emp.account?.status !== 'Active' ? ' (Inactive)' : '' }}
-          </option>
-        </select>
-        <div *ngIf="submitted && f.employeeId.errors" class="invalid-feedback d-block">
-          Employee is required
-        </div>
-      </div>
-
-      <!-- For Users: auto-filled employeeId -->
-      <ng-template #userEmployee>
-        <input type="hidden" formControlName="employeeId" />
-      </ng-template>
-
-      <!-- Items (Dynamic List) -->
+      <!-- Items -->
       <div formArrayName="items" class="mb-3">
-        <label class="form-label">Items</label>
-
+        <label class="form-label fw-bold">Items</label>
         <div *ngFor="let item of items.controls; let i = index" [formGroupName]="i" class="d-flex gap-2 mb-2">
-          <input type="text" formControlName="name" placeholder="Name" class="form-control" />
-          <input type="number" formControlName="quantity" placeholder="Quantity" min="1" class="form-control w-25" />
+          <input type="text" formControlName="name" placeholder="Item name" class="form-control" />
+          <input type="number" formControlName="quantity" placeholder="1" min="1" class="form-control w-25" />
           <button type="button" class="btn btn-danger" (click)="removeItem(i)">Remove</button>
         </div>
-
         <button type="button" class="btn btn-secondary mt-2" (click)="addItem()">Add Item</button>
       </div>
 
-      <!-- Save / Cancel -->
-     <div class="d-flex justify-content-start mt-3">
-    <!-- Save only -->
-    <button type="button" 
-            [disabled]="submitting" 
-            class="btn btn-secondary me-2"
-            (click)="onSubmit(false)">
-      <span *ngIf="submitting && !submitToAdmin" class="spinner-border spinner-border-sm me-1"></span>
-      Save
-    </button>
+      <!-- Status -->
+      <div class="mb-3">
+        <label class="form-label fw-bold">Status</label>
+        <input type="text" class="form-control" [value]="form.get('status')?.value || 'Pending'" readonly />
+      </div>
 
-    <!-- Submit to admin -->
-    <button type="button" 
-            [disabled]="submitting" 
-            class="btn btn-primary me-2"
-            (click)="onSubmit(true)">
-      <span *ngIf="submitting && submitToAdmin" class="spinner-border spinner-border-sm me-1"></span>
-      Submit
-    </button>
+      <!-- Save / Submit / Cancel -->
+      <div class="d-flex justify-content-start mt-3">
+        <button type="button" class="btn btn-secondary me-2" [disabled]="submitting" (click)="onSubmit(false)">
+          <span *ngIf="submitting && !submitToAdmin" class="spinner-border spinner-border-sm me-1"></span>
+          Save
+        </button>
 
-    <a routerLink="/requests" class="btn btn-outline-secondary">Cancel</a>
-  </div>
+        <button type="button" class="btn btn-primary me-2" [disabled]="submitting" (click)="onSubmit(true)">
+          <span *ngIf="submitting && submitToAdmin" class="spinner-border spinner-border-sm me-1"></span>
+          Submit
+        </button>
 
+        <a routerLink="/requests" class="btn btn-outline-secondary">Cancel</a>
+      </div>
     </form>
   </div>
 </div>

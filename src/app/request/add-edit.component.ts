@@ -22,8 +22,12 @@ export class RequestAddEditComponent implements OnInit, OnDestroy {
   private routeSub!: Subscription;
 
   employees: any[] = [];
+  approvers: any[] = [];
   currentUser: any;
   isAdmin = false;
+  employeeLogin: string = '';
+
+  submitToAdmin = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -36,25 +40,27 @@ export class RequestAddEditComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    // ✅ Get current user info
     this.currentUser = this.accountService.accountValue;
     this.isAdmin = this.currentUser?.role === Role.Admin;
 
     this.initForm();
+    this.loadApprovers();
 
     if (this.isAdmin) {
-      this.loadEmployees(); // only admins need dropdown
+      this.loadEmployees();
     } else {
-      // ✅ Auto-set employeeId for normal users
-      if (this.currentUser?.employee?.id) {
-    // if your currentUser object already includes employee object
-    this.form.patchValue({ employeeId: this.currentUser.employee.id });
-    } else if (this.currentUser?.employeeId) {
-    // fallback
-    this.form.patchValue({ employeeId: this.currentUser.employeeId });
+      // ✅ Auto-fill logged-in user info
+      const emp = this.currentUser?.employee;
+      if (emp) {
+        this.form.patchValue({ employeeId: emp.id });
+        this.employeeLogin = emp.employeeId; // e.g. EMP001
+      } else if (this.currentUser?.employeeId) {
+        this.form.patchValue({ employeeId: this.currentUser.employeeId });
+        this.employeeLogin = this.currentUser.employeeId;
+      }
     }
- }
 
+    // Load edit data if applicable
     this.routeSub = this.route.params.subscribe(params => {
       this.id = params['id'];
       this.title = this.id ? 'Edit Request' : 'Create Request';
@@ -65,7 +71,6 @@ export class RequestAddEditComponent implements OnInit, OnDestroy {
           .pipe(first())
           .subscribe({
             next: (x: any) => {
-              // reset items
               this.items.clear();
               if (x.items) {
                 const parts = x.items.split(',').map((s: string) => s.trim());
@@ -84,8 +89,10 @@ export class RequestAddEditComponent implements OnInit, OnDestroy {
               this.form.patchValue({
                 type: x.type,
                 employeeId: x.employeeId,
+                approverId: x.approverId,
                 status: x.status ?? 'Pending'
               });
+
               this.loading = false;
             },
             error: () => this.loading = false
@@ -98,6 +105,17 @@ export class RequestAddEditComponent implements OnInit, OnDestroy {
     if (this.routeSub) this.routeSub.unsubscribe();
   }
 
+  private initForm() {
+    this.form = this.formBuilder.group({
+      employeeId: ['', Validators.required],
+      approverId: ['', Validators.required],
+      type: ['', Validators.required],
+      items: this.formBuilder.array([]),
+      status: ['Pending']  // ✅ Default to Pending for better UX
+    });
+    this.addItem();
+  }
+
   private loadEmployees() {
     this.loading = true;
     this.employeesService.getAllEmployees()
@@ -107,21 +125,31 @@ export class RequestAddEditComponent implements OnInit, OnDestroy {
           this.employees = data;
           this.loading = false;
         },
-        error: (err: any) => {
+        error: err => {
           console.error('Error loading employees', err);
           this.loading = false;
         }
       });
   }
 
-  private initForm() {
-    this.form = this.formBuilder.group({
-      type: ['', Validators.required],
-      employeeId: ['', Validators.required],
-      items: this.formBuilder.array([]),
-      status: ['Saved', Validators.required]
-    });
-    this.addItem();
+  private loadApprovers() {
+    this.loading = true;
+    this.employeesService.getAllEmployees()
+      .pipe(first())
+      .subscribe({
+        next: (data: any[]) => {
+          // ✅ Example: only “Head” or “Manager” can be approvers (if you want)
+          this.approvers = data.filter(emp => emp.account?.role === 'Manager' || emp.account?.role === 'Head');
+          if (this.approvers.length === 0) {
+            this.approvers = data; // fallback: show all
+          }
+          this.loading = false;
+        },
+        error: err => {
+          console.error('Error loading approvers', err);
+          this.loading = false;
+        }
+      });
   }
 
   get f() { return this.form.controls; }
@@ -139,8 +167,6 @@ export class RequestAddEditComponent implements OnInit, OnDestroy {
     this.items.removeAt(index);
   }
 
-  submitToAdmin = false;
-
   onSubmit(submitFlag: boolean = false) {
     this.submitted = true;
     this.alertService.clear();
@@ -152,32 +178,30 @@ export class RequestAddEditComponent implements OnInit, OnDestroy {
 
     const payload = { ...this.form.value };
 
-    // Convert items array to string
+    // Convert items array → string format
     if (Array.isArray(payload.items)) {
       payload.items = payload.items
         .map((x: any) => `${x.name} (${x.quantity})`)
         .join(', ');
     }
 
-    // Set status based on button
+    // Update status
     payload.status = this.submitToAdmin ? 'Pending' : 'Draft';
 
     let request$;
     let message: string;
 
-   if (this.id) {
-  request$ = this.requestsService.update(+this.id, payload);
-  message = this.submitToAdmin ? 'Request submitted' : 'Request saved';
-} else {
-  // Pass the current user to backend
-  request$ = this.requestsService.create(payload, this.currentUser);
-  message = this.submitToAdmin ? 'Request submitted' : 'Request saved';
-}
+    if (this.id) {
+      request$ = this.requestsService.update(+this.id, payload);
+      message = this.submitToAdmin ? 'Request submitted' : 'Request saved';
+    } else {
+      request$ = this.requestsService.create(payload, this.currentUser);
+      message = this.submitToAdmin ? 'Request submitted' : 'Request saved';
+    }
 
     request$.pipe(first()).subscribe({
       next: () => {
         this.alertService.success(message, { keepAfterRouteChange: true });
-        // Redirect user to their own requests
         this.router.navigateByUrl('/requests');
       },
       error: (error: any) => {
@@ -186,5 +210,4 @@ export class RequestAddEditComponent implements OnInit, OnDestroy {
       }
     });
   }
-
 }

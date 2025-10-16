@@ -29,20 +29,20 @@ export class RequestsListComponent implements OnInit {
           complete: () => this.loading = false
         });
     } else {
-  // Regular user sees own requests
-  const empId = currentUser.employeeId;
-  if (!empId) {
-    console.warn('No employeeId found for user:', currentUser);
-    this.loading = false;
-    return;
-  }
+      // Regular user sees own requests
+      const empId = currentUser.employeeId;
+      if (!empId) {
+        console.warn('No employeeId found for user:', currentUser);
+        this.loading = false;
+        return;
+    }
 
-  this.requestsService.getByEmployeeId(empId)
-    .pipe(first())
-    .subscribe({
-      next: data => this.requests = data,
-      complete: () => this.loading = false
-    });
-   }
+    this.requestsService.getByEmployeeId(empId)
+      .pipe(first())
+      .subscribe({
+        next: data => this.requests = data,
+        complete: () => this.loading = false
+      });
+    }
   }
 }
