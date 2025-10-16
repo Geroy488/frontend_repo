@@ -19,7 +19,7 @@
                 [ngClass]="{ 'is-invalid': submitted && f.approverId.errors }">
           <option value="">-- Select Approver --</option>
           <option *ngFor="let app of approvers" [value]="app.id">
-            {{ app.employeeId }} - {{ app.account?.firstName }} {{ app.account?.lastName }}
+            {{ app.employeeId }} - {{ app.account?.email }}
           </option>
         </select>
         <div *ngIf="submitted && f.approverId.errors" class="invalid-feedback">

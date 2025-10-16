@@ -16,34 +16,33 @@
   <tbody>
     <tr *ngFor="let req of requests">
       <td>{{ req.type || '—' }}</td>
-      <!-- ✅ show employeeId instead of account email -->
-      <td>
-  {{ req.employee?.account?.email || '—' }}
-  <span *ngIf="req.employee?.account?.status !== 'Active'"> (Inactive)</span>
-</td>
-      <td>{{ req.items || '—' }}</td>
-      <td>
-        <span 
-          class="badge"
-          [ngClass]="{
-            'bg-success': req.status === 'Approved',
-            'bg-warning': req.status === 'Pending',
-            'bg-secondary text-white': req.status === 'Draft',  
-            'bg-danger': req.status === 'Rejected'
-          }">
-          {{ req.status }}
-        </span>
-      </td>
+        <!-- ✅ show employeeId instead of account email -->
+        <td>
+          {{ req.employee?.account?.email || '—' }}
+          <span *ngIf="req.employee?.account?.status !== 'Active'"> (Inactive)</span>
+        </td>
+        <td>{{ req.items || '—' }}</td>
+        <td>
+          <span 
+            class="badge"
+            [ngClass]="{
+              'bg-success': req.status === 'Approved',
+              'bg-warning': req.status === 'Pending',
+              'bg-secondary text-white': req.status === 'Draft',  
+              'bg-danger': req.status === 'Rejected'
+            }">
+            {{ req.status }}
+          </span>
+        </td>
       <td style="white-space: nowrap">
-      <a [routerLink]="['/requests/edit', req.id]" class="btn btn-sm btn-primary">
-        Edit
-      </a>
-
-      <!-- <a [routerLink]="['/admin/workflows', req.employee?.employeeId]" 
-        class="btn btn-sm btn-outline-secondary ms-1">
-        Workflows
-      </a> -->
-    </td>
+        <a [routerLink]="['/requests/edit', req.id]" class="btn btn-sm btn-primary">
+          Edit
+        </a>
+        <!-- <a [routerLink]="['/admin/workflows', req.employee?.employeeId]" 
+          class="btn btn-sm btn-outline-secondary ms-1">
+          Workflows
+        </a> -->
+      </td>
     </tr>
 
     <!-- Loading spinner -->
@@ -56,6 +55,5 @@
     <tr *ngIf="!loading && requests.length === 0">
     <td colspan="5" class="text-center">No requests found</td>
    </tr>
-
   </tbody>
 </table>
