@@ -307,8 +307,6 @@ export class AddEditComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.initForm();
-
-    // Watch route params (create or edit)
     this.routeSub = this.route.params.subscribe(params => {
       this.id = params['id'];
       this.title = this.id ? 'Edit Employee' : 'Create Employee';
@@ -319,7 +317,6 @@ export class AddEditComponent implements OnInit, OnDestroy {
   private loadData() {
     this.loading = true;
 
-    // Load all needed data in parallel
     forkJoin({
       accounts: this.accountService.getAll().pipe(first()),
       departments: this.employeeService.getDepartments().pipe(first()),
@@ -327,37 +324,57 @@ export class AddEditComponent implements OnInit, OnDestroy {
       employees: this.employeeService.getAll().pipe(first())
     }).subscribe({
       next: ({ accounts, departments, positions, employees }) => {
-        this.accounts = accounts;
+        // -------------------- ACCOUNTS --------------------
+        if (this.id) {
+        // EDIT MODE: show only current employee's account
+        const currentEmp = employees.find(e => e.employeeId === this.id);
+        if (currentEmp?.accountId !== undefined && currentEmp?.accountId !== null) {
+          this.accounts = accounts.filter(acc => Number(acc.id) === currentEmp.accountId);
+        } else {
+          this.accounts = [];
+        }
+      } else {
+        // CREATE MODE: show all active accounts that are not used
+        const usedAccountIds = employees
+          .map(e => e.accountId)
+          .filter((id): id is number => id !== undefined && id !== null);
+
+        this.accounts = accounts.filter(
+          acc => acc.status === 'Active' && acc.id !== undefined && !usedAccountIds.includes(Number(acc.id))
+        );
+      }
+
+        // -------------------- DEPARTMENTS & POSITIONS --------------------
         this.departments = departments;
         this.positions = positions;
 
         if (this.id) {
-          this.employeeService.getById(this.id)
-            .pipe(first())
-            .subscribe(emp => {
-              this.currentDepartment = emp.department ?? null;
-              this.currentPosition = emp.position ?? null;
+          const emp = employees.find(e => e.employeeId === this.id);
+          if (emp) {
+            this.currentDepartment = emp.department ?? null;
+            this.currentPosition = emp.position ?? null;
 
-              this.filterPositions(employees, emp.employeeId);
+            // Filter positions (disable Manager/Head if already taken)
+            this.filterPositions(employees, emp.employeeId);
 
-              this.form.patchValue({
-                employeeId: emp.employeeId,
-                accountId: emp.accountId,
-                position: emp.position,
-                department: emp.department,
-                hireDate: emp.hireDate,
-                status: emp.status ?? 'Active'
-              });
-
-              this.loading = false;
+            this.form.patchValue({
+              employeeId: emp.employeeId,
+              accountId: emp.accountId ?? null,
+              position: emp.position ?? null,
+              department: emp.department ?? null,
+              hireDate: emp.hireDate,
+              status: emp.status ?? 'Active'
             });
+          }
         } else {
+          // CREATE MODE
           this.filterPositions(employees);
           this.employeeService.getNextId()
             .pipe(first())
             .subscribe(res => this.form.get('employeeId')?.setValue(res.nextId));
-          this.loading = false;
         }
+
+        this.loading = false;
       },
       error: err => {
         console.error('Error loading form data', err);
@@ -366,7 +383,7 @@ export class AddEditComponent implements OnInit, OnDestroy {
     });
   }
 
-  // ✅ Disable Manager/Head if already taken
+  // -------------------- POSITIONS --------------------
   private filterPositions(employees: any[], currentEmpId?: string) {
     const usedPositions = employees
       .filter(e => e.employeeId !== currentEmpId)
@@ -378,10 +395,7 @@ export class AddEditComponent implements OnInit, OnDestroy {
 
       return {
         ...pos,
-        disabled:
-          isManagerOrHead &&
-          usedPositions.includes(posName) &&
-          pos.name !== this.currentPosition
+        disabled: isManagerOrHead && usedPositions.includes(posName) && pos.name !== this.currentPosition
       };
     });
   }

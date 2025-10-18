@@ -25,9 +25,10 @@
         <label class="form-label">Approver</label>
         <select class="form-select" formControlName="approverId">
           <option value="">-- Select Approver --</option>
-          <option *ngFor="let appr of approvers" [value]="appr.id">
-            {{ appr.employeeId }} - {{ appr.account?.email }}
-          </option>
+            <option *ngFor="let appr of approvers" [value]="appr.id">
+              {{ appr.employeeId }} - {{ appr.account?.email }}
+              <span *ngIf="appr.position">({{ appr.position }})</span>
+            </option>
         </select>
         <div *ngIf="submitted && f.approverId.errors" class="invalid-feedback d-block">
           Approver is required

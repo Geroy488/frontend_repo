@@ -213,6 +213,9 @@ export class RequestAddEditComponent implements OnInit, OnDestroy {
     private alertService: AlertService
   ) {}
 
+  // =========================
+  // INIT
+  // =========================
   ngOnInit() {
     this.initForm();
     this.loadEmployees();
@@ -231,6 +234,7 @@ export class RequestAddEditComponent implements OnInit, OnDestroy {
             next: (x: any) => {
               this.items.clear();
 
+              // Parse items like "Laptop (2)"
               if (x.items) {
                 const parts = x.items.split(',').map((s: string) => s.trim());
                 parts.forEach((p: string) => {
@@ -255,16 +259,25 @@ export class RequestAddEditComponent implements OnInit, OnDestroy {
 
               this.loading = false;
             },
-            error: () => this.loading = false
+            error: () => (this.loading = false)
           });
       }
     });
+  }
+
+   isManagerOrHead(position?: string): boolean {
+    if (!position) return false;
+    const lower = position.toLowerCase();
+    return lower.includes('manager') || lower.includes('head');
   }
 
   ngOnDestroy() {
     if (this.routeSub) this.routeSub.unsubscribe();
   }
 
+  // =========================
+  // FORM SETUP
+  // =========================
   private initForm() {
     this.form = this.formBuilder.group({
       employeeId: ['', Validators.required],
@@ -276,34 +289,72 @@ export class RequestAddEditComponent implements OnInit, OnDestroy {
     this.addItem();
   }
 
+  // =========================
+  // LOAD DATA
+  // =========================
   private loadEmployees() {
-    this.employeesService.getAllEmployees()
+    this.loading = true;
+    this.employeesService
+      .getAllEmployees()
       .pipe(first())
       .subscribe({
-        next: (data: any[]) => this.employees = data,
-        error: err => console.error('Error loading employees', err)
+        next: (data: any[]) => {
+          this.employees = data;
+          this.loading = false;
+        },
+        error: (err) => {
+          console.error('Error loading employees', err);
+          this.loading = false;
+        },
       });
   }
 
   private loadApprovers() {
-    this.employeesService.getAllEmployees()
-      .pipe(first())
-      .subscribe({
-        next: (data: any[]) => {
-          this.approvers = data.filter(emp => emp.account?.role === 'Manager' || emp.account?.role === 'Head');
-          if (this.approvers.length === 0) this.approvers = data;
-        },
-        error: err => console.error('Error loading approvers', err)
-      });
+  this.loading = true;
+  this.employeesService
+    .getApprovers()
+    .pipe(first())
+    .subscribe({
+      next: (data: any[]) => {
+        console.log('APPROVERS DATA:', data);
+
+        this.approvers = data.map(emp => ({
+          ...emp,
+          position: emp.position?.name || '', // map position object to string
+          account: {
+            ...emp.account,
+            name: `${emp.account?.firstName || ''} ${emp.account?.lastName || ''}`.trim()
+          }
+        }));
+
+        if (this.approvers.length === 0) {
+          console.warn('No approvers found with position Head or Manager');
+        }
+
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Error loading approvers', err);
+        this.loading = false;
+      }
+    });
+}
+
+  // =========================
+  // FORM CONTROLS
+  // =========================
+  get f() {
+    return this.form.controls;
   }
 
-  get f() { return this.form.controls; }
-  get items(): FormArray { return this.form.get('items') as FormArray; }
+  get items(): FormArray {
+    return this.form.get('items') as FormArray;
+  }
 
   addItem() {
     const itemForm = this.formBuilder.group({
       name: ['', Validators.required],
-      quantity: [1, [Validators.required, Validators.min(1)]]
+      quantity: [1, [Validators.required, Validators.min(1)]],
     });
     this.items.push(itemForm);
   }
@@ -312,24 +363,27 @@ export class RequestAddEditComponent implements OnInit, OnDestroy {
     this.items.removeAt(index);
   }
 
+  // =========================
+  // SUBMIT
+  // =========================
   onSubmit(submitFlag: boolean = false) {
     this.submitted = true;
     this.alertService.clear();
     this.submitToAdmin = submitFlag;
 
     if (this.form.invalid) return;
-    this.submitting = true;
 
+    this.submitting = true;
     const payload = { ...this.form.value };
 
-    // Convert FormArray → string
+    // Convert items array to string
     if (Array.isArray(payload.items)) {
       payload.items = payload.items
         .map((x: any) => `${x.name} (${x.quantity})`)
         .join(', ');
     }
 
-    // Default status logic (Draft or Pending)
+    // Default status: Draft or Pending
     payload.status = this.submitToAdmin ? 'Pending' : 'Draft';
     payload.createdByRole = 'Admin';
 
@@ -352,7 +406,7 @@ export class RequestAddEditComponent implements OnInit, OnDestroy {
       error: (error: any) => {
         this.alertService.error(error?.message || 'Failed to save request');
         this.submitting = false;
-      }
+      },
     });
   }
 }

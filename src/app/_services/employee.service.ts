@@ -15,6 +15,11 @@ export class EmployeesService {
     return this.http.get<Employee[]>(this.baseUrl);
   }
 
+  // 🔹 Get only employees with Head or Manager positions
+  getApprovers(): Observable<Employee[]> {
+    return this.http.get<Employee[]>(`${this.baseUrl}/approvers`);
+  }
+
   // 🔹 Get all employees (active + inactive) for requests
   getAllEmployees(): Observable<Employee[]> {
     return this.http.get<Employee[]>(`${environment.apiUrl}/requests/all-employees`);
