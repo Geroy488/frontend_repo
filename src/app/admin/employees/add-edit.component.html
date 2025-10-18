@@ -29,32 +29,67 @@
       </div>
     </div>
 
-      <!-- Position -->
-     <div class="form-group">
-     <label for="position">Position</label>
-     <select id="position" formControlName="position" class="form-control" [disabled]="loading">
+      <div class="form-group">
+        <label for="position">Position</label>
+        <select
+          id="position"
+          formControlName="position"
+          class="form-control"
+          [disabled]="loading"
+        >
+          <option value="" disabled selected>Select position</option>
 
-      <!-- ✅ Show current position -->
-      <option *ngIf="currentPosition" [value]="currentPosition">
-      {{ currentPosition }}
-      <span *ngIf="isCurrentPositionDisabled(); else currentEnabled">(Disabled)</span>
-      <ng-template #currentEnabled>(Current)</ng-template>
-      </option>
-
-        <!-- ✅ Show only enabled positions (not current one) -->
-        <ng-container *ngFor="let pos of positions">
-          <option 
-            *ngIf="pos.status === 'ENABLE' && (!currentPosition || currentPosition.indexOf(pos.name) === -1)" 
-            [value]="pos.name">
-            {{ pos.name }}
+          <!-- 🔹 CURRENT POSITION (when editing) -->
+          <option *ngIf="currentPosition" [value]="currentPosition">
+            {{ currentPosition }} (Current)
           </option>
-        </ng-container>
-      </select>
 
-  <div *ngIf="submitted && f.position.errors" class="invalid-feedback d-block">
-    <div *ngIf="f.position.errors['required']">Position is required</div>
-  </div>
-</div>
+          <!-- 🔹 HEAD positions -->
+          <ng-container *ngIf="positions?.length">
+            <ng-container *ngFor="let pos of positions">
+              <option
+                *ngIf="pos.name.toLowerCase().includes('head')"
+                [value]="pos.name"
+                [disabled]="pos.disabled"
+              >
+                {{ pos.name }}
+                <span *ngIf="pos.disabled"> (Already Assigned)</span>
+              </option>
+            </ng-container>
+
+            <!-- 🔹 MANAGER positions -->
+            <ng-container *ngFor="let pos of positions">
+              <option
+                *ngIf="pos.name.toLowerCase().includes('manager')"
+                [value]="pos.name"
+                [disabled]="pos.disabled"
+              >
+                {{ pos.name }}
+                <span *ngIf="pos.disabled"> (Already Assigned)</span>
+              </option>
+            </ng-container>
+
+            <!-- Divider -->
+            <option disabled>──────────────</option>
+
+            <!-- 🔹 OTHER positions -->
+            <ng-container *ngFor="let pos of positions">
+              <option
+                *ngIf="!pos.name.toLowerCase().includes('head') && !pos.name.toLowerCase().includes('manager')"
+                [value]="pos.name"
+                [disabled]="pos.disabled"
+              >
+                {{ pos.name }}
+                <span *ngIf="pos.disabled"> (Already Assigned)</span>
+              </option>
+            </ng-container>
+          </ng-container>
+        </select>
+
+        <div *ngIf="submitted && f.position.errors" class="invalid-feedback d-block">
+          Position is required
+        </div>
+      </div>
       
       <!-- Department -->
       <div class="form-group">
